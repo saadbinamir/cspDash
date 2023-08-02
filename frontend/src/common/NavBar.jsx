@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function NavBar() {
     return (
         <header className="shadow-lg" style={{ backgroundColor: '#2F2F2F' }}>
-            <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center " >
+            <div className="container max-w-screen-xl mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center " >
                 <Link to={'/'} className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0 z-50">
                     <img src={Logo} className='w-10' alt="Logo" />
                     <span className="ml-3 text-xl" style={{ color: '#C39601' }}>CSP Dashboard</span>

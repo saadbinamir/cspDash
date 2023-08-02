@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Nav from './common/NavBar';
+import Footer from './common/Footer';
 import Home from './pages/Home';
 import ContactUs from './pages/ContactUs';
 import AboutUS from './pages/AboutUS';
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/Create_acc" element={<CreateAcc />} />
         </Routes>
+        <Footer />
       </Router >
     </>
   );

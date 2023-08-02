@@ -32,18 +32,18 @@ export default function ContactUs() {
 
     };
 
-    React.useEffect(() => {
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        return () => {
-            document.documentElement.style.overflow = 'auto';
-            document.body.style.overflow = 'auto';
-        };
-    }, []);
+    // React.useEffect(() => {
+    //     document.documentElement.style.overflow = 'hidden';
+    //     document.body.style.overflow = 'hidden';
+    //     return () => {
+    //         document.documentElement.style.overflow = 'auto';
+    //         document.body.style.overflow = 'auto';
+    //     };
+    // }, []);
 
     return (
         <section className="text-gray-600 body-font relative" style={{ marginTop: '-40px' }}>
-            <div className="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap" >
+            <div className="container max-w-screen-xl px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap" >
                 <div className="lg:w-2/3 md:w-1/2  rounded-3xl overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative" style={{ backgroundColor: '#2F2F2F' }}>
                     <iframe
                         width="100%"
