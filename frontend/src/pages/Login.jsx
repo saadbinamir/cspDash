@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Lottie from "lottie-react";
 import help from "../assets/help.json";
 import NavBar from "../common/NavBar";
 import Footer from "../common/Footer";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/Auth";
+
 export default function Login() {
+  const auth = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectPath = location.state?.path || "/dash";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,10 +33,8 @@ export default function Login() {
     } else if (email != "" && password != "") {
       setErr("Success");
       setErrState(false);
-      setTimeout(() => {
-        navigate("/dash");
-      }, 1000);
-      // alert("else");
+      auth.login(email);
+      navigate(redirectPath, { replace: true });
     } else {
       // navigate("/dash");
       // setTimeout(() => {

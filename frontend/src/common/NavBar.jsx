@@ -1,7 +1,16 @@
 import React from "react";
 import Logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
+import Login from "../pages/Login";
+import { useAuth } from "../utils/Auth";
 export default function NavBar() {
+  const auth = useAuth();
+
+  const handleLogout = async () => {
+    await auth.logout();
+    // navigate("/");
+  };
+
   return (
     <header
       className="shadow-lg"
@@ -59,38 +68,78 @@ export default function NavBar() {
           </Link>
         </nav>
 
-        <Link
-          to={"/login"}
-          class="mx-11 py-2 px-4 rounded-full z-50"
-          style={{ color: "#F6F6F6", transition: "1ms" }}
-          onMouseEnter={(e) => {
-            e.target.style.borderBottom = "2px solid #C39601";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.borderBottom = "0px";
-          }}
-        >
-          Login
-        </Link>
-        <Link
-          to={"/create_acc"}
-          class=" py-2 px-4 rounded-full z-50"
-          style={{
-            color: "#C39601",
-            transition: "1ms",
-            border: "2px solid #C39601",
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = "#C39601";
-            e.target.style.color = "#111111";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "initial";
-            e.target.style.color = "#C39601";
-          }}
-        >
-          Create Account
-        </Link>
+        {auth.user ? (
+          <>
+            <Link
+              onClick={handleLogout}
+              class="mx-11 py-2 px-4 rounded-full z-50"
+              style={{ color: "#F6F6F6", transition: "1ms" }}
+              onMouseEnter={(e) => {
+                e.target.style.borderBottom = "2px solid #C39601";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.borderBottom = "0px";
+              }}
+            >
+              Logout
+            </Link>
+            <Link
+              to={"/dash"}
+              class=" py-2 px-4 rounded-full z-50"
+              style={{
+                color: "#C39601",
+                transition: "1ms",
+                border: "2px solid #C39601",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = "#C39601";
+                e.target.style.color = "#111111";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = "initial";
+                e.target.style.color = "#C39601";
+              }}
+            >
+              Go to Dashboard
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link
+              to={"/login"}
+              // onClick={Login}
+              class="mx-11 py-2 px-4 rounded-full z-50"
+              style={{ color: "#F6F6F6", transition: "1ms" }}
+              onMouseEnter={(e) => {
+                e.target.style.borderBottom = "2px solid #C39601";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.borderBottom = "0px";
+              }}
+            >
+              Login
+            </Link>
+            <Link
+              to={"/create_acc"}
+              class=" py-2 px-4 rounded-full z-50"
+              style={{
+                color: "#C39601",
+                transition: "1ms",
+                border: "2px solid #C39601",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = "#C39601";
+                e.target.style.color = "#111111";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = "initial";
+                e.target.style.color = "#C39601";
+              }}
+            >
+              Create Account
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );
