@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Lottie from "lottie-react";
 import help from "../assets/help.json";
-import NavBar from "../common/NavBar";
-import Footer from "../common/Footer";
+// import NavBar from "../common/NavBar";
+// import Footer from "../common/Footer";
 
 export default function CreateAcc() {
   const [name, setName] = useState("");
@@ -47,7 +47,7 @@ export default function CreateAcc() {
 
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="flex h-screen" style={{ backgroundColor: "#F6F6F6" }}>
         <div className="w-1/2">
           <div
@@ -239,7 +239,7 @@ export default function CreateAcc() {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

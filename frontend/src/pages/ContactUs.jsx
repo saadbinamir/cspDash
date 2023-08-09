@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import NavBar from "../common/NavBar";
-import Footer from "../common/Footer";
+// import NavBar from "../common/NavBar";
+// import Footer from "../common/Footer";
 
 export default function ContactUs() {
   const [name, setName] = useState("");
@@ -44,7 +44,7 @@ export default function ContactUs() {
 
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <section
         className="text-gray-600 body-font relative"
         style={{ backgroundColor: "#f6f6f6" }}
@@ -202,7 +202,7 @@ export default function ContactUs() {
         </div>
       </section>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

@@ -2,12 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Lottie from "lottie-react";
 import help from "../assets/help.json";
-import NavBar from "../common/NavBar";
-import Footer from "../common/Footer";
+// import NavBar from "../common/NavBar";
+// import Footer from "../common/Footer";
 export default function Home() {
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <div style={{ backgroundColor: "#F6F6F6" }}>
         <div className="container max-w-screen-xl mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
           <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
@@ -50,7 +50,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

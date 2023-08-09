@@ -25,18 +25,57 @@ export default function App() {
       {/* <Nav /> */}
       <Routes>
         {/* public routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/about_us" element={<AboutUS />} />
-        <Route path="/contact_us" element={<ContactUs />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/Create_acc" element={<CreateAcc />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <Nav />
+              <Home />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/about_us"
+          element={
+            <>
+              <Nav />
+              <AboutUS />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/contact_us"
+          element={
+            <>
+              <Nav />
+              <ContactUs />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <>
+              <Nav />
+              <Login />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/Create_acc"
+          element={
+            <>
+              <Nav />
+              <CreateAcc />
+              <Footer />
+            </>
+          }
+        />
         {/* Private Routes */}
-
-        {/* <Route path="/dash" element={<Dashboard />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/post" element={<Post />} />
-        <Route path="/insights" element={<Insights />} /> */}
-
         <Route
           path="/dash"
           element={

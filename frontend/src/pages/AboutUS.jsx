@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import me from "../assets/1.jpg";
 import jawad from "../assets/jawad.jpg";
 import maam from "../assets/maam.jpg";
-import NavBar from "../common/NavBar";
-import Footer from "../common/Footer";
+// import NavBar from "../common/NavBar";
+// import Footer from "../common/Footer";
 export default function AboutUS() {
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <section
         className="text-gray-600 body-font"
         style={{ backgroundColor: "#f6f6f6" }}
@@ -105,7 +105,7 @@ export default function AboutUS() {
           </div>
         </div>
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

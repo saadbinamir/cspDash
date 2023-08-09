@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Lottie from "lottie-react";
 import help from "../assets/help.json";
-import NavBar from "../common/NavBar";
-import Footer from "../common/Footer";
+// import NavBar from "../common/NavBar";
+// import Footer from "../common/Footer";
 import { useAuth } from "../utils/Auth";
 
 export default function Login() {
@@ -45,7 +45,7 @@ export default function Login() {
 
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="flex h-screen" style={{ backgroundColor: "#F6F6F6" }}>
         <div className="w-1/2">
           <div
@@ -185,7 +185,7 @@ export default function Login() {
           <Lottie animationData={help} style={{ marginTop: "-140px" }} />
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
