@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
 import Post from "./pages/Post";
 import Insights from "./pages/Insights";
+import Profile from "./pages/Profile";
 
 export default function App() {
   return (
@@ -105,6 +106,14 @@ export default function App() {
           element={
             <PrivateRoute>
               <Insights />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />

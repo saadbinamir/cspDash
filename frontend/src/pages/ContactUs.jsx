@@ -28,7 +28,7 @@ export default function ContactUs() {
       message;
       setErrState(true);
     } else if (name != "" && email != "" && message != "") {
-      setErr("Success");
+      setErr("Sent");
       setErrState(false);
     }
   };

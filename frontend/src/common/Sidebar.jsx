@@ -81,7 +81,7 @@ export default function Sidebar() {
                     </div> */}
                   </div>
                   <Link
-                    to={"/dash"}
+                    to={"/profile"}
                     className=" flex items-center p-2 text-sm px-4 py-2"
                     style={{ color: "#F6F6F6", transition: "1ms" }}
                     onMouseEnter={(e) => {
