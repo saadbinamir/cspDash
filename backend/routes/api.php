@@ -15,11 +15,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+// these all will just return whatever is in the table... 
 Route::get('roles', [roleController::class, 'roleNames']);
-Route::get('teams', [teamController::class, 'teams']);
-Route::get('users', [userController::class, 'userslist']);
+
 Route::get('userroles', [userRolesController::class, 'userRoles']);
 Route::get('members', [teamMembersControllers::class, 'membersList']);
 Route::get('events', [eventController::class, 'eventList']);
 Route::get('participants', [eventParticipantsController::class, 'participanstList']);
 Route::get('credits', [userCreditHoursController::class, 'creditHours']);
+
+
+
+
+Route::get('users', [userController::class, 'userslist']);
+Route::post('signup', [userController::class, 'signup']);
+Route::post('login', [userController::class, 'login']);
+Route::post('updateProfile', [userController::class, 'updateProfile']);
+
+
+Route::get('showTeams', [teamController::class, 'showTeams']);
+Route::post('createTeam', [teamController::class, 'createTeam']);
+Route::post('addUserToTeam', [teamController::class, 'addUserToTeam']);
+Route::post('removeUserFromTeam', [teamController::class, 'removeUserFromTeam']);
