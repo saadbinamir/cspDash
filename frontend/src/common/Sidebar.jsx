@@ -45,7 +45,7 @@ export default function Sidebar() {
               <button
                 id="dropdownInformationButton"
                 type="button"
-                className="py-2 px-5 rounded-full z-50 "
+                className="py-2 px-5 rounded-2xl z-50 "
                 style={{
                   color: "#C39601",
                   transition: "1ms",
@@ -62,7 +62,7 @@ export default function Sidebar() {
                   // toggleDropdown();
                 }}
               >
-                Saad Bin Amir
+                {auth.user.name}
               </button>
               {/* Dropdown menu */}
               {dropdownVisible && (
@@ -75,7 +75,9 @@ export default function Sidebar() {
                   style={{ backgroundColor: "#2F2F2F" }}
                 >
                   <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                    <div className="font-medium truncate">{auth.user}</div>
+                    <div className="font-medium truncate">
+                      {auth.user.email}
+                    </div>
                     {/* <div className="font-medium truncate">
                       saad.amir28@gmail.com
                     </div> */}
@@ -93,19 +95,7 @@ export default function Sidebar() {
                   >
                     Profile
                   </Link>
-                  <Link
-                    to={"/dash"}
-                    className=" flex items-center p-2 text-sm px-4 py-2"
-                    style={{ color: "#F6F6F6", transition: "1ms" }}
-                    onMouseEnter={(e) => {
-                      e.target.style.borderLeft = "5px solid #C39601";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.borderLeft = "0px";
-                    }}
-                  >
-                    Settings
-                  </Link>
+                  
                   <hr className="opacity-50 mt-2" />
 
                   <Link
@@ -153,7 +143,7 @@ export default function Sidebar() {
                 fill="#F6F6F6"
               />
             </svg>
-            Dashboard
+            Teams
           </Link>
           <Link
             to={"/users"}

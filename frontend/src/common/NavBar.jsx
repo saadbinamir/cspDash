@@ -72,7 +72,7 @@ export default function NavBar() {
           <>
             <Link
               onClick={handleLogout}
-              class="mx-11 py-2 px-4 rounded-full z-50"
+              class="mx-11 py-2 px-4 rounded-2xl z-50"
               style={{ color: "#F6F6F6", transition: "1ms" }}
               onMouseEnter={(e) => {
                 e.target.style.borderBottom = "2px solid #C39601";
@@ -85,7 +85,7 @@ export default function NavBar() {
             </Link>
             <Link
               to={"/dash"}
-              class=" py-2 px-4 rounded-full z-50"
+              class=" py-2 px-4 rounded-2xl z-50"
               style={{
                 color: "#C39601",
                 transition: "1ms",
@@ -108,7 +108,7 @@ export default function NavBar() {
             <Link
               to={"/login"}
               // onClick={Login}
-              class="mx-11 py-2 px-4 rounded-full z-50"
+              class="mx-11 py-2 px-4 rounded-2xl z-50"
               style={{ color: "#F6F6F6", transition: "1ms" }}
               onMouseEnter={(e) => {
                 e.target.style.borderBottom = "2px solid #C39601";
@@ -121,7 +121,7 @@ export default function NavBar() {
             </Link>
             <Link
               to={"/create_acc"}
-              class=" py-2 px-4 rounded-full z-50"
+              class=" py-2 px-4 rounded-2xl z-50"
               style={{
                 color: "#C39601",
                 transition: "1ms",

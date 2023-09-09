@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Lottie from "lottie-react";
 import help from "../assets/help.json";
+import axios from "axios";
+
 // import NavBar from "../common/NavBar";
 // import Footer from "../common/Footer";
 
@@ -39,9 +41,42 @@ export default function CreateAcc() {
     } else if (Cpassword != password) {
       setErr("Passwords do not match");
       setErrState(true);
-    } else if (email != "" && password != "") {
-      setErr("Success");
-      setErrState(false);
+    } else {
+      // setErr("Success");
+      // setErrState(false);
+
+      axios
+        .post("http://localhost:8000/api/signup", {
+          name: name,
+          email: email,
+          phone: phone,
+          password: password,
+        })
+        .then((response) => {
+          if (response.data.status === 201) {
+            // setErr(response.data.message);
+            setErr(
+              <p>
+                Account created sucessfully, please
+                <Link
+                  to={"/login"}
+                  className="mx-1 underline"
+                  // style={{ color: "#C39601" }}
+                >
+                  Sign In
+                </Link>
+                to continue.
+              </p>
+            );
+            setErrState(false);
+
+            // auth.login(response.data.user);
+            // navigate(redirectPath, { replace: true });
+          } else {
+            setErr(response.data.message);
+            setErrState(true);
+          }
+        });
     }
   };
 
@@ -50,10 +85,7 @@ export default function CreateAcc() {
       {/* <NavBar /> */}
       <div className="flex h-screen" style={{ backgroundColor: "#F6F6F6" }}>
         <div className="w-1/2">
-          <div
-            className="flex flex-col items-center justify-center px-6  mx-auto md:h-screen lg:py-0 "
-            style={{ marginTop: "-40px" }}
-          >
+          <div className="flex flex-col items-center justify-center px-6  mx-auto md:h-screen lg:py-0 ">
             <div
               className="w-full rounded-3xl shadow md:mt-0 sm:max-w-md xl:p-0 border"
               style={{ backgroundColor: "#2F2F2F" }}
@@ -177,30 +209,10 @@ export default function CreateAcc() {
                       {err}
                     </p>
                   </div>
-                  {/* <div className="flex items-center justify-between">
-                                    <div className="flex items-start">
-                                        <div className="flex items-center h-5">
-                                            <input
-                                                id="remember"
-                                                aria-describedby="remember"
-                                                type="checkbox"
-                                                className="w-4 h-4"
-                                            // required
-                                            />
-                                        </div>
-                                        <div className="ml-3 text-sm">
-                                            <label htmlFor="remember" className="text-gray-500 dark:text-gray-400">
-                                                Remember me
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <a href="#" className="text-sm font-medium text-primary-600 hover:underline " style={{ color: '#C39601' }}>
-                                        Forgot password?
-                                    </a>
-                                </div> */}
+
                   <button
                     type="submit"
-                    className="py-2 px-4 rounded-full w-full"
+                    className="py-2 px-4 rounded-2xl w-full"
                     style={{
                       color: "#C39601",
                       transition: "1ms",
@@ -219,7 +231,7 @@ export default function CreateAcc() {
                   </button>
 
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                    Already have an account?{" "}
+                    Already have an account?
                     <Link
                       to={"/login"}
                       className="mx-2 hover:underline"

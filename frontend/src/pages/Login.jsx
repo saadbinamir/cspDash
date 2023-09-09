@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import Lottie from "lottie-react";
 import help from "../assets/help.json";
-// import NavBar from "../common/NavBar";
-// import Footer from "../common/Footer";
 import { useAuth } from "../utils/Auth";
 
 export default function Login() {
@@ -18,7 +17,7 @@ export default function Login() {
   const [err, setErr] = useState("");
   const [errState, setErrState] = useState();
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
 
     console.log("Email:", email);
@@ -30,16 +29,29 @@ export default function Login() {
     } else if (password == "") {
       setErr("Enter a valid Password");
       setErrState(true);
-    } else if (email != "" && password != "") {
-      setErr("Success");
-      setErrState(false);
-      auth.login(email);
-      navigate(redirectPath, { replace: true });
     } else {
-      // navigate("/dash");
-      // setTimeout(() => {
-      //   navigate("/dash");
-      // }, 2000);
+      // setErr("Success");
+      // setErrState(false);
+      // auth.login(email);
+      // navigate(redirectPath, { replace: true });
+
+      axios
+        .post("http://localhost:8000/api/login", {
+          email: email,
+          password: password,
+        })
+        .then((response) => {
+          if (response.data.status === 200) {
+            setErr(response.data.message);
+            setErrState(false);
+            response.data.user.password = password;
+            auth.login(response.data.user);
+            navigate(redirectPath, { replace: true });
+          } else {
+            setErr(response.data.message);
+            setErrState(true);
+          }
+        });
     }
   };
 
@@ -148,7 +160,7 @@ export default function Login() {
                   </div>
                   <button
                     type="submit"
-                    className="py-2 px-4 rounded-full w-full"
+                    className="py-2 px-4 rounded-2xl w-full"
                     style={{
                       color: "#C39601",
                       transition: "1ms",

@@ -30,10 +30,10 @@ class teamController extends Controller
     }
 
 
-
     public function createTeam(Request $request)
     {
         $uniqueId = $request->input('unique_id');
+        $teamName = $request->input('team_name');
         $organizerEmail = $request->input('organizerEmail');
 
         $user = User::where('email', $organizerEmail)->first();
@@ -44,27 +44,25 @@ class teamController extends Controller
             return response()->json([
                 'status' => 400,
                 'message' => 'Team already exists'
-            ], 400);
+            ]);
         }
-        // create team
+
         $team = new Team();
         $team->unique_id = $uniqueId;
+        $team->team_name = $teamName;
         $team->organizer_id = $user->id;
         $team->save();
 
-        // add user roles 
         $user_roles = new user_roles();
         $user_roles->user_id = $user->id;
         $user_roles->role_id = 1;
         $user_roles->team_id = $team->id;
         $user_roles->save();
 
-        // add organizer as the first team member.
         $team_members = new team_members();
         $team_members->team_id = $team->id;
         $team_members->user_id = $user->id;
         $team_members->save();
-
 
 
         return response()->json([
@@ -73,10 +71,42 @@ class teamController extends Controller
             'team' => $team,
             'role' => $user_roles,
             'teamMember' => $team_members
-        ], 201);
+        ]);
     }
 
 
+
+    public function deleteTeam(Request $request)
+    {
+        $uniqueId = $request->input('unique_id');
+        $organizerEmail = $request->input('organizerEmail');
+
+        $user = User::where('email', $organizerEmail)->first();
+
+        // Find the team by unique ID and ensure the organizer matches
+        $team = Team::where('unique_id', $uniqueId)
+            ->where('organizer_id', $user->id)
+            ->first();
+
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found or unauthorized to delete',
+            ], 404);
+        }
+
+        // Delete associated user roles and team members
+        user_roles::where('team_id', $team->id)->delete();
+        team_members::where('team_id', $team->id)->delete();
+
+        // Delete the team itself
+        $team->delete();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Team deleted successfully',
+        ], 200);
+    }
 
 
 
@@ -89,13 +119,15 @@ class teamController extends Controller
         $team = Team::where('unique_id', $unique_id)->first();
 
         if ($user && $team) {
-            // Check if the user is already a member of the team
             $existingMember = team_members::where('team_id', $team->id)
                 ->where('user_id', $user->id)
                 ->first();
 
             if ($existingMember) {
-                return response()->json(['message' => 'User is already a member of the team.'], 400);
+                return response()->json([
+                    'status' => 400,
+                    'message' => 'User is already a member of the team.'
+                ]);
             }
 
             user_roles::create([
@@ -124,7 +156,10 @@ class teamController extends Controller
             ], 201);
         }
 
-        return response()->json(['message' => 'User not added to the team.'], 400);
+        return response()->json([
+            'status' => 400,
+            'message' => 'User not added to the team.'
+        ]);
     }
 
 
