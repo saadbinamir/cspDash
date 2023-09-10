@@ -13,6 +13,7 @@
     "axios": "^1.4.0",
     "lottie-react": "^2.4.0",
     "react": "^18.2.0",
+    "react-countdown-circle-timer": "^3.2.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.12.1",
     "typeface-roboto": "^1.1.13"

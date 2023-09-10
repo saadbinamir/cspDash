@@ -109,7 +109,70 @@ export default function Dashboard() {
       <div className="p-4 sm:ml-64">
         <div className="p-4  mt-14">
           <Toast err={err} errState={errState} />
-          <div className="w-80  sm:p-5 md:mt-0 sm:max-w-md xl:p-0  fixed top-40 right-5">
+          <div className="w-80  sm:p-5 md:mt-0 sm:max-w-md xl:p-0  fixed top-40 right-5 space-y-5">
+            <div
+              className=" space-y-4 rounded-2xl p-5 "
+              style={{ backgroundColor: "#2F2F2F" }}
+            >
+              <h1
+                className="text-xl leading-tight tracking-tight  md:text-2xl "
+                style={{ color: "#C39601" }}
+              >
+                Join a team using code
+              </h1>
+              <form className="space-y-4 md:space-y-2" onSubmit={handeJoin}>
+                <div>
+                  <label
+                    htmlFor="teamID"
+                    className="block mb-2 text-sm font-medium mt-2"
+                    style={{ color: "#F6F6F6" }}
+                  >
+                    Team unique ID
+                  </label>
+                  <input
+                    type="text"
+                    name="teamID"
+                    id="teamID"
+                    className="sm:text-sm rounded-2xl w-full px-4 py-2"
+                    style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
+                    placeholder="myTeam"
+                    value={joinTeamID}
+                    onChange={(e) => setjoinTeamID(e.target.value)}
+                  />
+                </div>
+                {/* <div>
+                  <p
+                    id="error"
+                    className={`text-sm font-light pt-2 ${
+                      errState ? "text-red-700" : "text-green-700"
+                    }`}
+                  >
+                    {err}
+                  </p>
+                </div> */}
+                <div>
+                  <button
+                    type="submit"
+                    className="py-1 rounded-2xl w-full mt-2"
+                    style={{
+                      color: "#C39601",
+                      transition: "1ms",
+                      border: "2px solid #C39601",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = "#C39601";
+                      e.target.style.color = "#111111";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = "initial";
+                      e.target.style.color = "#C39601";
+                    }}
+                  >
+                    Join team
+                  </button>
+                </div>
+              </form>
+            </div>
             <div
               className=" space-y-4   rounded-2xl p-5 "
               style={{ backgroundColor: "#2F2F2F" }}
@@ -189,70 +252,6 @@ export default function Dashboard() {
                     }}
                   >
                     Create team
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <div
-              className=" space-y-4 rounded-2xl p-5 mt-5"
-              style={{ backgroundColor: "#2F2F2F" }}
-            >
-              <h1
-                className="text-xl leading-tight tracking-tight  md:text-2xl "
-                style={{ color: "#C39601" }}
-              >
-                Join a team using code
-              </h1>
-              <form className="space-y-4 md:space-y-2" onSubmit={handeJoin}>
-                <div>
-                  <label
-                    htmlFor="teamID"
-                    className="block mb-2 text-sm font-medium mt-2"
-                    style={{ color: "#F6F6F6" }}
-                  >
-                    Team unique ID
-                  </label>
-                  <input
-                    type="text"
-                    name="teamID"
-                    id="teamID"
-                    className="sm:text-sm rounded-2xl w-full px-4 py-2"
-                    style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
-                    placeholder="myTeam"
-                    value={joinTeamID}
-                    onChange={(e) => setjoinTeamID(e.target.value)}
-                  />
-                </div>
-                {/* <div>
-                  <p
-                    id="error"
-                    className={`text-sm font-light pt-2 ${
-                      errState ? "text-red-700" : "text-green-700"
-                    }`}
-                  >
-                    {err}
-                  </p>
-                </div> */}
-                <div>
-                  <button
-                    type="submit"
-                    className="py-1 rounded-2xl w-full mt-2"
-                    style={{
-                      color: "#C39601",
-                      transition: "1ms",
-                      border: "2px solid #C39601",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = "#C39601";
-                      e.target.style.color = "#111111";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = "initial";
-                      e.target.style.color = "#C39601";
-                    }}
-                  >
-                    Join team
                   </button>
                 </div>
               </form>

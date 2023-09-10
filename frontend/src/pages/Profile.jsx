@@ -63,16 +63,14 @@ export default function Profile() {
         })
         .then((response) => {
           if (response.data.status === 200) {
-            // setErr(response.data.message);
             setErr(response.data.message);
             setErrState(false);
+            auth.user = response.data.user;
+            auth.user.password = password;
             setTimeout(() => {
               setErr("");
               setErrState(false);
             }, 3000);
-
-            // auth.login(response.data.user);
-            // navigate(redirectPath, { replace: true });
           } else {
             setErr(response.data.message);
             setErrState(true);

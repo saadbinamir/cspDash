@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Toast Animations */
+@keyframes slideIn {
+  from {
+    right: -100%;
+  }
+  to {
+    right: 20px;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    right: 20px;
+  }
+  to {
+    right: -100%;
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.5s forwards;
+}
+
+.slide-out {
+  animation: slideOut 0.5s forwards;
+}
