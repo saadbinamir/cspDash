@@ -128,7 +128,7 @@ class userController extends Controller
         // $password = $request->input('password');
 
         $user = User::where('email', $email)->first();
-        // if (!Hash::check($password, $user->password)) {
+        // if (!Hash::check($request->input('password'), $user->password)) {
         //     return response()->json([
         //         'status' => 401, // Unauthorized
         //         'message' => 'Invalid password',

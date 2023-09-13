@@ -38,7 +38,7 @@ function Toast({ err, errState }) {
         strokeWidth={2}
       ></CountdownCircleTimer>
       <div
-        className={`text-sm font-medium font-light  ${
+        className={`text-sm font-medium ${
           errState ? "text-red-500" : "text-green-500"
         }`}
         style={{ border: "0px" }}

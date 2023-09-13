@@ -34,6 +34,8 @@ Route::post('updateProfile', [userController::class, 'updateProfile']);
 Route::get('showTeams', [teamController::class, 'showTeams']);
 Route::post('createTeam', [teamController::class, 'createTeam']);
 Route::post('addUserToTeam', [teamController::class, 'addUserToTeam']);
+Route::post('getUserTeams', [teamController::class, 'getUserTeams']);
+Route::post('getMyTeams', [teamController::class, 'getMyTeams']);
 Route::delete('deleteTeam', [teamController::class, 'deleteTeam']);
 Route::delete('removeUserFromTeam', [teamController::class, 'removeUserFromTeam']);
 
