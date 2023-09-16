@@ -95,7 +95,7 @@ export default function Sidebar() {
                   >
                     Profile
                   </Link>
-                  
+
                   <hr className="opacity-50 mt-2" />
 
                   <Link

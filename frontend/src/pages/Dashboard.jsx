@@ -4,6 +4,7 @@ import Sidebar from "../common/Sidebar";
 import { useAuth } from "../utils/Auth";
 import Toast from "../common/Toast";
 import JoinCreateTeam from "./JoinCreateTeam";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const auth = useAuth();
@@ -21,8 +22,8 @@ export default function Dashboard() {
       .then((response) => {
         if (response.data.status === 200) {
           setMyTeams(response.data.teams);
-          console.log(response.data.teams);
-          // console.log(teams);
+          // console.log(response.data.teams);
+          // console.log(teams
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -66,111 +67,114 @@ export default function Dashboard() {
         <div className=" pr-4 mt-20 ">
           <Toast err={err} errState={errState} />
           {/* <JoinCreateTeam /> */}
-          <JoinCreateTeam
-            getMyTeams={getMyTeams} // Pass the function as a prop
-            getUserTeams={getUserTeams} // Pass the function as a prop
-          />
-          <div className="md:w-9/12 sm:w-full ">
-            <h1
-              className="text-lg  md:text-xl mt-3"
-              style={{ color: "#2f2f2f" }}
-            >
-              All Teams
-            </h1>
-            <hr />
+          <JoinCreateTeam getMyTeams={getMyTeams} getUserTeams={getUserTeams} />
 
-            <div className="mt-8 flex flex-row flex-wrap gap-5">
-              {teams.map((team) => (
-                <a
-                  href="#"
-                  className="flex flex-col items-center rounded-2xl shadow md:flex-row md:w-3/12 sm:w-full space-x-5 p-5 flex-grow"
-                  style={{ backgroundColor: "#2f2f2f" }}
-                  key={team.team_unique_id}
-                >
-                  <div
-                    className="w-20 h-20 flex items-center justify-center rounded-full shadow-lg "
-                    style={{
-                      backgroundColor: "#f6f6f6",
-                    }}
+          {teams.length > 0 && (
+            <div className="md:w-9/12 sm:w-full ">
+              <h1
+                className="text-lg  md:text-xl mt-3"
+                style={{ color: "#2f2f2f" }}
+              >
+                All Teams
+              </h1>
+              <hr />
+
+              <div className="mt-8 flex flex-row flex-wrap gap-5">
+                {teams.map((team) => (
+                  <Link
+                    to={`/teams/${team.team_unique_id}`}
+                    className="flex flex-col items-center rounded-2xl shadow md:flex-row md:w-3/12 sm:w-full space-x-5 p-5 flex-grow"
+                    style={{ backgroundColor: "#2f2f2f" }}
+                    key={team.team_unique_id}
                   >
-                    <span
-                      className="text-xl font-medium text-clip overflow-clip"
-                      style={{ color: "#C39601" }}
+                    <div
+                      className="w-20 h-20 flex items-center justify-center rounded-full shadow-lg "
+                      style={{
+                        backgroundColor: "#f6f6f6",
+                      }}
                     >
-                      {team.team_unique_id.slice(0, 4)}...
-                    </span>
-                  </div>
+                      <span
+                        className="text-xl font-medium text-clip overflow-clip"
+                        style={{ color: "#C39601" }}
+                      >
+                        {team.team_unique_id.slice(0, 4)}...
+                      </span>
+                    </div>
 
-                  <div className="flex flex-col ">
-                    <h5
-                      className="text-xl font-medium "
-                      style={{ color: "#C39601" }}
-                    >
-                      {team.team_name}
-                    </h5>
+                    <div className="flex flex-col ">
+                      <h5
+                        className="text-xl font-medium "
+                        style={{ color: "#C39601" }}
+                      >
+                        {team.team_name}
+                      </h5>
 
-                    <p className="font-normal text-gray-700 dark:text-gray-400">
-                      @ {team.organizer_email}
-                    </p>
-                    <p className="font-normal text-gray-700 dark:text-gray-400">
-                      # &nbsp;{team.number_of_members}
-                    </p>
-                  </div>
-                </a>
-              ))}
+                      <p className="font-normal text-gray-700 dark:text-gray-400">
+                        @ {team.organizer_email}
+                      </p>
+                      <p className="font-normal text-gray-700 dark:text-gray-400">
+                        # &nbsp;{team.number_of_members}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
           {/* my teams */}
-          <div className="md:w-9/12 sm:w-full mt-10">
-            <h1
-              className="text-lg  md:text-xl mt-3"
-              style={{ color: "#2f2f2f" }}
-            >
-              My Teams
-            </h1>
-            <hr />
+          {MyTeams.length > 0 && (
+            <div className="md:w-9/12 sm:w-full mt-10">
+              <h1
+                className="text-lg  md:text-xl mt-3"
+                style={{ color: "#2f2f2f" }}
+              >
+                My Teams
+              </h1>
+              <hr />
 
-            <div className="mt-8 flex flex-row flex-wrap gap-5">
-              {MyTeams.map((team) => (
-                <a
-                  href="#"
-                  className="flex flex-col items-center rounded-2xl shadow md:flex-row md:w-3/12 sm:w-full space-x-5 p-5 flex-grow"
-                  style={{ backgroundColor: "#2f2f2f" }}
-                  key={team.team_unique_id}
-                >
-                  <div
-                    className="w-20 h-20 flex items-center justify-center rounded-full shadow-lg "
-                    style={{
-                      backgroundColor: "#f6f6f6",
-                    }}
+              <div className="mt-8 flex flex-row flex-wrap gap-5">
+                {MyTeams.map((team) => (
+                  <Link
+                    to={`/teams/${team.team_unique_id}/admin`}
+                    className="flex flex-col items-center rounded-2xl shadow md:flex-row md:w-3/12 sm:w-full space-x-5 p-5 flex-grow"
+                    style={{ backgroundColor: "#2f2f2f" }}
+                    key={team.team_unique_id}
                   >
-                    <span
-                      className="text-xl font-medium text-clip overflow-clip"
-                      style={{ color: "#C39601" }}
+                    <div
+                      className="w-20 h-20 flex items-center justify-center rounded-full shadow-lg "
+                      style={{
+                        backgroundColor: "#f6f6f6",
+                      }}
                     >
-                      {team.team_unique_id.slice(0, 4)}...
-                    </span>
-                  </div>
+                      <span
+                        className="text-xl font-medium text-clip overflow-clip"
+                        style={{ color: "#C39601" }}
+                      >
+                        {team.team_unique_id.slice(0, 5)}...
+                      </span>
+                    </div>
 
-                  <div className="flex flex-col ">
-                    <h5
-                      className="text-xl font-medium "
-                      style={{ color: "#C39601" }}
-                    >
-                      {team.team_name}
-                    </h5>
+                    <div className="flex flex-col ">
+                      <h5
+                        className="text-xl font-medium "
+                        style={{ color: "#C39601" }}
+                      >
+                        {team.team_name}
+                      </h5>
 
-                    <p className="font-normal text-gray-700 dark:text-gray-400">
-                      @ {team.organizer_email}
-                    </p>
-                    <p className="font-normal text-gray-700 dark:text-gray-400">
-                      # &nbsp;{team.number_of_members}
-                    </p>
-                  </div>
-                </a>
-              ))}
+                      <p className="font-normal text-gray-700 dark:text-gray-400">
+                        @ {team.organizer_email}
+                      </p>
+                      <p className="font-normal text-gray-700 dark:text-gray-400">
+                        # &nbsp;{team.number_of_members}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

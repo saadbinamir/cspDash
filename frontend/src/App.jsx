@@ -18,12 +18,12 @@ import Post from "./pages/Post";
 import Insights from "./pages/Insights";
 import Profile from "./pages/Profile";
 
+import TeamAdmin from "./pages/TeamAdmin";
+import TeamMember from "./pages/TeamMember";
+
 export default function App() {
   return (
-    // <Routes>
-
     <AuthProvider>
-      {/* <Nav /> */}
       <Routes>
         {/* public routes */}
         <Route
@@ -117,11 +117,26 @@ export default function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/teams/:teamId/admin"
+          element={
+            <PrivateRoute>
+              <TeamAdmin />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/teams/:teamId"
+          element={
+            <PrivateRoute>
+              <TeamMember />
+            </PrivateRoute>
+          }
+        />
 
         {/* Catch all */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-      {/* <Footer /> */}
     </AuthProvider>
   );
 }
