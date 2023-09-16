@@ -4,6 +4,8 @@ import { AuthProvider } from "./utils/Auth";
 import PrivateRoute from "./utils/PrivateRoute";
 
 import Nav from "./common/NavBar";
+import Sidebar from "./common/Sidebar";
+
 import Footer from "./common/Footer";
 import Home from "./pages/Home";
 import ContactUs from "./pages/ContactUs";
@@ -80,9 +82,11 @@ export default function App() {
         <Route
           path="/dash"
           element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
+            <>
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            </>
           }
         />
         <Route

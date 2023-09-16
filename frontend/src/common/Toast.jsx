@@ -19,11 +19,12 @@ function Toast({ err, errState }) {
   return (
     <div
       id="toast-top-right"
-      className={`z-50 fixed flex items-center w-full max-w-xs p-4 space-x-4 divide-x rounded-2xl shadow top-20  ${
+      className={`z-50 fixed flex items-center w-full max-w-xs p-4 space-x-4 divide-x rounded-2xl  top-24  shadow-lg ${
         isVisible ? "slide-in" : "slide-out"
       }`}
       style={{
         backgroundColor: "#2f2f2f",
+        border: "1px solid #C39601 ",
       }}
       role="alert"
     >

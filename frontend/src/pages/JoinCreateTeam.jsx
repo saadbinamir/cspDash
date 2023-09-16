@@ -107,8 +107,7 @@ export default function JoinCreateTeam({ getMyTeams, getUserTeams }) {
   return (
     <>
       <Toast err={err} errState={errState} />
-
-      <div className="w-80  sm:p-5 md:mt-0 sm:max-w-md xl:p-0  fixed top-40 right-5 space-y-5">
+      <div className="flex flex-col gap-5 md:w-4/12 mt-10 sticky top-40 ">
         <div
           className=" space-y-4 rounded-2xl p-5 "
           style={{ backgroundColor: "#2F2F2F" }}
@@ -139,16 +138,7 @@ export default function JoinCreateTeam({ getMyTeams, getUserTeams }) {
                 onChange={(e) => setjoinTeamID(e.target.value)}
               />
             </div>
-            {/* <div>
-                  <p
-                    id="error"
-                    className={`text-sm font-light pt-2 ${
-                      errState ? "text-red-700" : "text-green-700"
-                    }`}
-                  >
-                    {err}
-                  </p>
-                </div> */}
+
             <div>
               <button
                 type="submit"
@@ -172,6 +162,7 @@ export default function JoinCreateTeam({ getMyTeams, getUserTeams }) {
             </div>
           </form>
         </div>
+
         <div
           className=" space-y-4   rounded-2xl p-5 "
           style={{ backgroundColor: "#2F2F2F" }}
@@ -219,16 +210,6 @@ export default function JoinCreateTeam({ getMyTeams, getUserTeams }) {
                 onChange={(e) => setteamID(e.target.value)}
               />
             </div>
-            {/* <div>
-                  <p
-                    id="error"
-                    className={`text-sm font-light pt-2 ${
-                      errState ? "text-red-700" : "text-green-700"
-                    }`}
-                  >
-                    {err}
-                  </p>
-                </div> */}
             <div>
               <button
                 type="submit"

@@ -82,141 +82,141 @@ export default function Profile() {
         });
     }
   };
-
+  const [Links, setLinks] = useState([{ title: "Teams", to: "/dash" }]);
   return (
     <>
-      <Sidebar />
+      <Sidebar Links={Links} />
 
-      <div className="px-4 sm:ml-64">
-        <div className="px-4   mt-24 ">
-          <Toast err={err} errState={errState} />
-          <form onSubmit={handleUpdate}>
-            <div className="border-b border-gray-900/10 pb-12">
-              <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <h2 className="text-base font-semibold leading-7 text-gray-900">
-                  Personal Information
-                </h2>
-                <div className="sm:col-span-6">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Email address
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      disabled
-                      className="py-2 px-4 rounded-2xl border w-full"
-                      value={auth.user.email}
-                    />
-                  </div>
-                </div>
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Name
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      autoComplete="given-name"
-                      className="py-2 px-4 rounded-2xl border w-full"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Phone #
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="text"
-                      name="phone"
-                      id="phone"
-                      autoComplete="given-name"
-                      className="py-2 px-4 rounded-2xl border w-full"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </div>
-                </div>
+      <div className="container mx-auto  max-w-screen-xl flex justify-center items-center mb-10">
+        <Toast err={err} errState={errState} />
+        <form onSubmit={handleUpdate} className="w-full ">
+          <div className="border-b border-gray-900/10 pb-12">
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <h2 className="text-base font-semibold leading-7 text-gray-900">
+                Personal Information
+              </h2>
 
-                <div className="col-span-full">
-                  <label
-                    htmlFor="address"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Address
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="text"
-                      name="address"
-                      id="address"
-                      autoComplete="street-address"
-                      className="py-2 px-4 rounded-2xl border w-full"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b border-gray-900/10 pb-12">
-              <div className="sm:col-span-3">
+              <div className="sm:col-span-6">
                 <label
-                  htmlFor="new-pass"
+                  htmlFor="email"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  New Password
+                  Email address
                 </label>
                 <div className="mt-2">
                   <input
-                    type="password"
-                    name="new-pass"
-                    id="new-pass"
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    disabled
+                    className="py-2 px-4 rounded-2xl border w-full"
+                    value={auth.user.email}
+                  />
+                </div>
+              </div>
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Name
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
                     autoComplete="given-name"
                     className="py-2 px-4 rounded-2xl border w-full"
-                    value={newPass}
-                    onChange={(e) => setnewPass(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="sm:col-span-3">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Phone #
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="phone"
+                    id="phone"
+                    autoComplete="given-name"
+                    className="py-2 px-4 rounded-2xl border w-full"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
               </div>
 
-              <div className="sm:col-span-3">
+              <div className="col-span-full">
                 <label
-                  htmlFor="new-pass"
-                  className=" text-sm font-medium leading-6 text-gray-900"
+                  htmlFor="address"
+                  className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Confirm New Password
+                  Address
                 </label>
                 <div className="mt-2">
                   <input
-                    type="password"
-                    name="new-pass"
-                    id="new-pass"
-                    autoComplete="given-name"
+                    type="text"
+                    name="address"
+                    id="address"
+                    autoComplete="street-address"
                     className="py-2 px-4 rounded-2xl border w-full"
-                    value={confirmNewPass}
-                    onChange={(e) => setconfirmNewPass(e.target.value)}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
               </div>
             </div>
-            {/* <p
+          </div>
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b border-gray-900/10 pb-12">
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="new-pass"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                New Password
+              </label>
+              <div className="mt-2">
+                <input
+                  type="password"
+                  name="new-pass"
+                  id="new-pass"
+                  autoComplete="given-name"
+                  className="py-2 px-4 rounded-2xl border w-full"
+                  value={newPass}
+                  onChange={(e) => setnewPass(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="new-pass"
+                className=" text-sm font-medium leading-6 text-gray-900"
+              >
+                Confirm New Password
+              </label>
+              <div className="mt-2">
+                <input
+                  type="password"
+                  name="new-pass"
+                  id="new-pass"
+                  autoComplete="given-name"
+                  className="py-2 px-4 rounded-2xl border w-full"
+                  value={confirmNewPass}
+                  onChange={(e) => setconfirmNewPass(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          {/* <p
               id="error"
               className={`text-sm font-light pt-2 ${
                 errState ? "text-red-700" : "text-green-700"
@@ -224,42 +224,41 @@ export default function Profile() {
             >
               {err}
             </p> */}
-            <div className="mt-6 flex items-center justify-end gap-x-6 ">
-              <div>
-                <input
-                  type="password"
-                  name="new-pass"
-                  id="new-pass"
-                  autoComplete="given-name"
-                  className="py-2 px-4 rounded-2xl border"
-                  placeholder="Enter your Password "
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <button
-                type="submit"
-                className="py-2 px-4 rounded-2xl "
-                style={{
-                  color: "#2F2F2F",
-                  transition: "1ms",
-                  border: "2px solid #C39601",
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "#C39601";
-                  e.target.style.color = "#111111";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = "initial";
-                  e.target.style.color = "#C39601";
-                }}
-                onClick={handleUpdate}
-              >
-                Update
-              </button>
+          <div className="mt-6 flex items-center justify-end gap-x-6 ">
+            <div>
+              <input
+                type="password"
+                name="new-pass"
+                id="new-pass"
+                autoComplete="given-name"
+                className="py-2 px-4 rounded-2xl border"
+                placeholder="Enter your Password "
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
-          </form>
-        </div>
+            <button
+              type="submit"
+              className="py-2 px-4 rounded-2xl "
+              style={{
+                color: "#2F2F2F",
+                transition: "1ms",
+                border: "2px solid #C39601",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = "#C39601";
+                e.target.style.color = "#111111";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = "initial";
+                e.target.style.color = "#C39601";
+              }}
+              onClick={handleUpdate}
+            >
+              Update
+            </button>
+          </div>
+        </form>
       </div>
     </>
   );

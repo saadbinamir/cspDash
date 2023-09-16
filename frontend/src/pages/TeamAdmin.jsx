@@ -13,16 +13,19 @@ export default function TeamAdmin() {
 
   const [err, setErr] = useState("");
   const [errState, setErrState] = useState();
-
+  const [Links, setLinks] = useState([
+    { title: "Teams", to: "/dash" },
+    { title: "Test", to: "/about_us" },
+  ]);
   return (
     <>
-      <Sidebar />
-      <div className="p-5 sm:ml-64 ">
-        <div className=" pr-4 mt-20 ">
-          <Toast err={err} errState={errState} />
-
+      <Sidebar Links={Links} />
+      <div className="container mx-auto max-w-screen-xl flex flex-row gap-x-10  justify-center items-start my-10">
+        {/* <Toast err={err} errState={errState} /> */}
+        <div className="flex flex-col w-full">
           <h1>Team Admin Page for Team ID: {teamId}</h1>
         </div>
+        {/* <JoinCreateTeam /> */}
       </div>
     </>
   );
