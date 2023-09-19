@@ -7,13 +7,11 @@ import JoinCreateTeam from "./JoinCreateTeam";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
-  // const auth = useAuth();
+
 
   const [teamName, setteamName] = useState("");
   const [teamID, setteamID] = useState("");
   const [joinTeamID, setjoinTeamID] = useState("");
-  // const [err, setErr] = useState("");
-  // const [errState, setErrState] = useState();
 
   const handleCreateTeam = (e) => {
     e.preventDefault();
@@ -161,7 +159,7 @@ export default function Dashboard() {
   }, []);
 
   const [Links, setLinks] = useState([
-    { title: "Teams", to: "/dash" },
+    { title: "Teams", to: "/dash", active: true },
     { title: "Test", to: "/about_us" },
   ]);
   return (

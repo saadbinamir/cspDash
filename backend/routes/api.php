@@ -20,7 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('roles', [roleController::class, 'roleNames']);
 
 Route::get('userroles', [userRolesController::class, 'userRoles']);
-Route::get('members', [teamMembersControllers::class, 'membersList']);
 Route::get('credits', [userCreditHoursController::class, 'creditHours']);
 
 
@@ -38,6 +37,10 @@ Route::post('getUserTeams', [teamController::class, 'getUserTeams']);
 Route::post('getMyTeams', [teamController::class, 'getMyTeams']);
 Route::delete('deleteTeam', [teamController::class, 'deleteTeam']);
 Route::delete('removeUserFromTeam', [teamController::class, 'removeUserFromTeam']);
+
+Route::get('members', [teamMembersControllers::class, 'membersList']);
+Route::post('getTeamMembers', [teamMembersControllers::class, 'getTeamMembers']);
+
 
 
 Route::get('events', [eventController::class, 'eventList']);

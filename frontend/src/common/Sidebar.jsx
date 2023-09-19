@@ -28,7 +28,182 @@ export default function Sidebar({ Links }) {
             CSP Dashboard
           </span>
         </Link>
-        <nav className="p-1 md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400 flex flex-wrap items-center text-base justify-center z-50">
+
+        {/* <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+          {Links.map((link) => (
+            <div key={link.to} className="mr-4 md:mr-8">
+              {link.sub ? (
+                <div className="flex items-center gap-x-10">
+                  <Link
+                    to={link.to}
+                    className={`${
+                      Links.some((l) => l.sub) ? "text-gray-500" : "text-white"
+                    }`}
+                    style={{
+                      transition: "border-bottom 1ms",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.borderBottom = "1px solid #C39601";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.borderBottom = "none";
+                    }}
+                  >
+                    {link.title}
+                  </Link>
+                  {link.sub.map((subLink) => (
+                    <Link
+                      key={subLink.to}
+                      to={subLink.to}
+                      className="mt-0 text-white"
+                      style={{
+                        transition: "border-bottom 1ms",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.borderBottom = "1px solid #C39601";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.borderBottom = "none";
+                      }}
+                    >
+                      {subLink.title}
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <Link
+                  to={link.to}
+                  className={`${
+                    Links.some((l) => l.sub) ? "text-gray-500" : "text-white "
+                  }`}
+                  style={{
+                    transition: "border-bottom 1ms",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.borderBottom = "1px solid #C39601";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.borderBottom = "none";
+                  }}
+                >
+                  {link.title}
+                </Link>
+              )}
+            </div>
+          ))}
+        </nav> */}
+
+        <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+          {Links.map((link) => (
+            <div key={link.to} className="mr-4 md:mr-8">
+              {link.sub ? (
+                <div className="flex items-center gap-x-10">
+                  <Link
+                    to={link.to}
+                    className={`${
+                      Links.some((l) => l.sub) ? "text-gray-500" : "text-white"
+                    }`}
+                    style={{
+                      borderBottom:
+                        link.active ||
+                        link.sub.some((subLink) => subLink.active)
+                          ? "1px solid #C39601"
+                          : "none", // Add border-bottom if active
+                      transition: "border-bottom 1ms",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.borderBottom = "1px solid #C39601";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (
+                        !link.active &&
+                        !link.sub.some((subLink) => subLink.active)
+                      ) {
+                        e.target.style.borderBottom = "none";
+                      }
+                    }}
+                  >
+                    {link.title}
+                  </Link>
+                  {link.sub.map((subLink) => (
+                    <Link
+                      key={subLink.to}
+                      to={subLink.to}
+                      className={`mt-0 text-white ${
+                        subLink.active ? "font-bold" : ""
+                      }`}
+                      style={{
+                        borderBottom: subLink.active
+                          ? "1px solid #C39601"
+                          : "none", // Add border-bottom if active
+                        transition: "border-bottom 1ms",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.borderBottom = "1px solid #C39601";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!subLink.active) {
+                          e.target.style.borderBottom = "none";
+                        }
+                      }}
+                    >
+                      {subLink.title}
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <Link
+                  to={link.to}
+                  className={`${
+                    Links.some((l) => l.sub)
+                      ? "text-gray-500 "
+                      : "text-white"
+                  }`}
+                  style={{
+                    // borderBottom: link.active ? "1px solid #C39601" : "none", // Add border-bottom if active
+                    borderBottom: link.active ? "1px solid #C39601" : "none", // Add border-bottom if active
+                    transition: "border-bottom 1ms",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.borderBottom = "1px solid #C39601";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!link.active) {
+                      e.target.style.borderBottom = "none";
+                    }
+                  }}
+                >
+                  {link.title}
+                </Link>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        {/* <nav className="p-1 md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400 flex flex-wrap items-center text-base justify-center z-50">
+          {Links.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`mr-4 md:mr-8 ${
+                Links.some((l) => l.sub) ? "text-gray-500" : "text-white"
+              }`}
+              style={{
+                transition: "border-bottom 1ms",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.borderBottom = "1px solid #C39601";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.borderBottom = "none";
+              }}
+            >
+              {link.title}
+            </Link>
+          ))}
+        </nav> */}
+
+        {/* <nav className="p-1 md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400 flex flex-wrap items-center text-base justify-center z-50">
           {Links.map((link) => (
             <Link
               key={link.to}
@@ -44,8 +219,9 @@ export default function Sidebar({ Links }) {
             >
               {link.title}
             </Link>
+           
           ))}
-        </nav>
+        </nav> */}
 
         <Link
           onClick={handleLogout}

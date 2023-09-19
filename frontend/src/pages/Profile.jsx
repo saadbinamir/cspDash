@@ -89,17 +89,25 @@ export default function Profile() {
 
       <div className="container mx-auto  max-w-screen-xl flex justify-center items-center mb-10">
         <Toast err={err} errState={errState} />
-        <form onSubmit={handleUpdate} className="w-full ">
-          <div className="border-b border-gray-900/10 pb-12">
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <h2 className="text-base font-semibold leading-7 text-gray-900">
+        <form
+          onSubmit={handleUpdate}
+          className="w-full rounded-2xl p-5 mt-10"
+          style={{ backgroundColor: "#2f2f2f" }}
+        >
+          <div className="border-b border-gray-400 pb-12">
+            <div className=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <h2
+                className="block mb-2 text-sm font-medium "
+                style={{ color: "#F6F6F6" }}
+              >
                 Personal Information
               </h2>
 
               <div className="sm:col-span-6">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block mb-2 text-sm font-medium "
+                  style={{ color: "#F6F6F6" }}
                 >
                   Email address
                 </label>
@@ -110,7 +118,8 @@ export default function Profile() {
                     type="email"
                     autoComplete="email"
                     disabled
-                    className="py-2 px-4 rounded-2xl border w-full"
+                    className="sm:text-sm rounded-lg  block w-full p-2.5 "
+                    style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                     value={auth.user.email}
                   />
                 </div>
@@ -118,7 +127,8 @@ export default function Profile() {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block mb-2 text-sm font-medium "
+                  style={{ color: "#F6F6F6" }}
                 >
                   Name
                 </label>
@@ -128,7 +138,8 @@ export default function Profile() {
                     name="name"
                     id="name"
                     autoComplete="given-name"
-                    className="py-2 px-4 rounded-2xl border w-full"
+                    className="sm:text-sm rounded-lg  block w-full p-2.5 "
+                    style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -137,7 +148,8 @@ export default function Profile() {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="phone"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block mb-2 text-sm font-medium "
+                  style={{ color: "#F6F6F6" }}
                 >
                   Phone #
                 </label>
@@ -147,7 +159,8 @@ export default function Profile() {
                     name="phone"
                     id="phone"
                     autoComplete="given-name"
-                    className="py-2 px-4 rounded-2xl border w-full"
+                    className="sm:text-sm rounded-lg  block w-full p-2.5 "
+                    style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
@@ -157,7 +170,8 @@ export default function Profile() {
               <div className="col-span-full">
                 <label
                   htmlFor="address"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block mb-2 text-sm font-medium "
+                  style={{ color: "#F6F6F6" }}
                 >
                   Address
                 </label>
@@ -167,7 +181,8 @@ export default function Profile() {
                     name="address"
                     id="address"
                     autoComplete="street-address"
-                    className="py-2 px-4 rounded-2xl border w-full"
+                    className="sm:text-sm rounded-lg  block w-full p-2.5 "
+                    style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
@@ -175,11 +190,12 @@ export default function Profile() {
               </div>
             </div>
           </div>
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b border-gray-900/10 pb-12">
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b border-gray-400 pb-12">
             <div className="sm:col-span-3">
               <label
                 htmlFor="new-pass"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block mb-2 text-sm font-medium "
+                style={{ color: "#F6F6F6" }}
               >
                 New Password
               </label>
@@ -189,7 +205,8 @@ export default function Profile() {
                   name="new-pass"
                   id="new-pass"
                   autoComplete="given-name"
-                  className="py-2 px-4 rounded-2xl border w-full"
+                  className="sm:text-sm rounded-lg  block w-full p-2.5 "
+                  style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                   value={newPass}
                   onChange={(e) => setnewPass(e.target.value)}
                 />
@@ -199,7 +216,8 @@ export default function Profile() {
             <div className="sm:col-span-3">
               <label
                 htmlFor="new-pass"
-                className=" text-sm font-medium leading-6 text-gray-900"
+                className="block mb-2 text-sm font-medium "
+                style={{ color: "#F6F6F6" }}
               >
                 Confirm New Password
               </label>
@@ -209,21 +227,15 @@ export default function Profile() {
                   name="new-pass"
                   id="new-pass"
                   autoComplete="given-name"
-                  className="py-2 px-4 rounded-2xl border w-full"
+                  className="sm:text-sm rounded-lg  block w-full p-2.5 "
+                  style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                   value={confirmNewPass}
                   onChange={(e) => setconfirmNewPass(e.target.value)}
                 />
               </div>
             </div>
           </div>
-          {/* <p
-              id="error"
-              className={`text-sm font-light pt-2 ${
-                errState ? "text-red-700" : "text-green-700"
-              }`}
-            >
-              {err}
-            </p> */}
+
           <div className="mt-6 flex items-center justify-end gap-x-6 ">
             <div>
               <input
@@ -231,7 +243,8 @@ export default function Profile() {
                 name="new-pass"
                 id="new-pass"
                 autoComplete="given-name"
-                className="py-2 px-4 rounded-2xl border"
+                className="sm:text-sm rounded-lg  block w-full p-2.5 "
+                style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                 placeholder="Enter your Password "
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -241,8 +254,8 @@ export default function Profile() {
               type="submit"
               className="py-2 px-4 rounded-2xl "
               style={{
-                color: "#2F2F2F",
-                transition: "1ms",
+                color: "#C39601",
+                transition: "background-color 1ms, color 1ms, border 1ms",
                 border: "2px solid #C39601",
               }}
               onMouseEnter={(e) => {

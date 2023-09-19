@@ -14,9 +14,27 @@ export default function TeamAdmin() {
   const [err, setErr] = useState("");
   const [errState, setErrState] = useState();
   const [Links, setLinks] = useState([
-    { title: "Teams", to: "/dash" },
-    { title: "Test", to: "/about_us" },
+    {
+      title: "Teams",
+      to: "/dash",
+      sub: [
+        {
+          title: "Events",
+          to: `/teams/${teamId}/admin`,
+          active: true,
+        },
+        {
+          title: "Users",
+          to: `/teams/${teamId}/admin/users`,
+        },
+      ],
+    },
+    {
+      title: "Test",
+      to: "/about_us",
+    },
   ]);
+
   return (
     <>
       <Sidebar Links={Links} />

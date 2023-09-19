@@ -15,13 +15,12 @@ import CreateAcc from "./pages/CreateAcc";
 import NotFound from "./pages/NotFound";
 
 import Dashboard from "./pages/Dashboard";
-import Users from "./pages/Users";
-import Post from "./pages/Post";
-import Insights from "./pages/Insights";
+
 import Profile from "./pages/Profile";
 
 import TeamAdmin from "./pages/TeamAdmin";
 import TeamMember from "./pages/TeamMember";
+import Users from "./pages/Users";
 
 export default function App() {
   return (
@@ -89,30 +88,8 @@ export default function App() {
             </>
           }
         />
-        <Route
-          path="/users"
-          element={
-            <PrivateRoute>
-              <Users />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/post"
-          element={
-            <PrivateRoute>
-              <Post />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/insights"
-          element={
-            <PrivateRoute>
-              <Insights />
-            </PrivateRoute>
-          }
-        />
+
+      
         <Route
           path="/profile"
           element={
@@ -137,6 +114,15 @@ export default function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/teams/:teamId/admin/users"
+          element={
+            <PrivateRoute>
+              <Users />
+            </PrivateRoute>
+          }
+        />
+       
 
         {/* Catch all */}
         <Route path="*" element={<NotFound />} />
