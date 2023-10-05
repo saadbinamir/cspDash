@@ -91,6 +91,62 @@ class eventParticipantsController extends Controller
             'message' => 'Event participant added successfully.'
         ]);
     }
+    public function removeEventParticipant(Request $request)
+    {
+        $uniqueId = $request->input('unique_id');
+        $eventTitle = $request->input('event_title');
+        $userEmail = $request->input('user_email');
+
+        // Find the team, event, and user
+        $team = Team::where('unique_id', $uniqueId)->first();
+        $event = Event::where('title', $eventTitle)->first();
+        $user = User::where('email', $userEmail)->first();
+
+        // Check if the team exists
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found.'
+            ]);
+        }
+
+        // Check if the event exists
+        if (!$event) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Event not found.'
+            ]);
+        }
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'User not found.'
+            ]);
+        }
+
+        // Find and delete the event participant
+        $eventParticipant = event_participant::where('team_id', $team->id)
+            ->where('event_id', $event->id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$eventParticipant) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Event participant not found.'
+            ]);
+        }
+
+        $eventParticipant->delete();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Event participant removed successfully.'
+        ]);
+    }
+
 
 
     public function getEventsForUserInTeam(Request $request)
@@ -105,7 +161,7 @@ class eventParticipantsController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'Team not found.'
-            ], 404);
+            ]);
         }
 
         // Find the user based on the email
@@ -115,7 +171,7 @@ class eventParticipantsController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'User not found.'
-            ], 404);
+            ]);
         }
 
         // Retrieve all events in the specified team that the user has participated in
@@ -128,7 +184,7 @@ class eventParticipantsController extends Controller
             'status' => 200,
             'message' => 'Events in team participated by the user retrieved successfully.',
             'events' => $events
-        ], 200);
+        ]);
     }
 
 

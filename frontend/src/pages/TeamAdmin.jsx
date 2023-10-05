@@ -24,6 +24,7 @@ export default function TeamAdmin() {
   const [comments, setcomments] = useState();
 
   const [events, setEvents] = useState([]);
+  const [participnts, setParticipnts] = useState([]);
 
   const [showTable, setShowTable] = useState(false);
 
@@ -34,6 +35,7 @@ export default function TeamAdmin() {
     setShowTable((prevShowTable) =>
       prevShowTable === eventTitle ? null : eventTitle
     );
+    getEventParticipants(eventTitle);
   }
 
   const [err, setErr] = useState();
@@ -171,6 +173,53 @@ export default function TeamAdmin() {
         }
       });
   }
+
+  function getEventParticipants(event_title) {
+    axios
+      .post("http://localhost:8000/api/getEventParticipants", {
+        team_unique_id: teamId,
+        event_title: event_title,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          setParticipnts(response.data.participants);
+          console.log(response.data.participants);
+        } else {
+          setErr(response.data.message);
+          setErrState(true);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        }
+      });
+  }
+
+  function removeEventParticipant(email, event_title) {
+    axios
+      .post("http://localhost:8000/api/removeEventParticipant", {
+        unique_id: teamId,
+        event_title: event_title,
+        user_email: email,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          setErr(response.data.message);
+          setErrState(false);
+          getEventParticipants(event_title);
+          // setParticipnts(response.data.participants);
+          // console.log(response.data.participants);
+        } else {
+          setErr(response.data.message);
+          setErrState(true);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        }
+      });
+  }
+
   function deleteEvent(eventTitle) {
     axios
       .post("http://localhost:8000/api/deleteEvent", {
@@ -343,6 +392,39 @@ export default function TeamAdmin() {
                               </th>
                             </tr>
                           </thead>
+                          <tbody>
+                            {participnts.map((participnt) => (
+                              <tr
+                                key={participnt.id}
+                                className={`border-b dark:border-gray-700 `}
+                                style={{ backgroundColor: "#2f2f2f" }}
+                              >
+                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                  {participnt.name}
+                                </td>
+                                <td className="px-6 py-4">
+                                  {participnt.email}
+                                </td>
+                                <td className="px-6 py-4">
+                                  {participnt.phone}
+                                </td>
+
+                                <td className="px-6 py-4">
+                                  <button
+                                    onClick={() =>
+                                      removeEventParticipant(
+                                        participnt.email,
+                                        event.title
+                                      )
+                                    }
+                                    className="text-red-700 hover:underline"
+                                  >
+                                    Remove
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
                         </table>
                       </div>
                     </>

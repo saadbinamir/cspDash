@@ -11,7 +11,7 @@ import Location from "../assets/Location";
 import Email from "../assets/Email";
 import Hours from "../assets/Hours";
 
-export default function TeamMember() {
+export default function MyEvents() {
   const { teamId } = useParams();
   const auth = useAuth();
 
@@ -27,11 +27,11 @@ export default function TeamMember() {
         {
           title: "All Events",
           to: `/teams/${teamId}`,
-          active: true,
         },
         {
           title: "My Events",
           to: `/teams/${teamId}/myEvents`,
+          active: true,
         },
       ],
     },
@@ -47,6 +47,8 @@ export default function TeamMember() {
         if (response.data.status === 201) {
           setErr(response.data.message);
           setErrState(false);
+          // setEvents(response.data.events);
+          // console.log(response.data.events);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -59,14 +61,35 @@ export default function TeamMember() {
   }
   function getEvents() {
     axios
-      .post("http://localhost:8000/api/getUnenrolledEvents", {
-        unique_id: teamId,
+      .post("http://localhost:8000/api/getEventsForUserInTeam", {
+        team_unique_id: teamId,
         user_email: auth.user.email,
       })
       .then((response) => {
         if (response.data.status === 200) {
           setEvents(response.data.events);
           console.log(response.data.events);
+        } else {
+          setErr(response.data.message);
+          setErrState(true);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        }
+      });
+  }
+  function removeEventParticipant(event_title) {
+    axios
+      .post("http://localhost:8000/api/removeEventParticipant", {
+        unique_id: teamId,
+        event_title: event_title,
+        user_email: auth.user.email,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          setErr(response.data.message);
+          setErrState(false);
           getEvents();
         } else {
           setErr(response.data.message);
@@ -78,7 +101,6 @@ export default function TeamMember() {
         }
       });
   }
-
   useEffect(() => {
     getEvents();
     // console.log(teamId);
@@ -119,7 +141,7 @@ export default function TeamMember() {
                         transition: "1ms",
                         border: "1px solid #C39601",
                       }}
-                      onClick={() => addEventParticipant(event.title)}
+                      onClick={() => removeEventParticipant(event.title)}
                       onMouseEnter={(e) => {
                         e.target.style.backgroundColor = "#C39601";
                         e.target.style.color = "#111111";
@@ -129,11 +151,7 @@ export default function TeamMember() {
                         e.target.style.color = "#C39601";
                       }}
                     >
-                      {/* {showTable ? "Hide Details" : "See Details"} */}
-                      {/* {showTable === event.title
-                        ? "Hide Details"
-                        : "See Details"} */}
-                      Participate
+                      Leave Event
                     </button>
                   </div>
                 </div>
@@ -143,7 +161,8 @@ export default function TeamMember() {
                     className="font-light text-base"
                     style={{ color: "#FAFAFA" }}
                   >
-                    {/* i don't know the description . don't mind.. wait why should I? yes phir bhi this is the description */}
+                    {/* i don't know the description . don't mind.. wait why should I?
+                  yes phir bhi this is the description */}
                     {event.comments}
                   </p>
                   <div className="flex flex-row pt-5 w-full justify-between ">

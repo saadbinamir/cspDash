@@ -172,7 +172,7 @@ export default function Users() {
                     <td className="px-6 py-4">
                       <button
                         onClick={() => RemoveMember(member.team_member_email)}
-                        className="text-yellow-500 hover:underline"
+                        className="text-red-700 hover:underline"
                       >
                         Remove
                       </button>

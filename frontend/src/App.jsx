@@ -21,6 +21,7 @@ import Profile from "./pages/Profile";
 import TeamAdmin from "./pages/TeamAdmin";
 import TeamMember from "./pages/TeamMember";
 import Users from "./pages/Users";
+import MyEvents from "./pages/MyEvents";
 
 export default function App() {
   return (
@@ -89,7 +90,6 @@ export default function App() {
           }
         />
 
-      
         <Route
           path="/profile"
           element={
@@ -122,7 +122,14 @@ export default function App() {
             </PrivateRoute>
           }
         />
-       
+        <Route
+          path="/teams/:teamId/myEvents"
+          element={
+            <PrivateRoute>
+              <MyEvents />
+            </PrivateRoute>
+          }
+        />
 
         {/* Catch all */}
         <Route path="*" element={<NotFound />} />

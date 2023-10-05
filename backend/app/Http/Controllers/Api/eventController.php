@@ -6,6 +6,7 @@ use App\Models\Team;
 use App\Models\event;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\event_participant;
 use App\Models\team_members;
 use App\Models\User;
 
@@ -152,8 +153,6 @@ class eventController extends Controller
         ]);
     }
 
-
-
     public function deleteEvent(Request $request)
     {
         $eventTitle = $request->input('event_title');
@@ -181,15 +180,100 @@ class eventController extends Controller
             ]);
         }
 
+        // Find the event participants associated with the event
+        $eventParticipants = event_participant::where('event_id', $event->id)->get();
+
+        // Delete each event participant
+        foreach ($eventParticipants as $participant) {
+            $participant->delete();
+        }
+
         // Delete the event
         $event->delete();
 
         return response()->json([
             'status' => 200,
-            'message' => 'Event deleted successfully.'
+            'message' => 'Event and its participants deleted successfully.'
         ]);
     }
 
+
+    // public function deleteEvent(Request $request)
+    // {
+    //     $eventTitle = $request->input('event_title');
+    //     $teamUniqueId = $request->input('team_unique_id');
+
+    //     // Find the team ID based on the unique_id
+    //     $team = Team::where('unique_id', $teamUniqueId)->first();
+
+    //     if (!$team) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'Team not found.'
+    //         ]);
+    //     }
+
+    //     // Find the event by its title and team ID
+    //     $event = Event::where('title', $eventTitle)
+    //         ->where('team_id', $team->id)
+    //         ->first();
+
+    //     if (!$event) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'Event not found.'
+    //         ]);
+    //     }
+
+    //     // Delete the event
+    //     $event->delete();
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         'message' => 'Event deleted successfully.'
+    //     ]);
+    // }
+
+    public function getUnenrolledEvents(Request $request)
+    {
+        $teamUniqueId = $request->input('unique_id');
+        $userEmail = $request->input('user_email');
+
+        // Find the team based on the unique_id
+        $team = Team::where('unique_id', $teamUniqueId)->first();
+
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found.'
+            ]);
+        }
+
+        // Find the user based on the email
+        $user = User::where('email', $userEmail)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'User not found.'
+            ]);
+        }
+
+        // Retrieve events in the specified team that the user is not enrolled in
+        $events = Event::where('team_id', $team->id)
+            ->whereNotIn('id', function ($query) use ($user) {
+                $query->select('event_id')
+                    ->from('event_participants')
+                    ->where('user_id', $user->id);
+            })
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Events in team not enrolled by the user retrieved successfully.',
+            'events' => $events
+        ]);
+    }
 
     public function getEventsInTeam(Request $request)
     {
@@ -213,6 +297,37 @@ class eventController extends Controller
             'message' => 'Events in team retrieved successfully.',
             'events' => $events
         ], 200);
+    }
+
+
+    public function getEventParticipants(Request $request)
+    {
+        $teamUniqueId = $request->input('team_unique_id');
+        $eventTitle = $request->input('event_title');
+
+        // Find the team based on the unique_id
+        $team = Team::where('unique_id', $teamUniqueId)->first();
+
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found.'
+            ]);
+        }
+
+        // Retrieve the list of members participating in the event
+        $participants = event_participant::join('events', 'event_participants.event_id', '=', 'events.id')
+            ->join('users', 'event_participants.user_id', '=', 'users.id')
+            ->where('events.team_id', $team->id)
+            ->where('events.title', $eventTitle)
+            ->select('users.*')
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'List of event participants retrieved successfully.',
+            'participants' => $participants
+        ]);
     }
 
 
