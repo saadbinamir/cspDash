@@ -7,6 +7,7 @@ use App\Models\event;
 use Illuminate\Http\Request;
 use App\Models\event_participant;
 use App\Http\Controllers\Controller;
+use App\Models\Team;
 use App\Models\user_credit_hour;
 
 class eventParticipantsController extends Controller
@@ -29,32 +30,109 @@ class eventParticipantsController extends Controller
     }
 
 
+
     public function addEventParticipant(Request $request)
     {
+        $unique_id = $request->input('unique_id');
         $eventTitle = $request->input('event_title');
         $userEmail = $request->input('user_email');
 
-        $event = event::where('title', $eventTitle)->first();
+        // Find the team, event, and user
+        $team = Team::where('unique_id', $unique_id)->first();
+        $event = Event::where('title', $eventTitle)->first();
         $user = User::where('email', $userEmail)->first();
 
-        if ($event && $user) {
-            // Create a new event participant
-            event_participant::create([
-                'event_id' => $event->id,
-                'user_id' => $user->id,
-                'attendance_status' => true, // Set the attendance status as needed
-            ]);
-
+        // Check if the team exists
+        if (!$team) {
             return response()->json([
-                'status' => 201,
-                'message' => 'Event participant added successfully.',
-                'event_id' => $event->id,
-                'user_email' => $user->email,
-            ], 201);
+                'status' => 404,
+                'message' => 'Team not found.'
+            ]);
         }
 
-        return response()->json(['message' => 'Event participant not added.'], 400);
+        // Check if the event exists
+        if (!$event) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Event not found.'
+            ]);
+        }
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'User not found.'
+            ]);
+        }
+
+        // Check if the user is already a participant in the event
+        $existingParticipant = event_participant::where('event_id', $event->id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if ($existingParticipant) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'User is already a participant in this event.'
+            ]);
+        }
+
+        // Create a new event participant
+        event_participant::create([
+            'team_id' => $team->id,
+            'event_id' => $event->id,
+            'user_id' => $user->id,
+            'attendance_status' => true, // Set the attendance status as needed
+        ]);
+
+        return response()->json([
+            'status' => 201,
+            'message' => 'Event participant added successfully.'
+        ]);
     }
+
+
+    public function getEventsForUserInTeam(Request $request)
+    {
+        $teamUniqueId = $request->input('team_unique_id');
+        $userEmail = $request->input('user_email');
+
+        // Find the team based on the unique_id
+        $team = Team::where('unique_id', $teamUniqueId)->first();
+
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found.'
+            ], 404);
+        }
+
+        // Find the user based on the email
+        $user = User::where('email', $userEmail)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'User not found.'
+            ], 404);
+        }
+
+        // Retrieve all events in the specified team that the user has participated in
+        $events = Event::where('events.team_id', $team->id)
+            ->join('event_participants', 'events.id', '=', 'event_participants.event_id')
+            ->where('event_participants.user_id', $user->id)
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Events in team participated by the user retrieved successfully.',
+            'events' => $events
+        ], 200);
+    }
+
+
+
 
 
 

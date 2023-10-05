@@ -45,7 +45,10 @@ Route::post('getTeamMembers', [teamMembersControllers::class, 'getTeamMembers'])
 
 Route::get('events', [eventController::class, 'eventList']);
 Route::post('createEvent', [eventController::class, 'createEvent']);
+Route::post('deleteEvent', [eventController::class, 'deleteEvent']);
+Route::post('getEventsInTeam', [eventController::class, 'getEventsInTeam']);
 
 Route::get('participants', [eventParticipantsController::class, 'participanstList']);
 Route::post('addEventParticipant', [eventParticipantsController::class, 'addEventParticipant']);
+Route::post('getEventsForUserInTeam', [eventParticipantsController::class, 'getEventsForUserInTeam']);
 Route::put('markAttendance', [eventParticipantsController::class, 'markAttendance']);

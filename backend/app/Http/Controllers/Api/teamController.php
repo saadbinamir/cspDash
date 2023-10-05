@@ -117,7 +117,12 @@ class teamController extends Controller
 
         $user = User::where('email', $email)->first();
         $team = Team::where('unique_id', $unique_id)->first();
-
+        if (!$user) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'User not found'
+            ]);
+        }
         if ($user && $team) {
             $existingMember = team_members::where('team_id', $team->id)
                 ->where('user_id', $user->id)

@@ -7,103 +7,9 @@ import JoinCreateTeam from "./JoinCreateTeam";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
-
-
   const [teamName, setteamName] = useState("");
   const [teamID, setteamID] = useState("");
   const [joinTeamID, setjoinTeamID] = useState("");
-
-  const handleCreateTeam = (e) => {
-    e.preventDefault();
-    // console.log(auth.user);
-    console.log("teamName:", teamName);
-    console.log("teamID:", teamID);
-
-    if (!teamName) {
-      setErr("Enter a team name");
-      setErrState(true);
-
-      setTimeout(() => {
-        setErr("");
-        setErrState(false);
-      }, 3000);
-    } else if (!teamID) {
-      setErr("Enter a team ID");
-      setErrState(true);
-
-      setTimeout(() => {
-        setErr("");
-        setErrState(false);
-      }, 3000);
-    } else {
-      axios
-        .post("http://localhost:8000/api/createTeam", {
-          unique_id: teamID,
-          team_name: teamName,
-          organizerEmail: auth.user.email,
-        })
-        .then((response) => {
-          if (response.data.status === 201) {
-            // setErr(response.data.message);
-            setErr(response.data.message);
-            setErrState(false);
-            setTimeout(() => {
-              setErr("");
-              setErrState(false);
-            }, 3000);
-            getMyTeams();
-          } else {
-            setErr(response.data.message);
-            setErrState(true);
-            setTimeout(() => {
-              setErr("");
-              setErrState(false);
-            }, 3000);
-          }
-        });
-    }
-  };
-
-  const handeJoin = (e) => {
-    e.preventDefault();
-    // console.log(auth.user);
-    console.log("teamID:", teamID);
-
-    if (!joinTeamID) {
-      setErr("Enter a team ID");
-      setErrState(true);
-
-      setTimeout(() => {
-        setErr("");
-        setErrState(false);
-      }, 3000);
-    } else {
-      axios
-        .post("http://localhost:8000/api/addUserToTeam", {
-          unique_id: joinTeamID,
-          email: auth.user.email,
-        })
-        .then((response) => {
-          if (response.data.status === 201) {
-            // setErr(response.data.message);
-            setErr(response.data.message);
-            setErrState(false);
-            setTimeout(() => {
-              setErr("");
-              setErrState(false);
-            }, 3000);
-            getUserTeams();
-          } else {
-            setErr(response.data.message);
-            setErrState(true);
-            setTimeout(() => {
-              setErr("");
-              setErrState(false);
-            }, 3000);
-          }
-        });
-    }
-  };
 
   const auth = useAuth();
   const [teams, setTeams] = useState([]);
@@ -160,7 +66,6 @@ export default function Dashboard() {
 
   const [Links, setLinks] = useState([
     { title: "Teams", to: "/dash", active: true },
-    { title: "Test", to: "/about_us" },
   ]);
   return (
     <>
@@ -168,22 +73,22 @@ export default function Dashboard() {
       <div className="container mx-auto max-w-screen-xl flex flex-row gap-x-10  justify-center items-start my-10">
         <Toast err={err} errState={errState} />
         <div className="flex flex-col w-full">
-          {teams.length > 0 && (
-            <div>
-              <h1
-                className="text-lg md:text-xl mt-3"
-                style={{ color: "#2f2f2f" }}
-              >
-                All Teams
-              </h1>
-              <hr />
+          <div>
+            <h1
+              className="text-lg md:text-xl mt-3"
+              style={{ color: "#2f2f2f" }}
+            >
+              All Teams
+            </h1>
+            <hr />
 
-              <div className="mt-4 flex flex-row flex-wrap gap-y-4">
-                <div
-                  className="flex flex-col items-start rounded-2xl shadow  p-5 w-full  gap-y-2 "
-                  style={{ backgroundColor: "#2f2f2f" }}
-                >
-                  {teams.map((team) => (
+            <div className="mt-4 flex flex-row flex-wrap gap-y-4">
+              <div
+                className="flex flex-col items-start rounded-2xl shadow  p-5 w-full  gap-y-2 "
+                style={{ backgroundColor: "#2f2f2f" }}
+              >
+                {teams.length > 0 &&
+                  teams.map((team) => (
                     <Link
                       key={team.team_unique_id}
                       to={`/teams/${team.team_unique_id}`}
@@ -229,28 +134,28 @@ export default function Dashboard() {
                       </div>
                     </Link>
                   ))}
-                </div>
               </div>
             </div>
-          )}
+          </div>
 
           {/* my teams */}
-          {MyTeams.length > 0 && (
-            <div className="mt-10">
-              <h1
-                className="text-lg md:text-xl mt-3"
-                style={{ color: "#2f2f2f" }}
-              >
-                My Teams
-              </h1>
-              <hr />
 
-              <div className="mt-4 flex flex-row flex-wrap gap-y-4">
-                <div
-                  className="flex flex-col items-start rounded-2xl shadow  p-5 w-full  gap-y-2 "
-                  style={{ backgroundColor: "#2f2f2f" }}
-                >
-                  {MyTeams.map((team) => (
+          <div className="mt-10">
+            <h1
+              className="text-lg md:text-xl mt-3"
+              style={{ color: "#2f2f2f" }}
+            >
+              My Teams
+            </h1>
+            <hr />
+
+            <div className="mt-4 flex flex-row flex-wrap gap-y-4">
+              <div
+                className="flex flex-col items-start rounded-2xl shadow  p-5 w-full  gap-y-2 "
+                style={{ backgroundColor: "#2f2f2f" }}
+              >
+                {MyTeams.length > 0 &&
+                  MyTeams.map((team) => (
                     <Link
                       key={team.team_unique_id}
                       to={`/teams/${team.team_unique_id}/admin`}
@@ -296,10 +201,9 @@ export default function Dashboard() {
                       </div>
                     </Link>
                   ))}
-                </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
         {/* <JoinCreateTeam /> */}
         <JoinCreateTeam getMyTeams={getMyTeams} getUserTeams={getUserTeams} />
