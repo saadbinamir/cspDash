@@ -35,8 +35,9 @@ Route::post('createTeam', [teamController::class, 'createTeam']);
 Route::post('addUserToTeam', [teamController::class, 'addUserToTeam']);
 Route::post('getUserTeams', [teamController::class, 'getUserTeams']);
 Route::post('getMyTeams', [teamController::class, 'getMyTeams']);
-Route::delete('deleteTeam', [teamController::class, 'deleteTeam']);
+Route::post('deleteTeam', [teamController::class, 'deleteTeam']);
 Route::delete('removeUserFromTeam', [teamController::class, 'removeUserFromTeam']);
+Route::post('getTeamDetails', [teamController::class, 'getTeamDetails']);
 
 Route::get('members', [teamMembersControllers::class, 'membersList']);
 Route::post('getTeamMembers', [teamMembersControllers::class, 'getTeamMembers']);
@@ -49,6 +50,7 @@ Route::post('deleteEvent', [eventController::class, 'deleteEvent']);
 Route::post('getEventsInTeam', [eventController::class, 'getEventsInTeam']);
 Route::post('getEventParticipants', [eventController::class, 'getEventParticipants']);
 Route::post('getUnenrolledEvents', [eventController::class, 'getUnenrolledEvents']);
+Route::post('getCoordinatorEvent', [eventController::class, 'getCoordinatorEvent']);
 
 
 

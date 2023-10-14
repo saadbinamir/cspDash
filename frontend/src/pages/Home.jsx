@@ -26,7 +26,7 @@ export default function Home() {
             <div className="flex justify-center">
               <Link
                 to={"/create_acc"}
-                class=" py-2 px-4 rounded-2xl "
+                className=" py-2 px-4 rounded-2xl "
                 style={{
                   color: "#C39601",
                   transition: "1ms",

@@ -215,7 +215,7 @@ export default function Profile() {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="new-pass"
+                htmlFor="confirm-new-pass"
                 className="block mb-2 text-sm font-medium "
                 style={{ color: "#F6F6F6" }}
               >
@@ -224,8 +224,8 @@ export default function Profile() {
               <div className="mt-2">
                 <input
                   type="password"
-                  name="new-pass"
-                  id="new-pass"
+                  name="confirm-new-pass"
+                  id="confirm-new-pass"
                   autoComplete="given-name"
                   className="sm:text-sm rounded-lg  block w-full p-2.5 "
                   style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
@@ -240,9 +240,9 @@ export default function Profile() {
             <div>
               <input
                 type="password"
-                name="new-pass"
-                id="new-pass"
-                autoComplete="given-name"
+                // name="new-pass"
+                // id="new-pass"
+                // autoComplete="given-name"
                 className="sm:text-sm rounded-lg  block w-full p-2.5 "
                 style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                 placeholder="Enter your Password "

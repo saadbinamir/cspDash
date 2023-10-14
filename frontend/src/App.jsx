@@ -23,6 +23,8 @@ import TeamMember from "./pages/TeamMember";
 import Users from "./pages/Users";
 import MyEvents from "./pages/MyEvents";
 
+import TeamDetA from "./common/TeamDetA";
+
 export default function App() {
   return (
     <AuthProvider>
@@ -130,6 +132,14 @@ export default function App() {
             </PrivateRoute>
           }
         />
+        {/* <Route
+          path="/teams/:teamId/admin"
+          element={
+            <PrivateRoute>
+              <TeamDetA />
+            </PrivateRoute>
+          }
+        /> */}
 
         {/* Catch all */}
         <Route path="*" element={<NotFound />} />

@@ -10,55 +10,17 @@ import Date from "../assets/date";
 import Location from "../assets/Location";
 import Email from "../assets/Email";
 import Hours from "../assets/Hours";
-
+import TeamDetM from "../common/TeamDetM";
 export default function MyEvents() {
   const { teamId } = useParams();
   const auth = useAuth();
-
+  const [totalEvents, settotalEvents] = useState(0);
+  const [myEvents, setmyEvents] = useState(0);
   const [err, setErr] = useState("");
   const [errState, setErrState] = useState();
 
   const [events, setEvents] = useState([]);
-  const [Links, setLinks] = useState([
-    {
-      title: "Teams",
-      to: "/dash",
-      sub: [
-        {
-          title: "All Events",
-          to: `/teams/${teamId}`,
-        },
-        {
-          title: "My Events",
-          to: `/teams/${teamId}/myEvents`,
-          active: true,
-        },
-      ],
-    },
-  ]);
-  function addEventParticipant(event_title) {
-    axios
-      .post("http://localhost:8000/api/addEventParticipant", {
-        unique_id: teamId,
-        event_title: event_title,
-        user_email: auth.user.email,
-      })
-      .then((response) => {
-        if (response.data.status === 201) {
-          setErr(response.data.message);
-          setErrState(false);
-          // setEvents(response.data.events);
-          // console.log(response.data.events);
-        } else {
-          setErr(response.data.message);
-          setErrState(true);
-          setTimeout(() => {
-            setErr("");
-            setErrState(false);
-          }, 3000);
-        }
-      });
-  }
+
   function getEvents() {
     axios
       .post("http://localhost:8000/api/getEventsForUserInTeam", {
@@ -69,6 +31,7 @@ export default function MyEvents() {
         if (response.data.status === 200) {
           setEvents(response.data.events);
           console.log(response.data.events);
+          setmyEvents(response.data.events.length);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -107,9 +70,10 @@ export default function MyEvents() {
   }, []);
   return (
     <>
-      <Sidebar Links={Links} />
+      <Sidebar />
       <Toast err={err} errState={errState} />
-      <div className="container mx-auto max-w-screen-xl flex flex-row gap-x-10  justify-center items-start my-10">
+      <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10  my-10 mt-10">
+        <TeamDetM totalEvents={totalEvents} myEvents={myEvents} />
         <div className="flex flex-col w-full gap-y-10">
           {/* <h1>Team member Page for Team ID: {teamId}</h1> */}
 

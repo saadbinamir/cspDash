@@ -198,41 +198,6 @@ class eventController extends Controller
     }
 
 
-    // public function deleteEvent(Request $request)
-    // {
-    //     $eventTitle = $request->input('event_title');
-    //     $teamUniqueId = $request->input('team_unique_id');
-
-    //     // Find the team ID based on the unique_id
-    //     $team = Team::where('unique_id', $teamUniqueId)->first();
-
-    //     if (!$team) {
-    //         return response()->json([
-    //             'status' => 404,
-    //             'message' => 'Team not found.'
-    //         ]);
-    //     }
-
-    //     // Find the event by its title and team ID
-    //     $event = Event::where('title', $eventTitle)
-    //         ->where('team_id', $team->id)
-    //         ->first();
-
-    //     if (!$event) {
-    //         return response()->json([
-    //             'status' => 404,
-    //             'message' => 'Event not found.'
-    //         ]);
-    //     }
-
-    //     // Delete the event
-    //     $event->delete();
-
-    //     return response()->json([
-    //         'status' => 200,
-    //         'message' => 'Event deleted successfully.'
-    //     ]);
-    // }
 
     public function getUnenrolledEvents(Request $request)
     {
@@ -331,40 +296,41 @@ class eventController extends Controller
     }
 
 
+    public function getCoordinatorEvent(Request $request)
+    {
+        $userEmail = $request->input('user_email');
+        $teamUniqueId = $request->input('team_unique_id');
 
+        // Find the user based on the email
+        $user = User::where('email', $userEmail)->first();
 
+        if (!$user) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'User not found.'
+            ]);
+        }
 
-    // public function getEventsForMember(Request $request)
-    // {
-    //     // Get the email and team_unique_id from the request
-    //     $email = $request->input('email');
-    //     $teamUniqueId = $request->input('team_unique_id');
+        // Retrieve all events in the specified team where the user is the coordinator
+        $events = Event::where('team_id', function ($query) use ($teamUniqueId) {
+            $query->select('id')
+                ->from('teams')
+                ->where('unique_id', $teamUniqueId);
+        })
+            ->where('coordinator_email', $user->email)
+            ->get();
 
-    //     // Find the team based on the unique_id
-    //     $team = Team::where('unique_id', $teamUniqueId)->first();
+        if ($events->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No events found where the user is the coordinator in the specified team.'
+            ]);
+        }
 
-    //     if (!$team) {
-    //         return response()->json([
-    //             'status' => 404,
-    //             'message' => 'Team not found.'
-    //         ], 404);
-    //     }
-
-    //     // Retrieve all events in the team
-    //     $events = Event::where('team_id', $team->id)->get();
-
-    //     // If the user is not an admin, filter events to show only those posted by the admin
-    //     // with a matching coordinator_email
-    //     if (!$user->isAdmin($team->id)) {
-    //         $events = $events->filter(function ($event) use ($email) {
-    //             return $event->coordinator_email === $email;
-    //         });
-    //     }
-
-    //     return response()->json([
-    //         'status' => 200,
-    //         'events' => $events,
-    //     ]);
-    // }
-
+        return response()->json([
+            'status' => 200,
+            'message' => 'Coordinator events retrieved successfully.',
+            'events' => $events
+        ]);
+    }
 }

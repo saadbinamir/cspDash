@@ -129,7 +129,7 @@ export default function Dashboard() {
                           <span className=" text-base font-light mr-4">
                             Total members:
                           </span>
-                          &nbsp;{team.number_of_members}
+                          &nbsp;{team.number_of_members - 1}
                         </p>
                       </div>
                     </Link>
@@ -196,7 +196,7 @@ export default function Dashboard() {
                           <span className=" text-base font-light mr-4">
                             Total members:
                           </span>
-                          &nbsp;{team.number_of_members}
+                          &nbsp;{team.number_of_members - 1}
                         </p>
                       </div>
                     </Link>

@@ -4,7 +4,7 @@ import Logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 import { useAuth } from "../utils/Auth";
 
-export default function Sidebar({ Links }) {
+export default function Sidebar() {
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -33,9 +33,25 @@ export default function Sidebar({ Links }) {
             </span>
           </Link>
 
-          <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
-            {Links.map((link) => (
-              <div key={link.to} className="mr-4 md:mr-8">
+          <nav className="md:ml-auto md:mx-auto flex flex-wrap items-center text-base justify-center gap-x-10">
+            <Link
+              to={"/dash"}
+              className={"text-white"}
+              style={{
+                transition: "border-bottom 1ms",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.borderBottom = "1px solid #C39601";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.borderBottom = "none";
+              }}
+            >
+              {/* {link.title} */}
+              Teams
+            </Link>
+            {/* {Links.map((link) => (
+              <div key={link.to} className="">
                 {link.sub ? (
                   <div className="flex items-center gap-x-10">
                     <Link
@@ -117,7 +133,7 @@ export default function Sidebar({ Links }) {
                   </Link>
                 )}
               </div>
-            ))}
+            ))} */}
           </nav>
 
           <Link

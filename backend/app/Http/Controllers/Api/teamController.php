@@ -9,6 +9,8 @@ use App\Models\team_members;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\event;
+use App\Models\event_participant;
 
 class teamController extends Controller
 {
@@ -92,12 +94,14 @@ class teamController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'Team not found or unauthorized to delete',
-            ], 404);
+            ]);
         }
 
         // Delete associated user roles and team members
         user_roles::where('team_id', $team->id)->delete();
         team_members::where('team_id', $team->id)->delete();
+        event::where('team_id', $team->id)->delete();
+        event_participant::where('team_id', $team->id)->delete();
 
         // Delete the team itself
         $team->delete();
@@ -105,7 +109,7 @@ class teamController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Team deleted successfully',
-        ], 200);
+        ]);
     }
 
 
@@ -188,66 +192,34 @@ class teamController extends Controller
                 user_roles::where('team_id', $team->id)
                     ->where('user_id', $user->id)
                     ->delete();
+                team_members::where('team_id', $team->id)
+                    ->where('user_id', $user->id)
+                    ->delete();
+                event_participant::where('team_id', $team->id)
+                    ->where('user_id', $user->id)
+                    ->delete();
 
                 return response()->json([
                     'status' => 200,
                     'message' => 'User removed from the team.'
-                ], 200);
+                ]);
             } else {
                 return response()->json([
                     'status' => 400,
                     'message' => 'User is not a member of the team.'
-                ], 400);
+                ]);
             }
         } else {
             return response()->json([
                 'status' => 404,
                 'message' => 'User or team not found.'
-            ], 404);
+            ]);
         }
     }
 
 
 
 
-
-    // public function getUserTeams(Request $request)
-    // {
-    //     $userEmail = $request->input('user_email');
-
-    //     // Retrieve the user
-    //     $user = User::where('email', $userEmail)->first();
-
-    //     if (!$user) {
-    //         return response()->json([
-    //             'status' => 404,
-    //             'message' => 'User not found'
-    //         ]);
-    //     }
-
-    //     // Retrieve teams where the user has a 'Member' role
-    //     $teams = Team::select(
-    //         'teams.team_name',
-    //         'teams.unique_id as team_unique_code',
-    //         'users.name as organizer_name'
-    //     )
-    //         ->join('user_roles', function ($join) {
-    //             $join->on('teams.id', '=', 'user_roles.team_id')
-    //                 ->where('user_roles.role_id', '=', 3);
-    //         })
-    //         ->join('users', 'teams.organizer_id', '=', 'users.id')
-    //         ->where('user_roles.user_id', $user->id)
-    //         ->get();
-
-    //     $teams->each(function ($team) {
-    //         $team->total_members = user_roles::where('team_id', $team->id)->count();
-    //     });
-
-    //     return response()->json([
-    //         'status' => 200,
-    //         'teams' => $teams
-    //     ]);
-    // }
 
 
 
@@ -327,6 +299,47 @@ class teamController extends Controller
         return response()->json([
             'status' => 200,
             'teams' => $teams
+        ]);
+    }
+
+
+
+
+
+
+
+    public function getTeamDetails(Request $request)
+    {
+        $teamUniqueId = $request->input('team_unique_id');
+
+        $teamDetails = DB::table('teams')
+            ->select(
+                'teams.team_name as team_name',
+                'teams.unique_id as team_unique_id',
+                'users.name as organizer_name',
+                'users.email as organizer_email',
+                DB::raw('COUNT(DISTINCT events.id) as number_of_events'),
+                DB::raw('COUNT(DISTINCT team_members.id) as number_of_members')
+            )
+
+            ->join('users', 'teams.organizer_id', '=', 'users.id')
+            ->leftJoin('events', 'teams.id', '=', 'events.team_id')
+            ->leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
+            ->where('teams.unique_id', $teamUniqueId)
+            ->groupBy('teams.id', 'users.id')
+            ->first();
+
+        if (!$teamDetails) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found.'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Team details retrieved successfully.',
+            'team_details' => $teamDetails
         ]);
     }
 }
