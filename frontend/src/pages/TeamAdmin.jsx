@@ -274,7 +274,7 @@ export default function TeamAdmin() {
         <TeamDetA key={key} />
 
         <div className=" flex flex-row gap-x-10  justify-center items-start">
-          <div className="flex flex-col w-8/12 gap-y-10">
+          <div className="flex flex-col w-8/12 gap-y-5">
             {events && events.length > 0 ? (
               events.map((event) => (
                 <div

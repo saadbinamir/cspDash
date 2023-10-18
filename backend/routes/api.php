@@ -59,5 +59,5 @@ Route::post('getCoordinatorEvent', [eventController::class, 'getCoordinatorEvent
 Route::get('participants', [eventParticipantsController::class, 'participanstList']);
 Route::post('addEventParticipant', [eventParticipantsController::class, 'addEventParticipant']);
 Route::post('getEventsForUserInTeam', [eventParticipantsController::class, 'getEventsForUserInTeam']);
-Route::put('markAttendance', [eventParticipantsController::class, 'markAttendance']);
+Route::post('markAttendance', [eventParticipantsController::class, 'markAttendance']);
 Route::post('removeEventParticipant', [eventParticipantsController::class, 'removeEventParticipant']);

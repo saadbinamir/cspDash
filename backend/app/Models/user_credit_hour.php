@@ -12,6 +12,7 @@ class user_credit_hour extends Model
     protected $fillable = [
         'user_id',
         'event_id',
-        'credit_hours'
+        'credit_hours',
+        'team_id'
     ];
 }

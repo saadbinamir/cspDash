@@ -9,9 +9,7 @@ import Copy from "../assets/copy";
 import TeamAdmin from "../pages/TeamAdmin";
 import Users from "../pages/Users";
 
-export default function TeamDetM({ totalEvents, myEvents }) {
-  const { totalE } = totalEvents;
-  const { myE } = myEvents;
+export default function TeamDetM() {
   const { teamId } = useParams();
   const auth = useAuth();
   const navigate = useNavigate();
@@ -178,7 +176,7 @@ export default function TeamDetM({ totalEvents, myEvents }) {
               e.target.style.borderBottom = "none";
             }}
           >
-            {totalEvents} All Events
+            All Events
           </Link>
           <Link
             to={`/teams/${teamId}/myEvents`}
@@ -195,7 +193,24 @@ export default function TeamDetM({ totalEvents, myEvents }) {
               e.target.style.borderBottom = "none";
             }}
           >
-            {myEvents} My Events
+            My Events
+          </Link>
+          <Link
+            to={`/teams/${teamId}/coordinatorEvents`}
+            // onClick={() => setSelectedTab("members")}
+            className="text-white  flex items-center"
+            style={{
+              borderBottom: "none",
+              transition: "border-bottom 1ms",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.borderBottom = "1px solid #C39601";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.borderBottom = "none";
+            }}
+          >
+            Coordinator Events
           </Link>
         </nav>
       </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Lottie from "lottie-react";
 import help from "../assets/help.json";
 import axios from "axios";
+import Toast from "../common/Toast";
 
 // import NavBar from "../common/NavBar";
 // import Footer from "../common/Footer";
@@ -29,18 +30,38 @@ export default function CreateAcc() {
     if (name == "") {
       setErr("Enter a valid Name");
       setErrState(true);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
     } else if (email === "") {
       setErr("Enter a valid Email");
       setErrState(true);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
     } else if (phone === "") {
       setErr("Enter a valid Phone #");
       setErrState(true);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
     } else if (password == "") {
       setErr("Enter a valid Password");
       setErrState(true);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
     } else if (Cpassword != password) {
       setErr("Passwords do not match");
-      setErrState(true);
+      setErrState(false);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
     } else {
       // setErr("Success");
       // setErrState(false);
@@ -55,26 +76,21 @@ export default function CreateAcc() {
         .then((response) => {
           if (response.data.status === 201) {
             // setErr(response.data.message);
-            setErr(
-              <p>
-                Account created sucessfully, please
-                <Link
-                  to={"/login"}
-                  className="mx-1 underline"
-                  // style={{ color: "#C39601" }}
-                >
-                  Sign In
-                </Link>
-                to continue.
-              </p>
-            );
+            setErr("Account Created Succesfully. Please Login to continue");
             setErrState(false);
-
+            setTimeout(() => {
+              setErr("");
+              setErrState(false);
+            }, 3000);
             // auth.login(response.data.user);
             // navigate(redirectPath, { replace: true });
           } else {
             setErr(response.data.message);
             setErrState(true);
+            setTimeout(() => {
+              setErr("");
+              setErrState(false);
+            }, 3000);
           }
         });
     }
@@ -83,6 +99,7 @@ export default function CreateAcc() {
   return (
     <>
       {/* <NavBar /> */}
+      <Toast err={err} errState={errState} />
       <div className="flex h-screen" style={{ backgroundColor: "#F6F6F6" }}>
         <div className="w-1/2">
           <div className="flex flex-col items-center justify-center px-6  mx-auto md:h-screen lg:py-0 ">
@@ -200,14 +217,14 @@ export default function CreateAcc() {
                       value={Cpassword}
                       onChange={(e) => setCPassword(e.target.value)}
                     />
-                    <p
+                    {/* <p
                       id="error"
                       className={`text-sm font-light pt-2 ${
                         errState ? "text-red-700" : "text-green-700"
                       }`}
                     >
                       {err}
-                    </p>
+                    </p> */}
                   </div>
 
                   <button

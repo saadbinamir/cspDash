@@ -22,7 +22,7 @@ import TeamAdmin from "./pages/TeamAdmin";
 import TeamMember from "./pages/TeamMember";
 import Users from "./pages/Users";
 import MyEvents from "./pages/MyEvents";
-
+import CoordinatorEvents from "./pages/CoordinatorEvents";
 import TeamDetA from "./common/TeamDetA";
 
 export default function App() {
@@ -132,14 +132,14 @@ export default function App() {
             </PrivateRoute>
           }
         />
-        {/* <Route
-          path="/teams/:teamId/admin"
+        <Route
+          path="/teams/:teamId/coordinatorEvents"
           element={
             <PrivateRoute>
-              <TeamDetA />
+              <CoordinatorEvents />
             </PrivateRoute>
           }
-        /> */}
+        />
 
         {/* Catch all */}
         <Route path="*" element={<NotFound />} />

@@ -193,90 +193,57 @@ class eventParticipantsController extends Controller
 
 
 
+
     public function markAttendance(Request $request)
     {
         $eventTitle = $request->input('event_title');
-        $studentEmail = $request->input('user_email');
+        $studentEmails = $request->input('user_email');
+        $team_id = $request->input('team_id');
 
         // Find the event by title
         $event = Event::where('title', $eventTitle)->first();
+        $team = Team::where('unique_id', $team_id)->first();
 
         if (!$event) {
-            return response()->json(['message' => 'Event not found'], 404);
+            return response()->json([
+                'status' => 404,
+                'message' => 'Event not found'
+            ]);
+        }
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'team not found'
+            ]);
         }
 
-        // Loop through each absent student email and update attendance
-        foreach ($studentEmail as $email) {
-            $user = User::where('email', $email)->first();
+        // Get all participants for the event
+        $participants = event_participant::where('event_id', $event->id)
+            ->where('team_id', $team->id)
+            ->get();
 
-            if ($user) {
-                // Check if the user is already marked as attending the event
-                $participant = event_participant::where('event_id', $event->id)
-                    ->where('user_id', $user->id)
-                    ->first();
+        // Loop through all participants
+        foreach ($participants as $participant) {
+            // Check if the participant's email is in the array
+            $email = User::find($participant->user_id)->email;
+            $isAbsent = in_array($email, $studentEmails);
+            $participant->attendance_status = !$isAbsent;
+            $participant->save();
 
-                if ($participant) {
-                    // Update attendance status to false for absent students
-                    $participant->attendance_status = false;
-                    $participant->save();
-
-                    // Update credit hours to 0 for absent students
-                    user_credit_hour::where('user_id', $user->id)
-                        ->where('event_id', $event->id)
-                        ->update(['credit_hours' => 0]);
-                }
-            }
+            // Find the user_credit_hour record or create a new one if it doesn't exist
+            $creditHour = user_credit_hour::updateOrCreate(
+                [
+                    'user_id' => $participant->user_id,
+                    'event_id' => $event->id,
+                    'team_id' => $team->id,
+                ],
+                ['credit_hours' => $isAbsent ? 0 : $event->credit_hours]
+            );
         }
 
-        return response()->json(['message' => 'Attendance updated for absent students']);
+        return response()->json([
+            'status' => 200,
+            'message' => 'Attendance Marked'
+        ]);
     }
 }
-
-
-
-// $eventTitle = $request->input('event_title');
-// $studentEmail = $request->input('user_email');
-
-// // Find the event by title
-// $event = Event::where('title', $eventTitle)->first();
-
-// if (!$event) {
-//     return response()->json(['message' => 'Event not found'], 404);
-// }
-
-// // Loop through each student email and mark attendance
-// foreach ($studentEmail as $email) {
-//     $user = User::where('email', $email)->first();
-
-//     if ($user) {
-//         $attendanceStatus = false; // Set initial attendance status to false
-
-//         // Check if the user is already marked as attending the event
-//         $participant = event_participant::where('event_id', $event->id)
-//             ->where('user_id', $user->id)
-//             ->first();
-
-//         if ($participant) {
-//             // Update attendance status to true
-//             $attendanceStatus = true;
-//             $participant->attendance_status = true;
-//             $participant->save();
-//         } else {
-//             // Add the user as a participant with attendance status true
-//             event_participant::create([
-//                 'event_id' => $event->id,
-//                 'user_id' => $user->id,
-//                 'attendance_status' => true,
-//             ]);
-//         }
-
-//         // Update credit hours for the user
-//         user_credit_hour::create([
-//             'user_id' => $user->id,
-//             'event_id' => $event->id,
-//             'credit_hours' => $event->credit_hours,
-//         ]);
-//     }
-// }
-
-// return response()->json(['message' => 'Attendance marked and credit hours updated successfully']);

@@ -265,6 +265,38 @@ class eventController extends Controller
     }
 
 
+    // public function getEventParticipants(Request $request)
+    // {
+    //     $teamUniqueId = $request->input('team_unique_id');
+    //     $eventTitle = $request->input('event_title');
+
+    //     // Find the team based on the unique_id
+    //     $team = Team::where('unique_id', $teamUniqueId)->first();
+
+    //     if (!$team) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'Team not found.'
+    //         ]);
+    //     }
+
+    //     // Retrieve the list of members participating in the event
+    //     $participants = event_participant::join('events', 'event_participants.event_id', '=', 'events.id')
+    //         ->join('users', 'event_participants.user_id', '=', 'users.id')
+    //         ->where('events.team_id', $team->id)
+    //         ->where('events.title', $eventTitle)
+    //         ->select('users.*')
+    //         ->get();
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         'message' => 'List of event participants retrieved successfully.',
+    //         'participants' => $participants
+    //     ]);
+    // }
+
+
+
     public function getEventParticipants(Request $request)
     {
         $teamUniqueId = $request->input('team_unique_id');
@@ -280,12 +312,12 @@ class eventController extends Controller
             ]);
         }
 
-        // Retrieve the list of members participating in the event
+        // Retrieve the list of members participating in the event with their attendance status
         $participants = event_participant::join('events', 'event_participants.event_id', '=', 'events.id')
             ->join('users', 'event_participants.user_id', '=', 'users.id')
             ->where('events.team_id', $team->id)
             ->where('events.title', $eventTitle)
-            ->select('users.*')
+            ->select('users.*', 'event_participants.attendance_status')
             ->get();
 
         return response()->json([
@@ -294,7 +326,6 @@ class eventController extends Controller
             'participants' => $participants
         ]);
     }
-
 
     public function getCoordinatorEvent(Request $request)
     {
