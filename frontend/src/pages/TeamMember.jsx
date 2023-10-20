@@ -6,7 +6,7 @@ import Toast from "../common/Toast";
 import JoinCreateTeam from "./JoinCreateTeam";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import Date from "../assets/date";
+import Dat from "../assets/date";
 import Location from "../assets/Location";
 import Email from "../assets/Email";
 import Hours from "../assets/Hours";
@@ -66,7 +66,7 @@ export default function TeamMember() {
 
   useEffect(() => {
     getEvents();
-    // console.log(teamId);
+    console.log(new Date());
   }, []);
   return (
     <>
@@ -80,7 +80,7 @@ export default function TeamMember() {
           {events && events.length > 0 ? (
             events.map((event) => (
               <div
-                key={event.EventTitle}
+                key={event.title}
                 className="flex flex-col rounded-2xl shadow w-full  "
                 style={{ backgroundColor: "#2f2f2f" }}
               >
@@ -114,12 +114,11 @@ export default function TeamMember() {
                         e.target.style.backgroundColor = "initial";
                         e.target.style.color = "#C39601";
                       }}
+                      disabled={new Date(event.date) < new Date()}
                     >
-                      {/* {showTable ? "Hide Details" : "See Details"} */}
-                      {/* {showTable === event.title
-                        ? "Hide Details"
-                        : "See Details"} */}
-                      Participate
+                      {new Date(event.date) < new Date()
+                        ? "Locked"
+                        : "Participate"}
                     </button>
                   </div>
                 </div>
@@ -138,7 +137,7 @@ export default function TeamMember() {
                       style={{ color: "#FAFAFA" }}
                     >
                       <span className=" text-base font-light mr-2">
-                        <Date />
+                        <Dat />
                       </span>
                       {/* 18-04-2023 */}
                       {event.date}

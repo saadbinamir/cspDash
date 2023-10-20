@@ -4,7 +4,7 @@ import Sidebar from "../common/Sidebar";
 import { useAuth } from "../utils/Auth";
 import Toast from "../common/Toast";
 import { useParams } from "react-router-dom";
-import Date from "../assets/date";
+import Dat from "../assets/date";
 import Location from "../assets/Location";
 import Email from "../assets/Email";
 import Hours from "../assets/Hours";
@@ -144,12 +144,20 @@ export default function CoordinatorEvents() {
                     </h5>
                   </div>
                   <div className="flex flex-row space-x-5">
-                    <button
+                    {new Date(event.date) > new Date() && (
+                      <button
+                        className="text-green-700 hover:underline"
+                        onClick={() => saveAttendance(event.title)}
+                      >
+                        Save
+                      </button>
+                    )}
+                    {/* <button
                       className="text-green-700 hover:underline"
                       onClick={() => saveAttendance(event.title)}
                     >
                       Save
-                    </button>
+                    </button> */}
                     <button
                       className="py-1 px-4 rounded-2xl"
                       style={{
@@ -166,8 +174,11 @@ export default function CoordinatorEvents() {
                         e.target.style.backgroundColor = "initial";
                         e.target.style.color = "#C39601";
                       }}
+                      disabled={new Date(event.date) < new Date()}
                     >
-                      Mark Attendance
+                      {new Date(event.date) < new Date()
+                        ? "Locked"
+                        : "Mark Attendance"}
                     </button>
                   </div>
                 </div>
@@ -185,7 +196,7 @@ export default function CoordinatorEvents() {
                       style={{ color: "#FAFAFA" }}
                     >
                       <span className=" text-base font-light mr-2">
-                        <Date />
+                        <Dat />
                       </span>
                       {event.date}
                     </p>

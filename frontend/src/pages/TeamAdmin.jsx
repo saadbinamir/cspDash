@@ -6,7 +6,7 @@ import Toast from "../common/Toast";
 import JoinCreateTeam from "./JoinCreateTeam";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import Date from "../assets/date";
+import Dat from "../assets/date";
 import Location from "../assets/Location";
 import Email from "../assets/Email";
 import Hours from "../assets/Hours";
@@ -40,35 +40,6 @@ export default function TeamAdmin() {
 
   const [err, setErr] = useState();
   const [errState, setErrState] = useState();
-  const [Links, setLinks] = useState([
-    {
-      title: "Events",
-      to: `/teams/${teamId}/admin`,
-      active: true,
-    },
-    {
-      title: "Users",
-      to: `/teams/${teamId}/admin/users`,
-    },
-  ]);
-  // const [Links, setLinks] = useState([
-  //   {
-  //     title: "Teams",
-  //     to: "/dash",
-  //     sub: [
-  //       {
-  //         title: "Events",
-  //         to: `/teams/${teamId}/admin`,
-  //         active: true,
-  //       },
-  //       {
-  //         title: "Users",
-  //         to: `/teams/${teamId}/admin/users`,
-  //       },
-  //     ],
-  //   },
-  //   {},
-  // ]);
 
   const createEvent = (e) => {
     e.preventDefault();
@@ -80,8 +51,8 @@ export default function TeamAdmin() {
         setErr("");
         setErrState(false);
       }, 3000);
-    } else if (!EventDate) {
-      setErr("Enter Event Date");
+    } else if (new Date(EventDate) < new Date()) {
+      setErr("Enter a Valid Date");
       setErrState(true);
 
       setTimeout(() => {
@@ -330,7 +301,6 @@ export default function TeamAdmin() {
                           e.target.style.color = "#C39601";
                         }}
                       >
-                        {/* {showTable ? "Hide Details" : "See Details"} */}
                         {showTable === event.title
                           ? "Hide Details"
                           : "See Details"}
@@ -353,9 +323,9 @@ export default function TeamAdmin() {
                         style={{ color: "#FAFAFA" }}
                       >
                         <span className=" text-base font-light mr-2">
-                          <Date />
+                          <Dat />
                         </span>
-                        {/* 18-04-2023 */}
+                        {/* 18-04-2001 */}
                         {event.date}
                       </p>
                       <p
@@ -505,6 +475,7 @@ export default function TeamAdmin() {
                     </label>
                     <input
                       type="date"
+                      min={new Date()}
                       name="EventDate"
                       id="EventDate"
                       className="sm:text-sm rounded-2xl w-full px-4 py-2"
@@ -514,7 +485,18 @@ export default function TeamAdmin() {
                         colorScheme: "dark",
                       }}
                       value={EventDate}
-                      onChange={(e) => setEventDate(e.target.value)}
+                      onChange={(e) => {
+                        setEventDate(e.target.value);
+                        if (new Date(e.target.value) < new Date()) {
+                          setErr("Enter a Valid Date");
+                          setErrState(true);
+
+                          setTimeout(() => {
+                            setErr("");
+                            setErrState(false);
+                          }, 3000);
+                        }
+                      }}
                     />
                   </div>
                   <div>

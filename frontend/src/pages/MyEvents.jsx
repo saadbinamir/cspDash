@@ -6,7 +6,7 @@ import Toast from "../common/Toast";
 import JoinCreateTeam from "./JoinCreateTeam";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import Date from "../assets/date";
+import Dat from "../assets/date";
 import Location from "../assets/Location";
 import Email from "../assets/Email";
 import Hours from "../assets/Hours";
@@ -19,6 +19,14 @@ export default function MyEvents() {
   const [errState, setErrState] = useState();
 
   const [events, setEvents] = useState([]);
+
+  // Get the current date in the format 'YYYY-MM-DD'
+  // const currentDate = new Date().toISOString().split("T")[0];
+
+  // // Function to check if the event date has passed
+  // const isEventDatePassed = (date) => {
+  //   return date < currentDate;
+  // };
 
   function getEvents() {
     axios
@@ -64,7 +72,7 @@ export default function MyEvents() {
   }
   useEffect(() => {
     getEvents();
-    // console.log(teamId);
+    // console.log(new Date());
   }, []);
   return (
     <>
@@ -112,8 +120,11 @@ export default function MyEvents() {
                         e.target.style.backgroundColor = "initial";
                         e.target.style.color = "#C39601";
                       }}
+                      disabled={new Date(event.date) < new Date()}
                     >
-                      Leave Event
+                      {new Date(event.date) < new Date()
+                        ? "Locked"
+                        : "Leave Event"}
                     </button>
                   </div>
                 </div>
@@ -133,7 +144,7 @@ export default function MyEvents() {
                       style={{ color: "#FAFAFA" }}
                     >
                       <span className=" text-base font-light mr-2">
-                        <Date />
+                        <Dat />
                       </span>
                       {/* 18-04-2023 */}
                       {event.date}

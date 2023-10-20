@@ -114,20 +114,20 @@ export default function Dashboard() {
                           style={{ color: "#C39601" }}
                         >
                           <span className=" text-base font-light mr-10">
-                            Team Name:
+                            Team:
                           </span>
                           {team.team_name}
                         </h5>
 
                         <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
                           <span className=" text-base font-light mr-8">
-                            Owner Name:
+                            Owner:
                           </span>
                           {team.organizer_email}
                         </p>
                         <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
-                          <span className=" text-base font-light mr-4">
-                            Total members:
+                          <span className=" text-base font-light mr-2">
+                            Members:
                           </span>
                           &nbsp;{team.number_of_members - 1}
                         </p>
@@ -181,20 +181,20 @@ export default function Dashboard() {
                           style={{ color: "#C39601" }}
                         >
                           <span className=" text-base font-light mr-10">
-                            Team Name:
+                            Team:
                           </span>
                           {team.team_name}
                         </h5>
 
                         <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
                           <span className=" text-base font-light mr-8">
-                            Owner Name:
+                            Owner:
                           </span>
                           {team.organizer_email}
                         </p>
                         <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
-                          <span className=" text-base font-light mr-4">
-                            Total members:
+                          <span className=" text-base font-light mr-2">
+                            Members:
                           </span>
                           &nbsp;{team.number_of_members - 1}
                         </p>

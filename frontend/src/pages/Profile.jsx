@@ -3,6 +3,7 @@ import Sidebar from "../common/Sidebar";
 import { useAuth } from "../utils/Auth";
 import axios from "axios";
 import Toast from "../common/Toast";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const auth = useAuth();
@@ -17,6 +18,8 @@ export default function Profile() {
 
   const [err, setErr] = useState("");
   const [errState, setErrState] = useState("");
+  const [events, setEvents] = useState([]);
+  const [creditHRS, setcreditHRS] = useState(0);
 
   const handleUpdate = (e) => {
     e.preventDefault();
@@ -29,7 +32,7 @@ export default function Profile() {
     console.log("CPassword:", confirmNewPass);
 
     if (!password) {
-      setErr("enter a valid password");
+      setErr("Enter your password");
       setErrState(true);
 
       setTimeout(() => {
@@ -82,23 +85,60 @@ export default function Profile() {
         });
     }
   };
-  const [Links, setLinks] = useState([{ title: "Teams", to: "/dash" }]);
+
+  function getEvents() {
+    axios
+      .post("http://localhost:8000/api/getEventsForUser", {
+        user_email: auth.user.email,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          const events = response.data.events;
+          // Filter events where attendance_status is true
+          const attendedEvents = events.filter(
+            (event) => event.attendance_status === true
+          );
+
+          // Calculate the sum of credit hours for attended events
+          const sumOfCreditHours = attendedEvents.reduce(
+            (sum, event) => sum + parseFloat(event.event_credit_hours),
+            0
+          );
+          setcreditHRS(sumOfCreditHours);
+          setEvents(events);
+          console.log(events);
+          console.log(creditHRS);
+        } else {
+          setErr(response.data.message);
+          setErrState(true);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        }
+      });
+  }
+
+  useEffect(() => {
+    getEvents();
+  }, []);
+
   return (
     <>
-      <Sidebar Links={Links} />
+      <Sidebar />
+      <Toast err={err} errState={errState} />
 
-      <div className="container mx-auto  max-w-screen-xl flex justify-center items-center mb-10">
-        <Toast err={err} errState={errState} />
+      <div className="container mx-auto  max-w-screen-xl flex-col justify-center items-center space-y-10 my-10">
         <form
           onSubmit={handleUpdate}
-          className="w-full rounded-2xl p-5 mt-10"
+          className="w-full rounded-2xl p-5 "
           style={{ backgroundColor: "#2f2f2f" }}
         >
-          <div className="border-b border-gray-400 pb-12">
-            <div className=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div className="border-b border-gray-400 pb-5">
+            <div className=" grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-6">
               <h2
                 className="block mb-2 text-sm font-medium "
-                style={{ color: "#F6F6F6" }}
+                style={{ color: "#C39601" }}
               >
                 Personal Information
               </h2>
@@ -190,7 +230,7 @@ export default function Profile() {
               </div>
             </div>
           </div>
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b border-gray-400 pb-12">
+          <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-6 border-b border-gray-400 pb-5">
             <div className="sm:col-span-3">
               <label
                 htmlFor="new-pass"
@@ -272,6 +312,97 @@ export default function Profile() {
             </button>
           </div>
         </form>
+        <div
+          className="w-full rounded-2xl p-5 flex flex-col space-y-5"
+          style={{ backgroundColor: "#2f2f2f" }}
+        >
+          <h2
+            className="block text-base font-medium "
+            style={{ color: "#C39601" }}
+          >
+            My Events
+          </h2>
+
+          <table className="w-full text-sm text-center text-gray-400 rounded-2xl overflow-hidden">
+            <thead
+              className="text-xs uppercase text-gray-400 border-b border-opacity-50"
+              style={{ backgroundColor: "#2f2f2f" }}
+            >
+              <tr>
+                <th scope="col" className="px-2 py-3">
+                  Sr.
+                </th>
+                <th scope="col" className="px-2 py-3">
+                  Team Name
+                </th>
+                <th scope="col" className="px-2 py-3">
+                  Event Title
+                </th>
+                <th scope="col" className="px-2 py-3">
+                  Organization | Location
+                </th>
+                <th scope="col" className="px-2 py-3">
+                  Date
+                </th>
+                <th scope="col" className="px-2 py-3">
+                  Attendance
+                </th>
+                <th scope="col" className="px-2 py-3">
+                  Credits
+                </th>
+                <th scope="col" className="px-2 py-3">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map((event, index) => (
+                <tr
+                  key={event.event_title}
+                  className={`border-b dark:border-gray-700 `}
+                  style={{ backgroundColor: "#2f2f2f" }}
+                >
+                  <td className="px-2 py-4 ">{index + 1}</td>
+                  <td className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {event.team_name}
+                  </td>
+                  <td className="px-2 py-4 ">{event.event_title}</td>
+                  <td className="px-2 py-4">
+                    {event.event_organization} | {event.event_location}
+                  </td>
+                  <td className="px-2 py-4">{event.event_date}</td>
+                  <td
+                    className={
+                      event.attendance_status
+                        ? "text-green-700 px-2 py-4"
+                        : "text-red-700 px-2 py-4"
+                    }
+                  >
+                    {event.attendance_status ? "Present" : "Abesnt"}
+                  </td>
+                  <td className="px-2 py-4">{event.event_credit_hours}</td>
+
+                  <td className="px-2 py-4">
+                    <Link
+                      to={`/teams/${event.team_unique_id}/myEvents`}
+                      className="text-yellow-600 hover:underline"
+                    >
+                      Open
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="flex flex-row justify-end">
+            <h2
+              className="block text-base font-medium "
+              style={{ color: "#C39601" }}
+            >
+              Total Credit Hours : {creditHRS}
+            </h2>
+          </div>
+        </div>
       </div>
     </>
   );

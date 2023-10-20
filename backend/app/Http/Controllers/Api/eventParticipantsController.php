@@ -246,4 +246,71 @@ class eventParticipantsController extends Controller
             'message' => 'Attendance Marked'
         ]);
     }
+
+
+
+
+
+    // public function getEventsForUser(Request $request)
+    // {
+    //     $userEmail = $request->input('user_email'); // Replace with how you pass the user's email
+
+    //     // Find the user based on the email
+    //     $user = User::where('email', $userEmail)->first();
+
+    //     if (!$user) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'User not found.'
+    //         ]);
+    //     }
+
+    //     // Retrieve all events that the user has participated in
+    //     $events = Event::join('event_participants', 'events.id', '=', 'event_participants.event_id')
+    //         ->where('event_participants.user_id', $user->id)
+    //         ->select('events.title as event_title', 'events.date as event_date', 'events.organization_name as event_organization', 'events.location as event_location', 'events.credit_hours as event_credit_hours', 'event_participants.attendance_status as attendance_status', 'events.comments as event_comments')
+    //         ->get();
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         'message' => 'Events participated by the user retrieved successfully.',
+    //         'events' => $events
+    //     ]);
+    // }
+
+    public function getEventsForUser(Request $request)
+    {
+        $userEmail = $request->input('user_email');
+
+        $user = User::where('email', $userEmail)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'User not found.'
+            ]);
+        }
+
+        $events = Event::join('event_participants', 'events.id', '=', 'event_participants.event_id')
+            ->join('teams', 'events.team_id', '=', 'teams.id')
+            ->where('event_participants.user_id', $user->id)
+            ->select(
+                'events.title as event_title',
+                'events.date as event_date',
+                'events.organization_name as event_organization',
+                'events.location as event_location',
+                'events.credit_hours as event_credit_hours',
+                'event_participants.attendance_status as attendance_status',
+                'events.comments as event_comments',
+                'teams.team_name as team_name',
+                'teams.unique_id as team_unique_id'
+            )
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Events retrieved successfully.',
+            'events' => $events
+        ]);
+    }
 }
