@@ -87,7 +87,7 @@ export default function Dashboard() {
                 className="flex flex-col items-start rounded-2xl shadow  p-5 w-full  gap-y-2 "
                 style={{ backgroundColor: "#2f2f2f" }}
               >
-                {teams.length > 0 &&
+                {teams.length > 0 ? (
                   teams.map((team) => (
                     <Link
                       key={team.team_unique_id}
@@ -133,7 +133,12 @@ export default function Dashboard() {
                         </p>
                       </div>
                     </Link>
-                  ))}
+                  ))
+                ) : (
+                  <p className="text-white font-light text-sm">
+                    No Teams available.
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -154,7 +159,7 @@ export default function Dashboard() {
                 className="flex flex-col items-start rounded-2xl shadow  p-5 w-full  gap-y-2 "
                 style={{ backgroundColor: "#2f2f2f" }}
               >
-                {MyTeams.length > 0 &&
+                {MyTeams.length > 0 ? (
                   MyTeams.map((team) => (
                     <Link
                       key={team.team_unique_id}
@@ -200,7 +205,12 @@ export default function Dashboard() {
                         </p>
                       </div>
                     </Link>
-                  ))}
+                  ))
+                ) : (
+                  <p className="text-white font-light text-sm">
+                    No Teams available.
+                  </p>
+                )}
               </div>
             </div>
           </div>

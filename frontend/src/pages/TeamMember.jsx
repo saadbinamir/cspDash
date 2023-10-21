@@ -114,9 +114,11 @@ export default function TeamMember() {
                         e.target.style.backgroundColor = "initial";
                         e.target.style.color = "#C39601";
                       }}
-                      disabled={new Date(event.date) < new Date()}
+                      disabled={
+                        new Date(event.date) < new Date().setHours(0, 0, 0, 0)
+                      }
                     >
-                      {new Date(event.date) < new Date()
+                      {new Date(event.date) < new Date().setHours(0, 0, 0, 0)
                         ? "Locked"
                         : "Participate"}
                     </button>

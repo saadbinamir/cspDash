@@ -475,7 +475,7 @@ export default function TeamAdmin() {
                     </label>
                     <input
                       type="date"
-                      min={new Date()}
+                      min={new Date().setHours(0, 0, 0, 0)}
                       name="EventDate"
                       id="EventDate"
                       className="sm:text-sm rounded-2xl w-full px-4 py-2"

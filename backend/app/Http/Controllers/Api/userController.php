@@ -9,6 +9,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use App\Http\Controllers\Api\teamController;
+use App\Http\Controllers\Api\eventController;
+use App\Http\Controllers\Api\eventParticipantsController;
+
+
 class userController extends Controller
 {
     public function userslist()

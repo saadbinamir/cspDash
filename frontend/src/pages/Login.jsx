@@ -4,6 +4,7 @@ import axios from "axios";
 import Lottie from "lottie-react";
 import help from "../assets/help.json";
 import { useAuth } from "../utils/Auth";
+import Toast from "../common/Toast";
 
 export default function Login() {
   const auth = useAuth();
@@ -58,6 +59,7 @@ export default function Login() {
   return (
     <>
       {/* <NavBar /> */}
+      <Toast err={err} errState={errState} />
       <div className="flex h-screen" style={{ backgroundColor: "#F6F6F6" }}>
         <div className="w-1/2">
           <div
@@ -118,17 +120,7 @@ export default function Login() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                    <p
-                      id="error"
-                      // style={errState ? { color: '#F6F6F6' } : { color: '#cc0000' }}
-                      // className='text-sm font-light text-red-700 pt-2'>
-                      // className={errState ? ' text-red-700 ' : ' text-green-700 '}
-                      className={`text-sm font-light pt-2 ${
-                        errState ? "text-red-700" : "text-green-700"
-                      }`}
-                    >
-                      {err}
-                    </p>
+             
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-start">

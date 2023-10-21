@@ -136,9 +136,9 @@ export default function Users() {
                 <th scope="col" className="px-2 py-3">
                   Address
                 </th>
-                <th scope="col" className="px-2 py-3">
+                {/* <th scope="col" className="px-2 py-3">
                   Role
-                </th>
+                </th> */}
                 <th scope="col" className="px-2 py-3">
                   Actions
                 </th>
@@ -158,7 +158,7 @@ export default function Users() {
                   <td className="px-2 py-4">{member.team_member_email}</td>
                   <td className="px-2 py-4">{member.team_member_phone}</td>
                   <td className="px-2 py-4">{member.team_member_address}</td>
-                  <td className="px-2 py-4">{member.team_member_role}</td>
+                  {/* <td className="px-2 py-4">{member.team_member_role}</td> */}
                   <td className="px-2 py-4">
                     <button
                       onClick={() => RemoveMember(member.team_member_email)}
