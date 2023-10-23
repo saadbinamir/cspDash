@@ -20,7 +20,6 @@ export default function CoordinatorEvents() {
   const [events, setEvents] = useState([]);
 
   const [absentStudents, setAbsentStudents] = useState([]);
-  const [prevAbsentStudents, setprevAbsentStudents] = useState([]);
 
   const [showTable, setShowTable] = useState(false);
   const [participants, setparticipants] = useState([]);

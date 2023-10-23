@@ -25,15 +25,23 @@ export default function TeamAdmin() {
   const [comments, setcomments] = useState();
 
   const [events, setEvents] = useState([]);
-  const [participnts, setParticipnts] = useState([]);
+  const [participnts, setparticipants] = useState([]);
+  const [absentStudents, setAbsentStudents] = useState([]);
 
   const [key, setKey] = useState(0);
 
   const [showTable, setShowTable] = useState(false);
+  const [showAttendance, setshowAttendance] = useState(false);
 
   function toggleTable(eventTitle) {
     setShowTable((prevShowTable) =>
       prevShowTable === eventTitle ? null : eventTitle
+    );
+    getEventParticipants(eventTitle);
+  }
+  function toggleattendance(eventTitle) {
+    setshowAttendance((prevShowAttendance) =>
+      prevShowAttendance === eventTitle ? null : eventTitle
     );
     getEventParticipants(eventTitle);
   }
@@ -138,6 +146,32 @@ export default function TeamAdmin() {
         });
     }
   };
+  function saveAttendance(eventTitle) {
+    console.log("sending Absent Students:", absentStudents);
+    axios
+      .post("http://localhost:8000/api/markAttendance", {
+        event_title: eventTitle,
+        user_email: absentStudents,
+        team_id: teamId,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          setErr(response.data.message);
+          setErrState(false);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        } else {
+          setErr(response.data.message);
+          setErrState(true);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        }
+      });
+  }
   function getEvents() {
     axios
       .post("http://localhost:8000/api/getEventsInTeam", {
@@ -166,8 +200,18 @@ export default function TeamAdmin() {
       })
       .then((response) => {
         if (response.data.status === 200) {
-          setParticipnts(response.data.participants);
+          setparticipants(response.data.participants);
           console.log(response.data.participants);
+
+          // Filter participants with attendance_status = false and extract their emails
+          const absent = response.data.participants
+            .filter((participant) => participant.attendance_status === false)
+            .map((participant) => participant.email);
+
+          // Now, absentStudents contains the emails of absent students
+          setAbsentStudents(absent);
+
+          console.log("prev Absent Students:", absentStudents);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -267,7 +311,85 @@ export default function TeamAdmin() {
                       </h5>
                     </div>
                     <div className="flex flex-row space-x-5">
-                      <button
+                      {new Date(event.date).setHours(0, 0, 0, 0) ===
+                      new Date().setHours(0, 0, 0, 0) ? (
+                        <>
+                          <button
+                            className="text-green-700 hover:underline"
+                            onClick={() => saveAttendance(event.title)}
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="py-1 px-4 rounded-2xl"
+                            style={{
+                              color: "#C39601",
+                              transition: "1ms",
+                              border: "1px solid #C39601",
+                            }}
+                            onClick={() => toggleattendance(event.title)}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = "#C39601";
+                              e.target.style.color = "#111111";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = "initial";
+                              e.target.style.color = "#C39601";
+                            }}
+                            disabled={
+                              new Date(event.date) <
+                              new Date().setHours(0, 0, 0, 0)
+                            }
+                          >
+                            {new Date(event.date) <
+                            new Date().setHours(0, 0, 0, 0)
+                              ? "Locked"
+                              : "Mark Attendance"}
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="submit"
+                            className=" py-1 px-4 rounded-2xl z-50 text-red-700"
+                            style={{
+                              transition: "border-bottom 1ms",
+                            }}
+                            onClick={() => deleteEvent(event.title)}
+                            onMouseEnter={(e) => {
+                              e.target.style.borderBottom = "1px solid #C39601";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.borderBottom = "none";
+                            }}
+                          >
+                            Delete
+                          </button>
+                          <button
+                            type="submit"
+                            className="py-1 px-4 rounded-2xl"
+                            style={{
+                              color: "#C39601",
+                              transition: "1ms",
+                              border: "1px solid #C39601",
+                            }}
+                            onClick={() => toggleTable(event.title)}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = "#C39601";
+                              e.target.style.color = "#111111";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = "initial";
+                              e.target.style.color = "#C39601";
+                            }}
+                          >
+                            {showTable === event.title
+                              ? "Hide Details"
+                              : "See Details"}
+                          </button>
+                        </>
+                      )}
+                      {/* <button
                         type="submit"
                         className=" py-1 px-4 rounded-2xl z-50 text-red-700"
                         style={{
@@ -305,6 +427,42 @@ export default function TeamAdmin() {
                           ? "Hide Details"
                           : "See Details"}
                       </button>
+                      {auth.user.email === event.coordinator_email && (
+                        <>
+                          <button
+                            className="text-green-700 hover:underline"
+                            onClick={() => saveAttendance(event.title)}
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="py-1 px-4 rounded-2xl"
+                            style={{
+                              color: "#C39601",
+                              transition: "1ms",
+                              border: "1px solid #C39601",
+                            }}
+                            onClick={() => toggleattendance(event.title)}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = "#C39601";
+                              e.target.style.color = "#111111";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = "initial";
+                              e.target.style.color = "#C39601";
+                            }}
+                            disabled={
+                              new Date(event.date) <
+                              new Date().setHours(0, 0, 0, 0)
+                            }
+                          >
+                            {new Date(event.date) <
+                            new Date().setHours(0, 0, 0, 0)
+                              ? "Locked"
+                              : "Mark Attendance"}
+                          </button>
+                        </>
+                      )} */}
                     </div>
                   </div>
 
@@ -360,11 +518,97 @@ export default function TeamAdmin() {
                         {event.credit_hours}
                       </p>
                     </div>
+                    {showAttendance === event.title && (
+                      <>
+                        <hr className="mt-5" />
+                        <div>
+                          <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                            <thead
+                              className="text-xs text-gray-700 uppercase dark:text-gray-400 border-b border-opacity-50"
+                              style={{ backgroundColor: "#2f2f2f" }}
+                            >
+                              <tr>
+                                <th scope="col" className="px-2 py-3">
+                                  Sr.
+                                </th>
+                                <th scope="col" className="px-2 py-3">
+                                  Name
+                                </th>
+                                <th scope="col" className="px-2 py-3">
+                                  Email
+                                </th>
+                                <th scope="col" className="px-2 py-3">
+                                  Phone
+                                </th>
+                                <th scope="col" className="px-2 py-3 ">
+                                  Present / Absent
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {participnts.map((participant, index) => (
+                                <tr
+                                  key={participant.id}
+                                  className={`border-b dark:border-gray-700 `}
+                                  style={{ backgroundColor: "#2f2f2f" }}
+                                >
+                                  <td className="px-2 py-2">{index + 1}</td>
+                                  <td className="px-2 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {participant.name}
+                                  </td>
+                                  <td className="px-2 py-2">
+                                    {participant.email}
+                                  </td>
+                                  <td className="px-2 py-2">
+                                    {participant.phone}
+                                  </td>
+
+                                  <td className="px-2 py-2">
+                                    <button
+                                      onClick={() => {
+                                        const email = participant.email;
+                                        if (absentStudents.includes(email)) {
+                                          setAbsentStudents(
+                                            absentStudents.filter(
+                                              (student) => student !== email
+                                            )
+                                          );
+                                        } else {
+                                          setAbsentStudents([
+                                            ...absentStudents,
+                                            email,
+                                          ]);
+                                        }
+
+                                        console.log(absentStudents);
+                                      }}
+                                      className={
+                                        absentStudents.includes(
+                                          participant.email
+                                        )
+                                          ? "text-red-700 hover:underline"
+                                          : "text-green-700 hover:underline"
+                                      }
+                                    >
+                                      {absentStudents.includes(
+                                        participant.email
+                                      )
+                                        ? "Absent"
+                                        : "Present"}
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </>
+                    )}
                     {showTable === event.title && (
                       <>
                         <hr className="mt-5" />
                         <div>
-                          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                          <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                             <thead
                               className="text-xs text-gray-700 uppercase dark:text-gray-400 border-b border-opacity-50"
                               style={{ backgroundColor: "#2f2f2f" }}
@@ -384,7 +628,10 @@ export default function TeamAdmin() {
                                 </th>
 
                                 <th scope="col" className="px-2 py-3 ">
-                                  actions
+                                  {new Date(event.date) <
+                                  new Date().setHours(0, 0, 0, 0)
+                                    ? "Attendance"
+                                    : "Actions"}
                                 </th>
                               </tr>
                             </thead>
@@ -414,9 +661,27 @@ export default function TeamAdmin() {
                                           event.title
                                         )
                                       }
-                                      className="text-red-700 hover:underline"
+                                      className={
+                                        new Date(event.date) < new Date()
+                                          ? absentStudents.includes(
+                                              participnt.email
+                                            )
+                                            ? "text-red-700 hover:underline"
+                                            : "text-green-700 hover:underline"
+                                          : "text-red-700 hover:underline"
+                                      }
+                                      disabled={
+                                        new Date(event.date) <
+                                        new Date().setHours(0, 0, 0, 0)
+                                      }
                                     >
-                                      Remove
+                                      {new Date(event.date) < new Date()
+                                        ? absentStudents.includes(
+                                            participnt.email
+                                          )
+                                          ? "Absent"
+                                          : "Present"
+                                        : "Remove"}
                                     </button>
                                   </td>
                                 </tr>
@@ -435,7 +700,7 @@ export default function TeamAdmin() {
           </div>
 
           <div
-            className=" space-y-4 rounded-2xl p-5 w-4/12"
+            className=" space-y-4 rounded-2xl p-5 w-4/12 sticky top-10"
             style={{ backgroundColor: "#2F2F2F" }}
           >
             <h1

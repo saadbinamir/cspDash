@@ -173,7 +173,7 @@ export default function Users() {
           </table>
 
           <div
-            className=" space-y-4 rounded-2xl p-5 w-96"
+            className=" space-y-4 rounded-2xl p-5 w-96 sticky top-10"
             style={{ backgroundColor: "#2F2F2F" }}
           >
             <h1
