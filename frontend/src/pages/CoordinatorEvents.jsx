@@ -143,7 +143,8 @@ export default function CoordinatorEvents() {
                     </h5>
                   </div>
                   <div className="flex flex-row space-x-5">
-                    {new Date(event.date) > new Date() && (
+                    {new Date(event.date).setHours(0, 0, 0, 0) ===
+                      new Date().setHours(0, 0, 0, 0) && (
                       <button
                         className="text-green-700 hover:underline"
                         onClick={() => saveAttendance(event.title)}
@@ -173,13 +174,15 @@ export default function CoordinatorEvents() {
                         e.target.style.backgroundColor = "initial";
                         e.target.style.color = "#C39601";
                       }}
-                      disabled={
-                        new Date(event.date) < new Date().setHours(0, 0, 0, 0)
-                      }
+                      // disabled={
+                      //   new Date(event.date).setHours(0, 0, 0, 0) <
+                      //   new Date().setHours(0, 0, 0, 0)
+                      // }
                     >
-                      {new Date(event.date) < new Date().setHours(0, 0, 0, 0)
-                        ? "Locked"
-                        : "Mark Attendance"}
+                      {new Date(event.date).setHours(0, 0, 0, 0) ===
+                      new Date().setHours(0, 0, 0, 0)
+                        ? "Mark Attendance"
+                        : "See Details"}
                     </button>
                   </div>
                 </div>
@@ -298,6 +301,14 @@ export default function CoordinatorEvents() {
                                       absentStudents.includes(participant.email)
                                         ? "text-red-700 hover:underline"
                                         : "text-green-700 hover:underline"
+                                    }
+                                    disabled={
+                                      new Date(event.date).setHours(
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                      ) < new Date().setHours(0, 0, 0, 0)
                                     }
                                   >
                                     {absentStudents.includes(participant.email)

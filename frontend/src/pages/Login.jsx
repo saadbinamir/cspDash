@@ -31,11 +31,6 @@ export default function Login() {
       setErr("Enter a valid Password");
       setErrState(true);
     } else {
-      // setErr("Success");
-      // setErrState(false);
-      // auth.login(email);
-      // navigate(redirectPath, { replace: true });
-
       axios
         .post("http://localhost:8000/api/login", {
           email: email,
@@ -45,12 +40,20 @@ export default function Login() {
           if (response.data.status === 200) {
             setErr(response.data.message);
             setErrState(false);
+            setTimeout(() => {
+              setErr("");
+              setErrState(false);
+            }, 3000);
             response.data.user.password = password;
             auth.login(response.data.user);
             navigate(redirectPath, { replace: true });
           } else {
             setErr(response.data.message);
             setErrState(true);
+            setTimeout(() => {
+              setErr("");
+              setErrState(false);
+            }, 3000);
           }
         });
     }
@@ -120,7 +123,6 @@ export default function Login() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-             
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-start">

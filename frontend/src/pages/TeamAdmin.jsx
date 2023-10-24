@@ -312,7 +312,8 @@ export default function TeamAdmin() {
                     </div>
                     <div className="flex flex-row space-x-5">
                       {new Date(event.date).setHours(0, 0, 0, 0) ===
-                      new Date().setHours(0, 0, 0, 0) ? (
+                        new Date().setHours(0, 0, 0, 0) &&
+                      auth.user.email === event.coordinator_email ? (
                         <>
                           <button
                             className="text-green-700 hover:underline"
@@ -336,15 +337,8 @@ export default function TeamAdmin() {
                               e.target.style.backgroundColor = "initial";
                               e.target.style.color = "#C39601";
                             }}
-                            disabled={
-                              new Date(event.date) <
-                              new Date().setHours(0, 0, 0, 0)
-                            }
                           >
-                            {new Date(event.date) <
-                            new Date().setHours(0, 0, 0, 0)
-                              ? "Locked"
-                              : "Mark Attendance"}
+                            Mark Attendance
                           </button>
                         </>
                       ) : (
@@ -389,80 +383,6 @@ export default function TeamAdmin() {
                           </button>
                         </>
                       )}
-                      {/* <button
-                        type="submit"
-                        className=" py-1 px-4 rounded-2xl z-50 text-red-700"
-                        style={{
-                          transition: "border-bottom 1ms",
-                        }}
-                        onClick={() => deleteEvent(event.title)}
-                        onMouseEnter={(e) => {
-                          e.target.style.borderBottom = "1px solid #C39601";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.borderBottom = "none";
-                        }}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        type="submit"
-                        className="py-1 px-4 rounded-2xl"
-                        style={{
-                          color: "#C39601",
-                          transition: "1ms",
-                          border: "1px solid #C39601",
-                        }}
-                        onClick={() => toggleTable(event.title)}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = "#C39601";
-                          e.target.style.color = "#111111";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = "initial";
-                          e.target.style.color = "#C39601";
-                        }}
-                      >
-                        {showTable === event.title
-                          ? "Hide Details"
-                          : "See Details"}
-                      </button>
-                      {auth.user.email === event.coordinator_email && (
-                        <>
-                          <button
-                            className="text-green-700 hover:underline"
-                            onClick={() => saveAttendance(event.title)}
-                          >
-                            Save
-                          </button>
-                          <button
-                            className="py-1 px-4 rounded-2xl"
-                            style={{
-                              color: "#C39601",
-                              transition: "1ms",
-                              border: "1px solid #C39601",
-                            }}
-                            onClick={() => toggleattendance(event.title)}
-                            onMouseEnter={(e) => {
-                              e.target.style.backgroundColor = "#C39601";
-                              e.target.style.color = "#111111";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.target.style.backgroundColor = "initial";
-                              e.target.style.color = "#C39601";
-                            }}
-                            disabled={
-                              new Date(event.date) <
-                              new Date().setHours(0, 0, 0, 0)
-                            }
-                          >
-                            {new Date(event.date) <
-                            new Date().setHours(0, 0, 0, 0)
-                              ? "Locked"
-                              : "Mark Attendance"}
-                          </button>
-                        </>
-                      )} */}
                     </div>
                   </div>
 
@@ -628,8 +548,9 @@ export default function TeamAdmin() {
                                 </th>
 
                                 <th scope="col" className="px-2 py-3 ">
-                                  {new Date(event.date) <
-                                  new Date().setHours(0, 0, 0, 0)
+                                  {new Date(event.date).setHours(0, 0, 0, 0) <
+                                    new Date().setHours(0, 0, 0, 0) &&
+                                  auth.user.email === event.coordinator_email
                                     ? "Attendance"
                                     : "Actions"}
                                 </th>
@@ -662,7 +583,12 @@ export default function TeamAdmin() {
                                         )
                                       }
                                       className={
-                                        new Date(event.date) < new Date()
+                                        new Date(event.date).setHours(
+                                          0,
+                                          0,
+                                          0,
+                                          0
+                                        ) < new Date().setHours(0, 0, 0, 0)
                                           ? absentStudents.includes(
                                               participnt.email
                                             )
@@ -671,11 +597,20 @@ export default function TeamAdmin() {
                                           : "text-red-700 hover:underline"
                                       }
                                       disabled={
-                                        new Date(event.date) <
-                                        new Date().setHours(0, 0, 0, 0)
+                                        new Date(event.date).setHours(
+                                          0,
+                                          0,
+                                          0,
+                                          0
+                                        ) < new Date().setHours(0, 0, 0, 0)
                                       }
                                     >
-                                      {new Date(event.date) < new Date()
+                                      {new Date(event.date).setHours(
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                      ) < new Date().setHours(0, 0, 0, 0)
                                         ? absentStudents.includes(
                                             participnt.email
                                           )
@@ -776,6 +711,7 @@ export default function TeamAdmin() {
                       type="number"
                       name="Credithours"
                       id="Credithours"
+                      min="1"
                       className="sm:text-sm rounded-2xl w-full px-4 py-2"
                       style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                       placeholder="05"

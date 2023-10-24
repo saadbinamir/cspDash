@@ -380,7 +380,9 @@ export default function Profile() {
                   >
                     {event.attendance_status ? "Present" : "Abesnt"}
                   </td>
-                  <td className="px-2 py-4">{event.event_credit_hours}</td>
+                  <td className="px-2 py-4">
+                    {event.attendance_status ? event.event_credit_hours : 0}
+                  </td>
 
                   <td className="px-2 py-4">
                     <Link
