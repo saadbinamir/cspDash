@@ -357,32 +357,36 @@ export default function TeamAdmin() {
                         </>
                       ) : (
                         <>
-                          <button
-                            type="submit"
-                            className=" py-1 px-4 rounded-2xl z-50 text-slate-100"
-                            style={{
-                              transition: "border-bottom 1ms",
-                            }}
-                            onClick={() => {
-                              // editEvent(event.title);
-                              setisEdit(true);
-                              setEventTitle(event.title);
-                              setEventDate(event.date);
-                              setlocation(event.location);
-                              setorganizationName(event.organization_name);
-                              setCredithours(event.credit_hours);
-                              setCoordinatorEmail(event.coordinator_email);
-                              setcomments(event.comments);
-                            }}
-                            onMouseEnter={(e) => {
-                              e.target.style.borderBottom = "1px solid #C39601";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.target.style.borderBottom = "none";
-                            }}
-                          >
-                            Edit
-                          </button>
+                          {new Date(event.date).setHours(0, 0, 0, 0) >
+                            new Date().setHours(0, 0, 0, 0) && (
+                            <button
+                              type="submit"
+                              className=" py-1 px-4 rounded-2xl z-50 text-slate-100"
+                              style={{
+                                transition: "border-bottom 1ms",
+                              }}
+                              onClick={() => {
+                                // editEvent(event.title);
+                                setisEdit(true);
+                                setEventTitle(event.title);
+                                setEventDate(event.date);
+                                setlocation(event.location);
+                                setorganizationName(event.organization_name);
+                                setCredithours(event.credit_hours);
+                                setCoordinatorEmail(event.coordinator_email);
+                                setcomments(event.comments);
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.borderBottom =
+                                  "1px solid #C39601";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.borderBottom = "none";
+                              }}
+                            >
+                              Edit
+                            </button>
+                          )}
                           <button
                             type="submit"
                             className=" py-1 px-4 rounded-2xl z-50 text-red-700"
