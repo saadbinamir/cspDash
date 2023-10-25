@@ -33,6 +33,8 @@ export default function TeamAdmin() {
   const [showTable, setShowTable] = useState(false);
   const [showAttendance, setshowAttendance] = useState(false);
 
+  const [isEdit, setisEdit] = useState(false);
+
   function toggleTable(eventTitle) {
     setShowTable((prevShowTable) =>
       prevShowTable === eventTitle ? null : eventTitle
@@ -109,7 +111,9 @@ export default function TeamAdmin() {
       }, 3000);
     } else {
       axios
-        .post("http://localhost:8000/api/createEvent", {
+        // .post("http://localhost:8000/api/createEvent", {
+        // .post("http://192.168.18.36:8000/api/createEvent", {
+        .post(`http://${auth.ip}:8000/api/createEvent`, {
           title: EventTitle,
           date: EventDate,
           organization_name: organizationName,
@@ -149,7 +153,9 @@ export default function TeamAdmin() {
   function saveAttendance(eventTitle) {
     console.log("sending Absent Students:", absentStudents);
     axios
-      .post("http://localhost:8000/api/markAttendance", {
+      // .post("http://localhost:8000/api/markAttendance", {
+      // .post("http://192.168.18.36:8000/api/markAttendance", {
+      .post(`http://${auth.ip}:8000/api/markAttendance`, {
         event_title: eventTitle,
         user_email: absentStudents,
         team_id: teamId,
@@ -174,7 +180,9 @@ export default function TeamAdmin() {
   }
   function getEvents() {
     axios
-      .post("http://localhost:8000/api/getEventsInTeam", {
+      // .post("http://localhost:8000/api/getEventsInTeam", {
+      // .post("http://192.168.18.36:8000/api/getEventsInTeam", {
+      .post(`http://${auth.ip}:8000/api/getEventsInTeam`, {
         team_unique_id: teamId,
       })
       .then((response) => {
@@ -194,7 +202,9 @@ export default function TeamAdmin() {
 
   function getEventParticipants(event_title) {
     axios
-      .post("http://localhost:8000/api/getEventParticipants", {
+      // .post("http://localhost:8000/api/getEventParticipants", {
+      // .post("http://192.168.18.36:8000/api/getEventParticipants", {
+      .post(`http://${auth.ip}:8000/api/getEventParticipants`, {
         team_unique_id: teamId,
         event_title: event_title,
       })
@@ -225,7 +235,9 @@ export default function TeamAdmin() {
 
   function removeEventParticipant(email, event_title) {
     axios
-      .post("http://localhost:8000/api/removeEventParticipant", {
+      // .post("http://localhost:8000/api/removeEventParticipant", {
+      // .post("http://192.168.18.36:8000/api/removeEventParticipant", {
+      .post(`http://${auth.ip}:8000/api/removeEventParticipant`, {
         unique_id: teamId,
         event_title: event_title,
         user_email: email,
@@ -250,7 +262,9 @@ export default function TeamAdmin() {
 
   function deleteEvent(eventTitle) {
     axios
-      .post("http://localhost:8000/api/deleteEvent", {
+      // .post("http://localhost:8000/api/deleteEvent", {
+      // .post("http://192.168.18.36:8000/api/deleteEvent", {
+      .post(`http://${auth.ip}:8000/api/deleteEvent`, {
         event_title: eventTitle,
         team_unique_id: teamId,
       })
@@ -343,6 +357,32 @@ export default function TeamAdmin() {
                         </>
                       ) : (
                         <>
+                          <button
+                            type="submit"
+                            className=" py-1 px-4 rounded-2xl z-50 text-slate-100"
+                            style={{
+                              transition: "border-bottom 1ms",
+                            }}
+                            onClick={() => {
+                              // editEvent(event.title);
+                              setisEdit(true);
+                              setEventTitle(event.title);
+                              setEventDate(event.date);
+                              setlocation(event.location);
+                              setorganizationName(event.organization_name);
+                              setCredithours(event.credit_hours);
+                              setCoordinatorEmail(event.coordinator_email);
+                              setcomments(event.comments);
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.borderBottom = "1px solid #C39601";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.borderBottom = "none";
+                            }}
+                          >
+                            Edit
+                          </button>
                           <button
                             type="submit"
                             className=" py-1 px-4 rounded-2xl z-50 text-red-700"
@@ -687,7 +727,10 @@ export default function TeamAdmin() {
                       value={EventDate}
                       onChange={(e) => {
                         setEventDate(e.target.value);
-                        if (new Date(e.target.value) < new Date()) {
+                        if (
+                          new Date(e.target.value).setHours(0, 0, 0, 0) <=
+                          new Date().setHours(0, 0, 0, 0)
+                        ) {
                           setErr("Enter a Valid Date");
                           setErrState(true);
 
@@ -814,7 +857,7 @@ export default function TeamAdmin() {
                     e.target.style.color = "#C39601";
                   }}
                 >
-                  Create Event
+                  {isEdit ? "Update" : "Create Event"}
                 </button>
               </div>
             </form>

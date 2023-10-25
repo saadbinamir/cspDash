@@ -20,17 +20,11 @@ export default function MyEvents() {
 
   const [events, setEvents] = useState([]);
 
-  // Get the current date in the format 'YYYY-MM-DD'
-  // const currentDate = new Date().toISOString().split("T")[0];
-
-  // // Function to check if the event date has passed
-  // const isEventDatePassed = (date) => {
-  //   return date < currentDate;
-  // };
-
   function getEvents() {
     axios
-      .post("http://localhost:8000/api/getEventsForUserInTeam", {
+      // .post("http://localhost:8000/api/getEventsForUserInTeam", {
+      // .post("http://192.168.18.36:8000/api/getEventsForUserInTeam", {
+      .post(`http://${auth.ip}:8000/api/getEventsForUserInTeam`, {
         team_unique_id: teamId,
         user_email: auth.user.email,
       })
@@ -50,7 +44,9 @@ export default function MyEvents() {
   }
   function removeEventParticipant(event_title) {
     axios
-      .post("http://localhost:8000/api/removeEventParticipant", {
+      // .post("http://localhost:8000/api/removeEventParticipant", {
+      // .post("http://192.168.18.36:8000/api/removeEventParticipant", {
+      .post(`http://${auth.ip}:8000/api/removeEventParticipant`, {
         unique_id: teamId,
         event_title: event_title,
         user_email: auth.user.email,

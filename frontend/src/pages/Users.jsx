@@ -21,7 +21,9 @@ export default function Users() {
 
   function getTeamMembers() {
     axios
-      .post("http://localhost:8000/api/getTeamMembers", {
+      // .post("http://localhost:8000/api/getTeamMembers", {
+      // .post("http://192.168.18.36:8000/api/getTeamMembers", {
+      .post(`http://${auth.ip}:8000/api/getTeamMembers`, {
         unique_id: teamId,
       })
       .then((response) => {
@@ -51,7 +53,9 @@ export default function Users() {
       }, 3000);
     } else {
       axios
-        .post("http://localhost:8000/api/addUserToTeam", {
+        // .post("http://localhost:8000/api/addUserToTeam", {
+        // .post("http://192.168.18.36:8000/api/addUserToTeam", {
+        .post(`http://${auth.ip}:8000/api/addUserToTeam`, {
           email: addUserEmail,
           unique_id: teamId,
         })
@@ -82,7 +86,9 @@ export default function Users() {
     };
 
     axios
-      .delete("http://localhost:8000/api/removeUserFromTeam", {
+      // .delete("http://localhost:8000/api/removeUserFromTeam", {
+      // .delete("http://192.168.18.36:8000/api/removeUserFromTeam", {
+      .delete(`http://${auth.ip}:8000/api/removeUserFromTeam`, {
         data: requestData,
       })
       .then((response) => {

@@ -31,7 +31,9 @@ export default function TeamDetA() {
       }, 3000);
     } else {
       axios
-        .post("http://localhost:8000/api/updateTeamAnnouncements", {
+        // .post("http://localhost:8000/api/updateTeamAnnouncements", {
+        // .post("http://192.168.18.36:8000/api/updateTeamAnnouncements", {
+        .post(`http://${auth.ip}:8000/api/updateTeamAnnouncements`, {
           team_unique_id: teamId,
           announcements: announcements,
         })
@@ -75,7 +77,9 @@ export default function TeamDetA() {
       }, 3000);
     } else {
       axios
-        .post("http://localhost:8000/api/deleteTeam", {
+        // .post("http://localhost:8000/api/deleteTeam", {
+        // .post("http://192.168.18.36:8000/api/deleteTeam", {
+        .post(`http://${auth.ip}:8000/api/deleteTeam`, {
           unique_id: teamId,
           organizerEmail: auth.user.email,
         })
@@ -101,7 +105,9 @@ export default function TeamDetA() {
   }
   function getTeamDetails() {
     axios
-      .post("http://localhost:8000/api/getTeamDetails", {
+      // .post("http://localhost:8000/api/getTeamDetails", {
+      // .post("http://192.168.18.36:8000/api/getTeamDetails", {
+      .post(`http://${auth.ip}:8000/api/getTeamDetails`, {
         team_unique_id: teamId,
       })
       .then((response) => {

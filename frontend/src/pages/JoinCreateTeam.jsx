@@ -37,7 +37,8 @@ export default function JoinCreateTeam({ getMyTeams, getUserTeams }) {
       }, 3000);
     } else {
       axios
-        .post("http://localhost:8000/api/createTeam", {
+        // .post("http://192.168.18.36:8000/api/createTeam", {
+        .post(`http://${auth.ip}:8000/api/createTeam`, {
           unique_id: teamID,
           team_name: teamName,
           organizerEmail: auth.user.email,
@@ -79,7 +80,9 @@ export default function JoinCreateTeam({ getMyTeams, getUserTeams }) {
       }, 3000);
     } else {
       axios
-        .post("http://localhost:8000/api/addUserToTeam", {
+        // .post("http://localhost:8000/api/addUserToTeam", {
+        // .post("http://192.168.18.36:8000/api/addUserToTeam", {
+        .post(`http://${auth.ip}:8000/api/addUserToTeam`, {
           unique_id: joinTeamID,
           email: auth.user.email,
         })

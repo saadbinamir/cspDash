@@ -20,7 +20,9 @@ export default function Dashboard() {
 
   function getMyTeams() {
     axios
-      .post("http://localhost:8000/api/getMyTeams", {
+      // .post("http://localhost:8000/api/getMyTeams", {
+      // .post("http://192.168.18.36:8000/api/getMyTeams", {
+      .post(`http://${auth.ip}:8000/api/getMyTeams`, {
         user_email: auth.user.email,
       })
       .then((response) => {
@@ -41,7 +43,9 @@ export default function Dashboard() {
 
   function getUserTeams() {
     axios
-      .post("http://localhost:8000/api/getUserTeams", {
+      // .post("http://localhost:8000/api/getUserTeams", {
+      // .post("http://192.168.18.36:8000/api/getUserTeams", {
+      .post(`http://${auth.ip}:8000/api/getUserTeams`, {
         user_email: auth.user.email,
       })
       .then((response) => {
@@ -64,12 +68,9 @@ export default function Dashboard() {
     getMyTeams();
   }, []);
 
-  const [Links, setLinks] = useState([
-    { title: "Teams", to: "/dash", active: true },
-  ]);
   return (
     <>
-      <Sidebar Links={Links} />
+      <Sidebar />
       <div className="container mx-auto max-w-screen-xl flex flex-row gap-x-10  justify-center items-start my-10">
         <Toast err={err} errState={errState} />
         <div className="flex flex-col w-full">

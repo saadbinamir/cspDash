@@ -67,7 +67,9 @@ export default function CreateAcc() {
       // setErrState(false);
 
       axios
-        .post("http://localhost:8000/api/signup", {
+        // .post("http://localhost:8000/api/signup", {
+        // .post("http://192.168.18.36:8000/api/signup", {
+        .post(`http://${auth.ip}:8000/api/signup`, {
           name: name,
           email: email,
           phone: phone,

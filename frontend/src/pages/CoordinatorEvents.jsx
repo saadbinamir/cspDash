@@ -33,7 +33,9 @@ export default function CoordinatorEvents() {
 
   function getEventParticipants(event_title) {
     axios
-      .post("http://localhost:8000/api/getEventParticipants", {
+      // .post("http://localhost:8000/api/getEventParticipants", {
+      // .post("http://192.168.18.36:8000/api/getEventParticipants", {
+      .post(`http://${auth.ip}:8000/api/getEventParticipants`, {
         team_unique_id: teamId,
         event_title: event_title,
       })
@@ -65,7 +67,9 @@ export default function CoordinatorEvents() {
   function saveAttendance(eventTitle) {
     console.log("sending Absent Students:", absentStudents);
     axios
-      .post("http://localhost:8000/api/markAttendance", {
+      // .post("http://localhost:8000/api/markAttendance", {
+      // .post("http://192.168.18.36:8000/api/markAttendance", {
+      .post(`http://${auth.ip}:8000/api/markAttendance`, {
         event_title: eventTitle,
         user_email: absentStudents,
         team_id: teamId,
@@ -90,7 +94,9 @@ export default function CoordinatorEvents() {
   }
   function getEvents() {
     axios
-      .post("http://localhost:8000/api/getCoordinatorEvent", {
+      // .post("http://localhost:8000/api/getCoordinatorEvent", {
+      // .post("http://192.168.18.36:8000/api/getCoordinatorEvent", {
+      .post(`http://${auth.ip}:8000/api/getCoordinatorEvent`, {
         team_unique_id: teamId,
         user_email: auth.user.email,
       })

@@ -32,7 +32,9 @@ export default function Login() {
       setErrState(true);
     } else {
       axios
-        .post("http://localhost:8000/api/login", {
+        // .post("http://localhost:8000/api/login", {
+          // .post("http://192.168.18.36:8000/api/login", {
+          .post(`http://${auth.ip}:8000/api/login`, {
           email: email,
           password: password,
         })

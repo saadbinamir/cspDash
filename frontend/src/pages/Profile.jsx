@@ -57,7 +57,9 @@ export default function Profile() {
       }, 3000);
     } else {
       axios
-        .post("http://localhost:8000/api/updateProfile", {
+        // .post("http://localhost:8000/api/updateProfile", {
+        // .post("http://192.168.18.36:8000/api/updateProfile", {
+        .post(`http://${auth.ip}:8000/api/updateProfile`, {
           name: name,
           email: email,
           phone: phone,
@@ -88,7 +90,9 @@ export default function Profile() {
 
   function getEvents() {
     axios
-      .post("http://localhost:8000/api/getEventsForUser", {
+      // .post("http://localhost:8000/api/getEventsForUser", {
+      // .post("http://192.168.18.36:8000/api/getEventsForUser", {
+      .post(`http://${auth.ip}:8000/api/getEventsForUser`, {
         user_email: auth.user.email,
       })
       .then((response) => {

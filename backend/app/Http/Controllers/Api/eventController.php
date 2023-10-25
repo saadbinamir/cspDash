@@ -33,6 +33,21 @@ class eventController extends Controller
     // {
     //     $eventTitle = $request->input('title');
     //     $teamUniqueId = $request->input('team_unique_id');
+    //     $coordinatorEmail = $request->input('coordinator_email');
+
+    //     // Check if the coordinator's email exists in the team's members
+    //     $isCoordinatorInTeam = User::join('team_members', 'users.id', '=', 'team_members.user_id')
+    //         ->join('teams', 'team_members.team_id', '=', 'teams.id')
+    //         ->where('teams.unique_id', $teamUniqueId)
+    //         ->where('users.email', $coordinatorEmail)
+    //         ->exists();
+
+    //     if (!$isCoordinatorInTeam) {
+    //         return response()->json([
+    //             'status' => 400,
+    //             'message' => 'Coordinator is not part of the team.'
+    //         ]);
+    //     }
 
     //     // Check if an event with the same title and team ID already exists
     //     $existingEvent = Event::where('title', $eventTitle)
@@ -50,15 +65,14 @@ class eventController extends Controller
     //         ]);
     //     }
 
-
-    //     // If no existing event found, create a new event
+    //     // If no existing event found and the coordinator is in the team, create a new event
     //     $event = new Event();
     //     $event->title = $eventTitle;
     //     $event->date = $request->input('date');
     //     $event->organization_name = $request->input('organization_name');
     //     $event->location = $request->input('location');
     //     $event->credit_hours = $request->input('credit_hours');
-    //     $event->coordinator_email = $request->input('coordinator_email');
+    //     $event->coordinator_email = $coordinatorEmail; // Set the coordinator's email
     //     $comments = $request->input('comments');
 
     //     // Find the team ID based on the unique_id
@@ -84,6 +98,12 @@ class eventController extends Controller
     //     ]);
     // }
 
+
+
+
+
+
+
     public function createEvent(Request $request)
     {
         $eventTitle = $request->input('title');
@@ -104,32 +124,6 @@ class eventController extends Controller
             ]);
         }
 
-        // Check if an event with the same title and team ID already exists
-        $existingEvent = Event::where('title', $eventTitle)
-            ->where('team_id', function ($query) use ($teamUniqueId) {
-                $query->select('id')
-                    ->from('teams')
-                    ->where('unique_id', $teamUniqueId);
-            })
-            ->first();
-
-        if ($existingEvent) {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Event with the same title already exists'
-            ]);
-        }
-
-        // If no existing event found and the coordinator is in the team, create a new event
-        $event = new Event();
-        $event->title = $eventTitle;
-        $event->date = $request->input('date');
-        $event->organization_name = $request->input('organization_name');
-        $event->location = $request->input('location');
-        $event->credit_hours = $request->input('credit_hours');
-        $event->coordinator_email = $coordinatorEmail; // Set the coordinator's email
-        $comments = $request->input('comments');
-
         // Find the team ID based on the unique_id
         $team = Team::where('unique_id', $teamUniqueId)->first();
         if (!$team) {
@@ -140,18 +134,28 @@ class eventController extends Controller
             ]);
         }
 
-        $event->team_id = $team->id;
-        $event->comments = $comments;
+        // Use updateOrCreate to create or update the event
+        $event = Event::updateOrCreate(
+            ['title' => $eventTitle, 'team_id' => $team->id],
+            [
+                'date' => $request->input('date'),
+                'organization_name' => $request->input('organization_name'),
+                'location' => $request->input('location'),
+                'credit_hours' => $request->input('credit_hours'),
+                'coordinator_email' => $coordinatorEmail,
+                'comments' => $request->input('comments')
+            ]
+        );
 
-        // Save the event
-        $event->save();
+        $message = $event->wasRecentlyCreated ? 'Event created successfully.' : 'Event updated successfully.';
 
         return response()->json([
             'status' => 201,
-            'message' => 'Event created successfully.',
+            'message' => $message,
             'event' => $event
         ]);
     }
+
 
     public function deleteEvent(Request $request)
     {

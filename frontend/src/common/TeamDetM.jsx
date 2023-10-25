@@ -43,7 +43,9 @@ export default function TeamDetM() {
       }, 3000);
     } else {
       axios
-        .delete("http://localhost:8000/api/removeUserFromTeam", {
+        // .delete("http://localhost:8000/api/removeUserFromTeam", {
+        // .delete("http://192.168.18.36:8000/api/removeUserFromTeam", {
+        .delete(`http://${auth.ip}:8000/api/removeUserFromTeam`, {
           data: requestData,
         })
         .then((response) => {
@@ -66,7 +68,9 @@ export default function TeamDetM() {
   }
   function getTeamDetails() {
     axios
-      .post("http://localhost:8000/api/getTeamDetails", {
+      // .post("http://localhost:8000/api/getTeamDetails", {
+      // .post("http://192.168.18.36:8000/api/getTeamDetails", {
+      .post(`http://${auth.ip}:8000/api/getTeamDetails`, {
         team_unique_id: teamId,
       })
       .then((response) => {

@@ -5,6 +5,8 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  const [ip, setip] = useState("127.0.0.1");
+
   // Retrieve user data from storage when the component mounts
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -26,7 +28,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, ip, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

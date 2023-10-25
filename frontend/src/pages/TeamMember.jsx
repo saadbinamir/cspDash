@@ -23,7 +23,9 @@ export default function TeamMember() {
 
   function addEventParticipant(event_title) {
     axios
-      .post("http://localhost:8000/api/addEventParticipant", {
+      // .post("http://localhost:8000/api/addEventParticipant", {
+      // .post("http://192.168.18.36:8000/api/addEventParticipant", {
+      .post(`http://${auth.ip}:8000/api/addEventParticipant`, {
         unique_id: teamId,
         event_title: event_title,
         user_email: auth.user.email,
@@ -45,7 +47,8 @@ export default function TeamMember() {
   }
   function getEvents() {
     axios
-      .post("http://localhost:8000/api/getUnenrolledEvents", {
+      // .post("http://192.168.18.36:8000/api/getUnenrolledEvents", {
+      .post(`http://${auth.ip}:8000/api/getUnenrolledEvents`, {
         unique_id: teamId,
         user_email: auth.user.email,
       })

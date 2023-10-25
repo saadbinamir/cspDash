@@ -42,7 +42,6 @@ Route::post('updateTeamAnnouncements', [teamController::class, 'updateTeamAnnoun
 
 
 
-
 Route::get('members', [teamMembersControllers::class, 'membersList']);
 Route::post('getTeamMembers', [teamMembersControllers::class, 'getTeamMembers']);
 
