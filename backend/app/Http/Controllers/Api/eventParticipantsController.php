@@ -29,8 +29,6 @@ class eventParticipantsController extends Controller
         }
     }
 
-
-
     public function addEventParticipant(Request $request)
     {
         $unique_id = $request->input('unique_id');
@@ -39,30 +37,16 @@ class eventParticipantsController extends Controller
 
         // Find the team, event, and user
         $team = Team::where('unique_id', $unique_id)->first();
-        $event = Event::where('title', $eventTitle)->first();
+        $event = Event::where('title', $eventTitle)
+            ->where('team_id', $team->id)
+            ->first();
         $user = User::where('email', $userEmail)->first();
 
-        // Check if the team exists
-        if (!$team) {
+        // Check if the team, event, and user exist
+        if (!$team || !$event || !$user) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Team not found.'
-            ]);
-        }
-
-        // Check if the event exists
-        if (!$event) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Event not found.'
-            ]);
-        }
-
-        // Check if the user exists
-        if (!$user) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'User not found.'
+                'message' => 'Team, Event, or User not found.'
             ]);
         }
 
@@ -78,6 +62,22 @@ class eventParticipantsController extends Controller
             ]);
         }
 
+        // Check if the user has participated in another event on the same date
+        $eventsOnSameDate = Event::where('date', $event->date)->get();
+
+        foreach ($eventsOnSameDate as $eventOnSameDate) {
+            $participantInSameDateEvent = event_participant::where('event_id', $eventOnSameDate->id)
+                ->where('user_id', $user->id)
+                ->first();
+
+            if ($participantInSameDateEvent) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => 'User has already participated in an event on the same date.'
+                ]);
+            }
+        }
+
         // Create a new event participant
         event_participant::create([
             'team_id' => $team->id,
@@ -91,6 +91,68 @@ class eventParticipantsController extends Controller
             'message' => 'Event participant added successfully.'
         ]);
     }
+
+
+    // public function addEventParticipant(Request $request)
+    // {
+    //     $unique_id = $request->input('unique_id');
+    //     $eventTitle = $request->input('event_title');
+    //     $userEmail = $request->input('user_email');
+
+    //     // Find the team, event, and user
+    //     $team = Team::where('unique_id', $unique_id)->first();
+    //     $event = Event::where('title', $eventTitle)->first();
+    //     $user = User::where('email', $userEmail)->first();
+
+    //     // Check if the team exists
+    //     if (!$team) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'Team not found.'
+    //         ]);
+    //     }
+
+    //     // Check if the event exists
+    //     if (!$event) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'Event not found.'
+    //         ]);
+    //     }
+
+    //     // Check if the user exists
+    //     if (!$user) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'User not found.'
+    //         ]);
+    //     }
+
+    //     // Check if the user is already a participant in the event
+    //     $existingParticipant = event_participant::where('event_id', $event->id)
+    //         ->where('user_id', $user->id)
+    //         ->first();
+
+    //     if ($existingParticipant) {
+    //         return response()->json([
+    //             'status' => 400,
+    //             'message' => 'User is already a participant in this event.'
+    //         ]);
+    //     }
+
+    //     // Create a new event participant
+    //     event_participant::create([
+    //         'team_id' => $team->id,
+    //         'event_id' => $event->id,
+    //         'user_id' => $user->id,
+    //         'attendance_status' => true, // Set the attendance status as needed
+    //     ]);
+
+    //     return response()->json([
+    //         'status' => 201,
+    //         'message' => 'Event participant added successfully.'
+    //     ]);
+    // }
     public function removeEventParticipant(Request $request)
     {
         $uniqueId = $request->input('unique_id');
