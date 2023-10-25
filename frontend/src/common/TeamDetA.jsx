@@ -18,7 +18,44 @@ export default function TeamDetA() {
   const [err, setErr] = useState();
   const [errState, setErrState] = useState();
   const [password, setPassword] = useState("");
+  const [announcements, setAnnouncements] = useState("");
 
+  function updateAnnouncements() {
+    if (!announcements) {
+      setErr("Announcements can not be empty");
+      setErrState(true);
+
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
+    } else {
+      axios
+        .post("http://localhost:8000/api/updateTeamAnnouncements", {
+          team_unique_id: teamId,
+          announcements: announcements,
+        })
+        .then((response) => {
+          if (response.data.status === 200) {
+            setAnnouncements(response.data.announcements);
+            setErr(response.data.message);
+            setErrState(false);
+            setTimeout(() => {
+              setErr("");
+              setErrState(false);
+            }, 3000);
+            // getTeamDetails();
+          } else {
+            setErr(response.data.message);
+            setErrState(true);
+            setTimeout(() => {
+              setErr("");
+              setErrState(false);
+            }, 3000);
+          }
+        });
+    }
+  }
   function deleteTeam() {
     if (!password) {
       setErr("Enter your password to delete team");
@@ -71,6 +108,7 @@ export default function TeamDetA() {
         if (response.data.status === 200) {
           setteamDet(response.data.team_details);
           console.log(response.data.team_details);
+          setAnnouncements(response.data.team_details.announcements);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -96,7 +134,7 @@ export default function TeamDetA() {
         // style={{ backgroundColor: "#111111" }}
       >
         <div
-          className="flex flex-col rounded-2xl shadow gap-x-10 px-10 py-5"
+          className="flex flex-col rounded-2xl shadow gap-x-10 px-10 py-5 space-y-5"
           style={{ backgroundColor: "#111111" }}
         >
           <div
@@ -158,6 +196,33 @@ export default function TeamDetA() {
                 Delete
               </button>
             </div>
+          </div>
+          <div className="flex flex-row gap-x-7 ">
+            <input
+              type="email"
+              name="CoordinatorEmail"
+              id="CoordinatorEmail"
+              className="sm:text-sm rounded-lg w-full px-4 py-2"
+              style={{ backgroundColor: "#2f2f2f", color: "#F6F6F6" }}
+              placeholder="Announcements"
+              value={announcements}
+              onChange={(e) => setAnnouncements(e.target.value)}
+            />
+            <button
+              className=" py-1 px-4 rounded-2xl  text-green-700"
+              style={{
+                transition: "border-bottom 1ms",
+              }}
+              onClick={() => updateAnnouncements(teamDet.team_unique_id)}
+              onMouseEnter={(e) => {
+                e.target.style.borderBottom = "1px solid #C39601";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.borderBottom = "none";
+              }}
+            >
+              Save
+            </button>
           </div>
         </div>
         <nav className="md:mx-auto md:mr-auto flex flex-wrap text-base py-5 gap-x-10">

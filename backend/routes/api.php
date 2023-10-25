@@ -38,6 +38,10 @@ Route::post('getMyTeams', [teamController::class, 'getMyTeams']);
 Route::post('deleteTeam', [teamController::class, 'deleteTeam']);
 Route::delete('removeUserFromTeam', [teamController::class, 'removeUserFromTeam']);
 Route::post('getTeamDetails', [teamController::class, 'getTeamDetails']);
+Route::post('updateTeamAnnouncements', [teamController::class, 'updateTeamAnnouncements']);
+
+
+
 
 Route::get('members', [teamMembersControllers::class, 'membersList']);
 Route::post('getTeamMembers', [teamMembersControllers::class, 'getTeamMembers']);

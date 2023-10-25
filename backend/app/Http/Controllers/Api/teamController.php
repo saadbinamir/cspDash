@@ -316,6 +316,7 @@ class teamController extends Controller
             ->select(
                 'teams.team_name as team_name',
                 'teams.unique_id as team_unique_id',
+                'teams.announcements as announcements',
                 'users.name as organizer_name',
                 'users.email as organizer_email',
                 DB::raw('COUNT(DISTINCT events.id) as number_of_events'),
@@ -340,6 +341,35 @@ class teamController extends Controller
             'status' => 200,
             'message' => 'Team details retrieved successfully.',
             'team_details' => $teamDetails
+        ]);
+    }
+
+
+
+
+    public function updateTeamAnnouncements(Request $request)
+    {
+        $teamUniqueId = $request->input('team_unique_id');
+        $announcements = $request->input('announcements');
+
+        // Find the team by unique ID
+        $team = Team::where('unique_id', $teamUniqueId)->first();
+
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found.'
+            ]);
+        }
+
+        // Update the team's announcements
+        $team->announcements = $announcements;
+        $team->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Team announcements updated successfully.',
+            'announcements' => $team->announcements // Optionally, you can return the updated team
         ]);
     }
 }

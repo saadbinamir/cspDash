@@ -18,6 +18,7 @@ export default function TeamDetM() {
   const [err, setErr] = useState();
   const [errState, setErrState] = useState();
   const [password, setPassword] = useState("");
+  const [announcements, setAnnouncements] = useState("");
 
   function RemoveMember() {
     const requestData = {
@@ -72,6 +73,7 @@ export default function TeamDetM() {
         if (response.data.status === 200) {
           setteamDet(response.data.team_details);
           console.log(response.data.team_details);
+          setAnnouncements(response.data.team_details.announcements);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -96,7 +98,7 @@ export default function TeamDetM() {
         // style={{ backgroundColor: "#111111" }}
       >
         <div
-          className="flex flex-col rounded-2xl shadow gap-x-10 px-10 py-5"
+          className="flex flex-col rounded-2xl shadow gap-x-10 px-10 py-5 gap-y-5"
           style={{ backgroundColor: "#111111" }}
         >
           <div
@@ -158,6 +160,19 @@ export default function TeamDetM() {
                 Leave team
               </button>
             </div>
+          </div>
+          <div className="flex flex-row">
+            <input
+              type="email"
+              name="CoordinatorEmail"
+              id="CoordinatorEmail"
+              className="sm:text-sm rounded-lg w-full px-4 py-2"
+              style={{ backgroundColor: "#2f2f2f", color: "#F6F6F6" }}
+              placeholder="Announcements"
+              disabled
+              value={announcements}
+              onChange={(e) => setAnnouncements(e.target.value)}
+            />
           </div>
         </div>
         <nav className="md:mx-auto md:mr-auto flex flex-wrap text-base py-5 gap-x-10">
