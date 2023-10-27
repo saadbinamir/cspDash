@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\event;
 use App\Models\event_participant;
+use App\Models\user_credit_hour;
 
 class teamController extends Controller
 {
@@ -102,6 +103,7 @@ class teamController extends Controller
         team_members::where('team_id', $team->id)->delete();
         event::where('team_id', $team->id)->delete();
         event_participant::where('team_id', $team->id)->delete();
+        user_credit_hour::where('team_id', $team->id)->delete();
 
         // Delete the team itself
         $team->delete();

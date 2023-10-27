@@ -80,8 +80,8 @@ export default function Dashboard() {
               style={{ color: "#2f2f2f" }}
             >
               All Teams
+              <hr />
             </h1>
-            <hr />
 
             <div className="mt-4 flex flex-row flex-wrap gap-y-4">
               <div
@@ -152,8 +152,8 @@ export default function Dashboard() {
               style={{ color: "#2f2f2f" }}
             >
               My Teams
+              <hr />
             </h1>
-            <hr />
 
             <div className="mt-4 flex flex-row flex-wrap gap-y-4">
               <div

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\event_participant;
 use App\Models\team_members;
 use App\Models\User;
+use App\Models\user_credit_hour;
 
 class eventController extends Controller
 {
@@ -184,6 +185,13 @@ class eventController extends Controller
             ]);
         }
 
+        $credits = user_credit_hour::where('event_id', $event->id)
+            ->where('team_id', $team->id)
+            ->get();
+
+        foreach ($credits as $credit) {
+            $credit->delete();
+        }
         // Find the event participants associated with the event
         $eventParticipants = event_participant::where('event_id', $event->id)->get();
 
