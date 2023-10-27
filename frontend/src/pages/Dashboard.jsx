@@ -64,12 +64,13 @@ export default function Dashboard() {
       });
   }
   useEffect(() => {
+    document.body.style.backgroundColor = "#1e1e1e";
     getUserTeams();
     getMyTeams();
   }, []);
 
   return (
-    <>
+    <div>
       <Sidebar />
       <div className="container mx-auto max-w-screen-xl flex flex-row gap-x-10  justify-center items-start my-10">
         <Toast err={err} errState={errState} />
@@ -77,7 +78,7 @@ export default function Dashboard() {
           <div>
             <h1
               className="text-lg md:text-xl mt-3"
-              style={{ color: "#2f2f2f" }}
+              style={{ color: "#f6f6f6" }}
             >
               All Teams
               <hr />
@@ -149,7 +150,7 @@ export default function Dashboard() {
           <div className="mt-10">
             <h1
               className="text-lg md:text-xl mt-3"
-              style={{ color: "#2f2f2f" }}
+              style={{ color: "#f6f6f6" }}
             >
               My Teams
               <hr />
@@ -219,6 +220,6 @@ export default function Dashboard() {
         {/* <JoinCreateTeam /> */}
         <JoinCreateTeam getMyTeams={getMyTeams} getUserTeams={getUserTeams} />
       </div>
-    </>
+    </div>
   );
 }

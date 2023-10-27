@@ -124,11 +124,12 @@ export default function Profile() {
   }
 
   useEffect(() => {
+    // document.body.style.backgroundColor = "#1e1e1e";
     getEvents();
   }, []);
 
   return (
-    <>
+    <div>
       <Sidebar />
       <Toast err={err} errState={errState} />
 
@@ -390,7 +391,7 @@ export default function Profile() {
 
                   <td className="px-2 py-4">
                     <Link
-                      to={`/teams/${event.team_unique_id}/myEvents`}
+                      to={`/teams/${event.team_unique_id}`}
                       className="text-yellow-600 hover:underline"
                     >
                       Open
@@ -410,6 +411,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

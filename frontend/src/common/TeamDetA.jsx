@@ -127,7 +127,6 @@ export default function TeamDetA() {
   }
   useEffect(() => {
     getTeamDetails();
-    // console.log(teamId);
   }, []);
   return (
     <>
@@ -247,7 +246,15 @@ export default function TeamDetA() {
               e.target.style.borderBottom = "none";
             }}
           >
-            {teamDet.number_of_events} Events
+            <span
+              className="px-2 rounded-2xl mr-2  text-black"
+              style={{
+                backgroundColor: "#C39601",
+              }}
+            >
+              {teamDet.number_of_events}
+            </span>
+            Events
           </Link>
           <Link
             to={`/teams/${teamId}/admin/users`}
@@ -264,7 +271,15 @@ export default function TeamDetA() {
               e.target.style.borderBottom = "none";
             }}
           >
-            {teamDet.number_of_members - 1} Members
+            <span
+              className="px-2 rounded-2xl mr-2 text-black"
+              style={{
+                backgroundColor: "#C39601",
+              }}
+            >
+              {teamDet.number_of_members - 1}
+            </span>
+            Members
           </Link>
         </nav>
       </div>

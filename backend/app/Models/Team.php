@@ -12,6 +12,8 @@ class Team extends Model
     protected $table = 'teams';
     protected $fillable  = [
         'unique_id',
-        'organizer_id'
+        'organizer_id',
+        'team_name',
+        'announcements'
     ];
 }

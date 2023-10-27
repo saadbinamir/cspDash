@@ -54,6 +54,7 @@ Route::post('getEventsInTeam', [eventController::class, 'getEventsInTeam']);
 Route::post('getEventParticipants', [eventController::class, 'getEventParticipants']);
 Route::post('getUnenrolledEvents', [eventController::class, 'getUnenrolledEvents']);
 Route::post('getCoordinatorEvent', [eventController::class, 'getCoordinatorEvent']);
+Route::post('getEventsWithStatus', [eventController::class, 'getEventsWithStatus']);
 
 
 

@@ -38,9 +38,10 @@ export default function TeamAdmin() {
   const [showAttendance, setshowAttendance] = useState(false);
 
   const [isEdit, setisEdit] = useState(false);
+
   const [showTodays, setshowTodays] = useState(true);
-  const [showupcoming, setshowupcoming] = useState(true);
-  const [showpast, setshowpast] = useState(true);
+  const [showupcoming, setshowupcoming] = useState(false);
+  const [showpast, setshowpast] = useState(false);
 
   function toggleTable(eventTitle) {
     setShowTable((prevShowTable) =>
@@ -120,8 +121,6 @@ export default function TeamAdmin() {
     // }
     else {
       axios
-        // .post("http://localhost:8000/api/createEvent", {
-        // .post("http://192.168.18.36:8000/api/createEvent", {
         .post(`http://${auth.ip}:8000/api/createEvent`, {
           title: EventTitle,
           date: EventDate,
@@ -163,8 +162,6 @@ export default function TeamAdmin() {
   function saveAttendance(eventTitle) {
     console.log("sending Absent Students:", absentStudents);
     axios
-      // .post("http://localhost:8000/api/markAttendance", {
-      // .post("http://192.168.18.36:8000/api/markAttendance", {
       .post(`http://${auth.ip}:8000/api/markAttendance`, {
         event_title: eventTitle,
         user_email: absentStudents,
@@ -190,8 +187,6 @@ export default function TeamAdmin() {
   }
   function getEvents() {
     axios
-      // .post("http://localhost:8000/api/getEventsInTeam", {
-      // .post("http://192.168.18.36:8000/api/getEventsInTeam", {
       .post(`http://${auth.ip}:8000/api/getEventsInTeam`, {
         team_unique_id: teamId,
       })
@@ -223,10 +218,6 @@ export default function TeamAdmin() {
           setTodaysEvents(todayEvents);
           setUpcomingEvents(upcomingEvents);
           setPastEvents(pastEvents);
-
-          console.log("todays events", todayEvents);
-          console.log("Upcoming events", upcomingEvents);
-          console.log("past events", pastEvents);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -240,8 +231,6 @@ export default function TeamAdmin() {
 
   function getEventParticipants(event_title) {
     axios
-      // .post("http://localhost:8000/api/getEventParticipants", {
-      // .post("http://192.168.18.36:8000/api/getEventParticipants", {
       .post(`http://${auth.ip}:8000/api/getEventParticipants`, {
         team_unique_id: teamId,
         event_title: event_title,
@@ -273,8 +262,6 @@ export default function TeamAdmin() {
 
   function removeEventParticipant(email, event_title) {
     axios
-      // .post("http://localhost:8000/api/removeEventParticipant", {
-      // .post("http://192.168.18.36:8000/api/removeEventParticipant", {
       .post(`http://${auth.ip}:8000/api/removeEventParticipant`, {
         unique_id: teamId,
         event_title: event_title,
@@ -300,8 +287,6 @@ export default function TeamAdmin() {
 
   function deleteEvent(eventTitle) {
     axios
-      // .post("http://localhost:8000/api/deleteEvent", {
-      // .post("http://192.168.18.36:8000/api/deleteEvent", {
       .post(`http://${auth.ip}:8000/api/deleteEvent`, {
         event_title: eventTitle,
         team_unique_id: teamId,
@@ -329,8 +314,8 @@ export default function TeamAdmin() {
   }
 
   useEffect(() => {
+    // document.body.style.backgroundColor = "#1e1e1e";
     getEvents();
-    // console.log(teamId);
   }, []);
   return (
     <>
@@ -346,7 +331,17 @@ export default function TeamAdmin() {
               onClick={() => setshowTodays(!showTodays)}
             >
               <div className="flex flex-row justify-between items-baseline">
-                <h1 className="text-lg  mt-3">Today's events</h1>
+                <h1 className="text-lg text-white ">
+                  <span
+                    className="px-2 rounded-2xl mr-2 text-black"
+                    style={{
+                      backgroundColor: "#C39601",
+                    }}
+                  >
+                    {todaysEvents.length}
+                  </span>
+                  Today's events
+                </h1>
                 <svg
                   className={` ${showTodays ? "rotate-180" : ""}`}
                   width="16"
@@ -359,11 +354,11 @@ export default function TeamAdmin() {
                     fill-rule="evenodd"
                     clip-rule="evenodd"
                     d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
-                    fill="black"
+                    fill="white"
                   />
                 </svg>
               </div>
-              <hr />
+              <hr className="opacity-50" />
             </div>
             {showTodays && (
               <>
@@ -541,7 +536,7 @@ export default function TeamAdmin() {
                         </div>
                         {showAttendance === event.title && (
                           <>
-                            <hr className="mt-5" />
+                            <hr className="mt-5 opacity-50" />
                             <div>
                               <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                                 <thead
@@ -629,7 +624,7 @@ export default function TeamAdmin() {
                         )}
                         {showTable === event.title && (
                           <>
-                            <hr className="mt-5" />
+                            <hr className="mt-5 opacity-50" />
                             <div>
                               <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                                 <thead
@@ -729,7 +724,9 @@ export default function TeamAdmin() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-center">No events for today</p>
+                  <p className="text-center dark:text-white">
+                    No events for today
+                  </p>
                 )}
               </>
             )}
@@ -739,7 +736,17 @@ export default function TeamAdmin() {
               onClick={() => setshowupcoming(!showupcoming)}
             >
               <div className="flex flex-row justify-between items-baseline">
-                <h1 className="text-lg  mt-3">Upcoming events</h1>
+                <h1 className="text-lg  mt-3 text-white">
+                  <span
+                    className="px-2 rounded-2xl mr-2 text-black"
+                    style={{
+                      backgroundColor: "#C39601",
+                    }}
+                  >
+                    {upcomingEvents.length}
+                  </span>
+                  Upcoming events
+                </h1>
                 <svg
                   className={` ${showupcoming ? "rotate-180" : ""}`}
                   width="16"
@@ -752,11 +759,11 @@ export default function TeamAdmin() {
                     fill-rule="evenodd"
                     clip-rule="evenodd"
                     d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
-                    fill="black"
+                    fill="white"
                   />
                 </svg>
               </div>
-              <hr />
+              <hr className="opacity-50" />
             </div>
             {showupcoming && (
               <>
@@ -888,7 +895,7 @@ export default function TeamAdmin() {
 
                         {showTable === event.title && (
                           <>
-                            <hr className="mt-5" />
+                            <hr className="mt-5 opacity-50" />
                             <div>
                               <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                                 <thead
@@ -987,7 +994,9 @@ export default function TeamAdmin() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-center">No upcoming events</p>
+                  <p className="text-center dark:text-white">
+                    No upcoming events
+                  </p>
                 )}
               </>
             )}
@@ -996,7 +1005,17 @@ export default function TeamAdmin() {
               onClick={() => setshowpast(!showpast)}
             >
               <div className="flex flex-row justify-between items-baseline">
-                <h1 className="text-lg  mt-3">Past events</h1>
+                <h1 className="text-lg  mt-3 text-white">
+                  <span
+                    className="px-2 rounded-2xl mr-2 text-black"
+                    style={{
+                      backgroundColor: "#C39601",
+                    }}
+                  >
+                    {pastEvents.length}
+                  </span>
+                  Past events
+                </h1>
                 <svg
                   className={` ${showpast ? "rotate-180" : ""}`}
                   width="16"
@@ -1009,11 +1028,11 @@ export default function TeamAdmin() {
                     fill-rule="evenodd"
                     clip-rule="evenodd"
                     d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
-                    fill="black"
+                    fill="white"
                   />
                 </svg>
               </div>
-              <hr />
+              <hr className="opacity-50" />
             </div>
             {showpast && (
               <>
@@ -1121,7 +1140,7 @@ export default function TeamAdmin() {
 
                         {showTable === event.title && (
                           <>
-                            <hr className="mt-5" />
+                            <hr className="mt-5 opacity-50" />
                             <div>
                               <table className="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                                 <thead
@@ -1221,7 +1240,7 @@ export default function TeamAdmin() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-center">No past events</p>
+                  <p className="text-center dark:text-white">No past events</p>
                 )}
               </>
             )}

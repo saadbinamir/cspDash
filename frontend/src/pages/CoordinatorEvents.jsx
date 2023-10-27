@@ -33,8 +33,7 @@ export default function CoordinatorEvents() {
 
   function getEventParticipants(event_title) {
     axios
-      // .post("http://localhost:8000/api/getEventParticipants", {
-      // .post("http://192.168.18.36:8000/api/getEventParticipants", {
+
       .post(`http://${auth.ip}:8000/api/getEventParticipants`, {
         team_unique_id: teamId,
         event_title: event_title,

@@ -277,36 +277,6 @@ class eventController extends Controller
     }
 
 
-    // public function getEventParticipants(Request $request)
-    // {
-    //     $teamUniqueId = $request->input('team_unique_id');
-    //     $eventTitle = $request->input('event_title');
-
-    //     // Find the team based on the unique_id
-    //     $team = Team::where('unique_id', $teamUniqueId)->first();
-
-    //     if (!$team) {
-    //         return response()->json([
-    //             'status' => 404,
-    //             'message' => 'Team not found.'
-    //         ]);
-    //     }
-
-    //     // Retrieve the list of members participating in the event
-    //     $participants = event_participant::join('events', 'event_participants.event_id', '=', 'events.id')
-    //         ->join('users', 'event_participants.user_id', '=', 'users.id')
-    //         ->where('events.team_id', $team->id)
-    //         ->where('events.title', $eventTitle)
-    //         ->select('users.*')
-    //         ->get();
-
-    //     return response()->json([
-    //         'status' => 200,
-    //         'message' => 'List of event participants retrieved successfully.',
-    //         'participants' => $participants
-    //     ]);
-    // }
-
 
 
     public function getEventParticipants(Request $request)
@@ -374,6 +344,68 @@ class eventController extends Controller
             'status' => 200,
             'message' => 'Coordinator events retrieved successfully.',
             'events' => $events
+        ]);
+    }
+
+
+
+
+
+
+
+
+
+
+    public function getEventsWithStatus(Request $request)
+    {
+        $teamUniqueId = $request->input('team_unique_id');
+        $userEmail = $request->input('user_email');
+
+        // Find the team based on the unique_id
+        $team = Team::where('unique_id', $teamUniqueId)->first();
+
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found.'
+            ]);
+        }
+
+        // Find the user based on the email
+        $user = User::where('email', $userEmail)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'User not found.'
+            ]);
+        }
+
+        // Retrieve all events in the specified team
+        $events = Event::where('team_id', $team->id)->get();
+
+        // Retrieve events that the user has participated in
+        $participatedEventIds = Event::where('events.team_id', $team->id)
+            ->join('event_participants', 'events.id', '=', 'event_participants.event_id')
+            ->where('event_participants.user_id', $user->id)
+            ->pluck('events.id')
+            ->toArray();
+
+        // Prepare the events array with participation status within event objects
+        $eventsWithStatus = [];
+        foreach ($events as $event) {
+            $status = in_array($event->id, $participatedEventIds);
+
+            $eventObject = $event->toArray();
+            $eventObject['participated'] = $status;
+
+            $eventsWithStatus[] = $eventObject;
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Events in team with participation status retrieved successfully.',
+            'events' => $eventsWithStatus
         ]);
     }
 }

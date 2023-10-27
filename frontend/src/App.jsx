@@ -4,7 +4,6 @@ import { AuthProvider } from "./utils/Auth";
 import PrivateRoute from "./utils/PrivateRoute";
 
 import Nav from "./common/NavBar";
-import Sidebar from "./common/Sidebar";
 
 import Footer from "./common/Footer";
 import Home from "./pages/Home";
@@ -23,7 +22,6 @@ import TeamMember from "./pages/TeamMember";
 import Users from "./pages/Users";
 import MyEvents from "./pages/MyEvents";
 import CoordinatorEvents from "./pages/CoordinatorEvents";
-import TeamDetA from "./common/TeamDetA";
 
 export default function App() {
   return (

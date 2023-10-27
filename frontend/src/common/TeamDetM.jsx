@@ -179,7 +179,7 @@ export default function TeamDetM() {
             />
           </div>
         </div>
-        <nav className="md:mx-auto md:mr-auto flex flex-wrap text-base py-5 gap-x-10">
+        {/* <nav className="md:mx-auto md:mr-auto flex flex-wrap text-base py-5 gap-x-10">
           <Link
             to={`/teams/${teamId}`}
             // onClick={() => setSelectedTab("events")}
@@ -231,7 +231,7 @@ export default function TeamDetM() {
           >
             Coordinator Events
           </Link>
-        </nav>
+        </nav> */}
       </div>
     </>
   );
