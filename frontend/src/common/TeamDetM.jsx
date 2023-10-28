@@ -165,73 +165,7 @@ export default function TeamDetM() {
               </button>
             </div>
           </div>
-          <div className="flex flex-row">
-            <input
-              type="email"
-              name="CoordinatorEmail"
-              id="CoordinatorEmail"
-              className="sm:text-sm rounded-lg w-full px-4 py-2"
-              style={{ backgroundColor: "#2f2f2f", color: "#F6F6F6" }}
-              placeholder="Announcements"
-              disabled
-              value={announcements}
-              onChange={(e) => setAnnouncements(e.target.value)}
-            />
-          </div>
         </div>
-        {/* <nav className="md:mx-auto md:mr-auto flex flex-wrap text-base py-5 gap-x-10">
-          <Link
-            to={`/teams/${teamId}`}
-            // onClick={() => setSelectedTab("events")}
-            className="text-white  flex items-center"
-            style={{
-              borderBottom: "none",
-              transition: "border-bottom 1ms",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.borderBottom = "1px solid #C39601";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.borderBottom = "none";
-            }}
-          >
-            All Events
-          </Link>
-          <Link
-            to={`/teams/${teamId}/myEvents`}
-            // onClick={() => setSelectedTab("members")}
-            className="text-white  flex items-center"
-            style={{
-              borderBottom: "none",
-              transition: "border-bottom 1ms",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.borderBottom = "1px solid #C39601";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.borderBottom = "none";
-            }}
-          >
-            My Events
-          </Link>
-          <Link
-            to={`/teams/${teamId}/coordinatorEvents`}
-            // onClick={() => setSelectedTab("members")}
-            className="text-white  flex items-center"
-            style={{
-              borderBottom: "none",
-              transition: "border-bottom 1ms",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.borderBottom = "1px solid #C39601";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.borderBottom = "none";
-            }}
-          >
-            Coordinator Events
-          </Link>
-        </nav> */}
       </div>
     </>
   );
