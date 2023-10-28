@@ -9,6 +9,7 @@ use App\Models\team_members;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\announcements;
 use App\Models\event;
 use App\Models\event_participant;
 use App\Models\user_credit_hour;
@@ -349,10 +350,36 @@ class teamController extends Controller
 
 
 
-    public function updateTeamAnnouncements(Request $request)
+    // public function updateTeamAnnouncements(Request $request)
+    // {
+    //     $teamUniqueId = $request->input('team_unique_id');
+    //     $announcements = $request->input('announcements');
+
+    //     // Find the team by unique ID
+    //     $team = Team::where('unique_id', $teamUniqueId)->first();
+
+    //     if (!$team) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'Team not found.'
+    //         ]);
+    //     }
+
+    //     // Update the team's announcements
+    //     $team->announcements = $announcements;
+    //     $team->save();
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         'message' => 'Team announcements updated successfully.',
+    //         'announcements' => $team->announcements // Optionally, you can return the updated team
+    //     ]);
+    // }
+
+    public function createAnnouncement(Request $request)
     {
         $teamUniqueId = $request->input('team_unique_id');
-        $announcements = $request->input('announcements');
+        $message = $request->input('message');
 
         // Find the team by unique ID
         $team = Team::where('unique_id', $teamUniqueId)->first();
@@ -364,14 +391,72 @@ class teamController extends Controller
             ]);
         }
 
-        // Update the team's announcements
-        $team->announcements = $announcements;
-        $team->save();
+        // Create a new announcement
+        $announcement = new announcements();
+        $announcement->message = $message;
+        $announcement->team_id = $team->id;
+        $announcement->save();
 
         return response()->json([
             'status' => 200,
-            'message' => 'Team announcements updated successfully.',
-            'announcements' => $team->announcements // Optionally, you can return the updated team
+            'message' => 'Announcement created successfully'
+        ]);
+    }
+
+    public function getAnnouncementsInTeam(Request $request)
+    {
+        $teamUniqueId = $request->input('team_unique_id');
+
+        $team = Team::where('unique_id', $teamUniqueId)->first();
+
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found.'
+            ]);
+        }
+
+        // Fetch announcements by team_id
+        $announcements = announcements::where('team_id', $team->id)->get();
+
+        return response()->json([
+            'status' => 200,
+            'announcements' => $announcements
+        ]);
+    }
+
+    public function deleteAnnouncement(Request $request)
+    {
+        $teamUniqueId = $request->input('team_unique_id');
+        $messageId = $request->input('message_id');
+
+
+        $team = Team::where('unique_id', $teamUniqueId)->first();
+
+        if (!$team) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team not found.'
+            ]);
+        }
+
+        // Find the announcement by ID and team_id
+        $announcement = announcements::where('id', $messageId)
+            ->where('team_id', $team->id)
+            ->first();
+
+        if (!$announcement) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Announcement not found for the team'
+            ]);
+        }
+
+        $announcement->delete();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Announcement deleted successfully'
         ]);
     }
 }

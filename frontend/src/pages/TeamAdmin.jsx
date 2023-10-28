@@ -43,6 +43,9 @@ export default function TeamAdmin() {
   const [showupcoming, setshowupcoming] = useState(false);
   const [showpast, setshowpast] = useState(false);
 
+  const [announcements, setannouncements] = useState([]);
+  const [mess, setmess] = useState();
+
   function toggleTable(eventTitle) {
     setShowTable((prevShowTable) =>
       prevShowTable === eventTitle ? null : eventTitle
@@ -228,6 +231,65 @@ export default function TeamAdmin() {
         }
       });
   }
+  function getAnnouncementsInTeam() {
+    axios
+      .post(`http://${auth.ip}:8000/api/getAnnouncementsInTeam`, {
+        team_unique_id: teamId,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          setannouncements(response.data.announcements);
+          setmess("");
+        } else {
+          setErr(response.data.message);
+          setErrState(true);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        }
+      });
+  }
+  function createAnnouncement(mess) {
+    axios
+      .post(`http://${auth.ip}:8000/api/createAnnouncement`, {
+        team_unique_id: teamId,
+        message: mess,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          // setannouncements(response.data.announcements);
+          getAnnouncementsInTeam();
+        } else {
+          setErr(response.data.message);
+          setErrState(true);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        }
+      });
+  }
+  function deleteannouncement(messid) {
+    axios
+      .post(`http://${auth.ip}:8000/api/deleteAnnouncement`, {
+        team_unique_id: teamId,
+        message_id: messid,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          // setannouncements(response.data.announcements);
+          getAnnouncementsInTeam();
+        } else {
+          setErr(response.data.message);
+          setErrState(true);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        }
+      });
+  }
 
   function getEventParticipants(event_title) {
     axios
@@ -316,6 +378,7 @@ export default function TeamAdmin() {
   useEffect(() => {
     // document.body.style.backgroundColor = "#1e1e1e";
     getEvents();
+    getAnnouncementsInTeam();
   }, []);
   return (
     <>
@@ -1246,193 +1309,252 @@ export default function TeamAdmin() {
             )}
           </div>
 
-          <div
-            className=" space-y-4 rounded-2xl p-5 w-4/12 sticky top-10"
-            style={{ backgroundColor: "#2F2F2F" }}
-          >
-            <h1
-              className="text-xl leading-tight tracking-tight  md:text-2xl "
-              style={{ color: "#C39601" }}
+          <div className="flex flex-col w-4/12 sticky top-10 gap-y-5">
+            <div
+              className=" space-y-2 rounded-2xl  px-5 py-4"
+              style={{ backgroundColor: "#2F2F2F" }}
             >
-              Create an event
-            </h1>
-            <form className="space-y-4 md:space-y-2" onSubmit={createEvent}>
-              <div>
-                <label
-                  htmlFor="EventTitle"
-                  className="block mb-2 text-sm font-medium mt-2"
-                  style={{ color: "#F6F6F6" }}
-                >
-                  Event Title
-                </label>
-                <input
-                  type="text"
-                  name="EventTitle"
-                  id="EventTitle"
-                  className="sm:text-sm rounded-2xl w-full px-4 py-2"
-                  style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
-                  placeholder="Anti Littering Drive"
-                  value={EventTitle}
-                  onChange={(e) => setEventTitle(e.target.value)}
-                />
-
-                <div className="flex flex-row space-x-2">
-                  <div className="w-6/12">
-                    <label
-                      htmlFor="EventDate"
-                      className="block mb-2 text-sm font-medium mt-2"
-                      style={{ color: "#F6F6F6" }}
-                    >
-                      Event Date
-                    </label>
-                    <input
-                      type="date"
-                      min={new Date().setHours(0, 0, 0, 0)}
-                      name="EventDate"
-                      id="EventDate"
-                      className="sm:text-sm rounded-2xl w-full px-4 py-2"
+              <h1
+                className="text-lg leading-tight tracking-tight  md:text-lg "
+                style={{ color: "#C39601" }}
+              >
+                Announcements
+              </h1>
+              <div
+                className=" max-h-36 rounded-lg overflow-y-auto "
+                style={{ backgroundColor: "#111111" }}
+              >
+                {announcements.map((announce) => (
+                  <p
+                    key={announce.id}
+                    className="text-sm text-white w-full px-3 py-1 rounded-lg flex items-center justify-between "
+                    style={{ borderBottom: "0.5px solid #C39601" }}
+                  >
+                    {announce.message}
+                    <span
+                      className="text-sm px-2 rounded-2xl text-black cursor-pointer"
                       style={{
-                        backgroundColor: "#111111",
-                        color: "#F6F6F6",
-                        colorScheme: "dark",
+                        backgroundColor: "maroon",
                       }}
-                      value={EventDate}
-                      onChange={(e) => {
-                        setEventDate(e.target.value);
-                        if (
-                          new Date(e.target.value).setHours(0, 0, 0, 0) <=
-                          new Date().setHours(0, 0, 0, 0)
-                        ) {
-                          setErr("Enter a Valid Date");
-                          setErrState(true);
-
-                          setTimeout(() => {
-                            setErr("");
-                            setErrState(false);
-                          }, 3000);
-                        }
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="Credithours"
-                      className="block mb-2 text-sm font-medium mt-2"
-                      style={{ color: "#F6F6F6" }}
+                      onClick={() => deleteannouncement(announce.id)}
                     >
-                      Credit hours
-                    </label>
-                    <input
-                      type="number"
-                      name="Credithours"
-                      id="Credithours"
-                      min="1"
-                      className="sm:text-sm rounded-2xl w-full px-4 py-2"
-                      style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
-                      placeholder="05"
-                      value={Credithours}
-                      onChange={(e) => setCredithours(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="flex space-x-2">
-                  <div>
-                    <label
-                      htmlFor="organizationName"
-                      className="block mb-2 text-sm font-medium mt-2"
-                      style={{ color: "#F6F6F6" }}
-                    >
-                      Organization Name
-                    </label>
-                    <input
-                      type="text"
-                      name="organizationName"
-                      id="organizationName"
-                      className="sm:text-sm rounded-2xl w-full px-4 py-2"
-                      style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
-                      placeholder="Khalida foundation"
-                      value={organizationName}
-                      onChange={(e) => setorganizationName(e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="location"
-                      className="block mb-2 text-sm font-medium mt-2"
-                      style={{ color: "#F6F6F6" }}
-                    >
-                      Location
-                    </label>
-                    <input
-                      type="text"
-                      name="location"
-                      id="location"
-                      className="sm:text-sm rounded-2xl w-full px-4 py-2"
-                      style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
-                      placeholder="E-8 Islamabad"
-                      value={location}
-                      onChange={(e) => setlocation(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <label
-                  htmlFor="CoordinatorEmail"
-                  className="block mb-2 text-sm font-medium mt-2"
-                  style={{ color: "#F6F6F6" }}
-                >
-                  Coordinator Email
-                </label>
+                      X
+                    </span>
+                  </p>
+                ))}
+              </div>
+              <div className="flex flex-row ">
                 <input
                   type="email"
                   name="CoordinatorEmail"
                   id="CoordinatorEmail"
-                  className="sm:text-sm rounded-2xl w-full px-4 py-2"
+                  className="sm:text-sm rounded-lg w-full px-3 "
                   style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
-                  placeholder="coordinator@example.com"
-                  value={CoordinatorEmail}
-                  onChange={(e) => setCoordinatorEmail(e.target.value)}
+                  placeholder="Message"
+                  value={mess}
+                  onChange={(e) => setmess(e.target.value)}
                 />
-                <label
-                  htmlFor="comments"
-                  className="block mb-2 text-sm font-medium mt-2"
-                  style={{ color: "#F6F6F6" }}
-                >
-                  Comments
-                </label>
-                <textarea
-                  name="comments"
-                  id="comments"
-                  className="sm:text-sm rounded-lg  block w-full p-2.5 resize-none  h-28"
-                  style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
-                  placeholder="Bring your bags with you."
-                  value={comments}
-                  onChange={(e) => setcomments(e.target.value)}
-                ></textarea>
-              </div>
-              <div>
                 <button
-                  type="submit"
-                  className="py-1 rounded-2xl w-full mt-2"
+                  className=" py-1 pl-4 rounded-2xl hover:underline"
                   style={{
+                    transition: "border-bottom 1ms",
                     color: "#C39601",
-                    transition: "1ms",
-                    border: "2px solid #C39601",
                   }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = "#C39601";
-                    e.target.style.color = "#111111";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = "initial";
-                    e.target.style.color = "#C39601";
-                  }}
+                  onClick={() => createAnnouncement(mess)}
                 >
-                  {isEdit ? "Update" : "Create Event"}
+                  Post
                 </button>
               </div>
-            </form>
+            </div>
+
+            <div
+              className=" space-y-4 rounded-2xl p-5 "
+              style={{ backgroundColor: "#2F2F2F" }}
+            >
+              <h1
+                className="text-xl leading-tight tracking-tight  md:text-lg "
+                style={{ color: "#C39601" }}
+              >
+                Create an event
+              </h1>
+              <form className="space-y-4 md:space-y-2" onSubmit={createEvent}>
+                <div>
+                  <label
+                    htmlFor="EventTitle"
+                    className="block mb-2 text-sm font-medium mt-2"
+                    style={{ color: "#F6F6F6" }}
+                  >
+                    Event Title
+                  </label>
+                  <input
+                    type="text"
+                    name="EventTitle"
+                    id="EventTitle"
+                    className="sm:text-sm rounded-2xl w-full px-4 py-2"
+                    style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
+                    placeholder="Anti Littering Drive"
+                    value={EventTitle}
+                    onChange={(e) => setEventTitle(e.target.value)}
+                  />
+
+                  <div className="flex flex-row space-x-2">
+                    <div className="w-6/12">
+                      <label
+                        htmlFor="EventDate"
+                        className="block mb-2 text-sm font-medium mt-2"
+                        style={{ color: "#F6F6F6" }}
+                      >
+                        Event Date
+                      </label>
+                      <input
+                        type="date"
+                        min={new Date().setHours(0, 0, 0, 0)}
+                        name="EventDate"
+                        id="EventDate"
+                        className="sm:text-sm rounded-2xl w-full px-4 py-2"
+                        style={{
+                          backgroundColor: "#111111",
+                          color: "#F6F6F6",
+                          colorScheme: "dark",
+                        }}
+                        value={EventDate}
+                        onChange={(e) => {
+                          setEventDate(e.target.value);
+                          if (
+                            new Date(e.target.value).setHours(0, 0, 0, 0) <=
+                            new Date().setHours(0, 0, 0, 0)
+                          ) {
+                            setErr("Enter a Valid Date");
+                            setErrState(true);
+
+                            setTimeout(() => {
+                              setErr("");
+                              setErrState(false);
+                            }, 3000);
+                          }
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="Credithours"
+                        className="block mb-2 text-sm font-medium mt-2"
+                        style={{ color: "#F6F6F6" }}
+                      >
+                        Credit hours
+                      </label>
+                      <input
+                        type="number"
+                        name="Credithours"
+                        id="Credithours"
+                        min="1"
+                        className="sm:text-sm rounded-2xl w-full px-4 py-2"
+                        style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
+                        placeholder="05"
+                        value={Credithours}
+                        onChange={(e) => setCredithours(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <div>
+                      <label
+                        htmlFor="organizationName"
+                        className="block mb-2 text-sm font-medium mt-2"
+                        style={{ color: "#F6F6F6" }}
+                      >
+                        Organization Name
+                      </label>
+                      <input
+                        type="text"
+                        name="organizationName"
+                        id="organizationName"
+                        className="sm:text-sm rounded-2xl w-full px-4 py-2"
+                        style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
+                        placeholder="Khalida foundation"
+                        value={organizationName}
+                        onChange={(e) => setorganizationName(e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="location"
+                        className="block mb-2 text-sm font-medium mt-2"
+                        style={{ color: "#F6F6F6" }}
+                      >
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        name="location"
+                        id="location"
+                        className="sm:text-sm rounded-2xl w-full px-4 py-2"
+                        style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
+                        placeholder="E-8 Islamabad"
+                        value={location}
+                        onChange={(e) => setlocation(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <label
+                    htmlFor="CoordinatorEmail"
+                    className="block mb-2 text-sm font-medium mt-2"
+                    style={{ color: "#F6F6F6" }}
+                  >
+                    Coordinator Email
+                  </label>
+                  <input
+                    type="email"
+                    name="CoordinatorEmail"
+                    id="CoordinatorEmail"
+                    className="sm:text-sm rounded-2xl w-full px-4 py-2"
+                    style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
+                    placeholder="coordinator@example.com"
+                    value={CoordinatorEmail}
+                    onChange={(e) => setCoordinatorEmail(e.target.value)}
+                  />
+                  <label
+                    htmlFor="comments"
+                    className="block mb-2 text-sm font-medium mt-2"
+                    style={{ color: "#F6F6F6" }}
+                  >
+                    Comments
+                  </label>
+                  <textarea
+                    name="comments"
+                    id="comments"
+                    className="sm:text-sm rounded-lg  block w-full p-2.5 resize-none  h-28"
+                    style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
+                    placeholder="Bring your bags with you."
+                    value={comments}
+                    onChange={(e) => setcomments(e.target.value)}
+                  ></textarea>
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    className="py-1 rounded-2xl w-full mt-2"
+                    style={{
+                      color: "#C39601",
+                      transition: "1ms",
+                      border: "2px solid #C39601",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = "#C39601";
+                      e.target.style.color = "#111111";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = "initial";
+                      e.target.style.color = "#C39601";
+                    }}
+                  >
+                    {isEdit ? "Update" : "Create Event"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

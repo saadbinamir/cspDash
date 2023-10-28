@@ -202,33 +202,6 @@ export default function TeamDetA() {
               </button>
             </div>
           </div>
-          <div className="flex flex-row gap-x-7 ">
-            <input
-              type="email"
-              name="CoordinatorEmail"
-              id="CoordinatorEmail"
-              className="sm:text-sm rounded-lg w-full px-4 py-2"
-              style={{ backgroundColor: "#2f2f2f", color: "#F6F6F6" }}
-              placeholder="Announcements"
-              value={announcements}
-              onChange={(e) => setAnnouncements(e.target.value)}
-            />
-            <button
-              className=" py-1 px-4 rounded-2xl  text-green-700"
-              style={{
-                transition: "border-bottom 1ms",
-              }}
-              onClick={() => updateAnnouncements(teamDet.team_unique_id)}
-              onMouseEnter={(e) => {
-                e.target.style.borderBottom = "1px solid #C39601";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.borderBottom = "none";
-              }}
-            >
-              Save
-            </button>
-          </div>
         </div>
         <nav className="md:mx-auto md:mr-auto flex flex-wrap text-base py-5 gap-x-10">
           <Link

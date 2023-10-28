@@ -39,6 +39,9 @@ Route::post('deleteTeam', [teamController::class, 'deleteTeam']);
 Route::delete('removeUserFromTeam', [teamController::class, 'removeUserFromTeam']);
 Route::post('getTeamDetails', [teamController::class, 'getTeamDetails']);
 Route::post('updateTeamAnnouncements', [teamController::class, 'updateTeamAnnouncements']);
+Route::post('createAnnouncement', [teamController::class, 'createAnnouncement']);
+Route::post('getAnnouncementsInTeam', [teamController::class, 'getAnnouncementsInTeam']);
+Route::post('deleteAnnouncement', [teamController::class, 'deleteAnnouncement']);
 
 
 
