@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Sidebar from "../common/Sidebar";
 import { useAuth } from "../utils/Auth";
@@ -7,11 +7,11 @@ import JoinCreateTeam from "./JoinCreateTeam";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
+  const auth = useAuth();
   const [teamName, setteamName] = useState("");
   const [teamID, setteamID] = useState("");
   const [joinTeamID, setjoinTeamID] = useState("");
 
-  const auth = useAuth();
   const [teams, setTeams] = useState([]);
   const [MyTeams, setMyTeams] = useState([]);
 
@@ -105,8 +105,8 @@ export default function Dashboard() {
   return (
     <div>
       <Sidebar />
+      <Toast err={err} errState={errState} />
       <div className="container mx-auto max-w-screen-xl flex flex-col md:flex-row gap-x-10  justify-center items-start my-10">
-        <Toast err={err} errState={errState} />
         <div className="flex flex-col md:w-full mx-auto w-11/12">
           <div>
             <h1

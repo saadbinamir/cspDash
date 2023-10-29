@@ -104,9 +104,9 @@ export default function CreateAcc() {
     <>
       {/* <NavBar /> */}
       <Toast err={err} errState={errState} />
-      <div className="md:flex md:h-screen my-7">
+      <div className="md:flex  md:max-w-screen-xl mx-auto">
         <div className="md:w-1/2">
-          <div className="flex flex-col items-center justify-center px-6  mx-auto md:h-screen  ">
+          <div className="flex flex-col items-center justify-center px-6  mx-auto my-10">
             <div
               className="w-full rounded-2xl shadow md:mt-0 "
               style={{ backgroundColor: "#2F2F2F" }}
@@ -267,7 +267,7 @@ export default function CreateAcc() {
           </div>
         </div>
         <div className="w-1/2 md:block hidden">
-          <div style={{ marginTop: "-140px" }}>
+          <div style={{ marginTop: "-80px" }}>
             <Lottie animationData={help} />
           </div>
         </div>

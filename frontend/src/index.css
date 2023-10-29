@@ -8,13 +8,13 @@
     right: -100%;
   }
   to {
-    right: 50px;
+    right: 20px;
   }
 }
 
 @keyframes slideOut {
   from {
-    right: 50px;
+    right: 20px;
   }
   to {
     right: -100%;

@@ -218,10 +218,10 @@ export default function TeamMember() {
     <>
       <Sidebar />
       <Toast err={err} errState={errState} />
-      <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10  mt-10">
+      <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10 py-10">
         <TeamDetM />
         <div className=" flex md:flex-row flex-col-reverse gap-x-10  justify-center items-start gap-y-10  ">
-          <div className="flex flex-col md:w-8/12 gap-y-5 mx-auto w-11/12">
+          <div className="flex flex-col md:w-8/12 gap-y-5 mx-auto w-11/12 mb-10">
             <div
               className="cursor-pointer"
               onClick={() => setshowTodays(!showTodays)}
@@ -343,7 +343,6 @@ export default function TeamMember() {
                             <span className=" text-base font-light mr-2">
                               <Location />
                             </span>
-                            {/* Mazhar Ul Islam School | Islamabad */}
                             {event.organization_name} | {event.location}
                           </p>
 
@@ -930,7 +929,7 @@ export default function TeamMember() {
               </>
             )}
           </div>
-          <div className="flex flex-col md:w-4/12 sticky top-10 gap-y-5 mx-auto w-11/12">
+          <div className="flex flex-col md:w-4/12  gap-y-5 mx-auto w-11/12">
             <div
               className=" space-y-2 rounded-2xl  px-5 py-4"
               style={{ backgroundColor: "#2F2F2F" }}
