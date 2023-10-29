@@ -136,21 +136,20 @@ export default function TeamDetA() {
       <div
         className="flex flex-col rounded-2xl shadow w-full"
         style={{ backgroundColor: "#2f2f2f" }}
-        // style={{ backgroundColor: "#111111" }}
       >
         <div
-          className="flex flex-col rounded-2xl shadow gap-x-10 px-10 py-5 space-y-5"
-          style={{ backgroundColor: "#111111" }}
+        className="rounded-2xl shadow gap-x-10 px-5 py-5 gap-y-5"
+        style={{ backgroundColor: "#111111" }}
+      >
+        <div
+          className="flex md:flex-row flex-col md:items-center items-start gap-y-2 justify-between "
+          // style={{ backgroundColor: "#111111" }}
         >
-          <div
-            className="flex flex-row items-center   justify-between "
-            // style={{ backgroundColor: "#111111" }}
-          >
-            <div className="flex flex-row gap-x-5 items-baseline">
-              <h5 className="text-2xl font-medium" style={{ color: "#c39601" }}>
-                {/* Hoor ka Event */}
-                {teamDet.team_name}
-              </h5>
+          <div className="flex flex-row gap-x-5 items-baseline">
+            <h5 className="text-2xl font-medium" style={{ color: "#c39601" }}>
+              {/* Hoor ka Event */}
+              {teamDet.team_name}
+            </h5>
               <p
                 className="font-light text-sm flex items-center "
                 style={{ color: "#FAFAFA" }}
@@ -203,7 +202,7 @@ export default function TeamDetA() {
             </div>
           </div>
         </div>
-        <nav className="md:mx-auto md:mr-auto flex flex-wrap text-base py-5 gap-x-10">
+        <nav className="mx-auto md:mr-auto flex flex-wrap text-base py-5 gap-x-10">
           <Link
             to={`/teams/${teamId}/admin`}
             // onClick={() => setSelectedTab("events")}

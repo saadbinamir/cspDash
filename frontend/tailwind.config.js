@@ -6,7 +6,7 @@ export default {
   ],
   theme: {
     fontFamily: {
-      sans: ['Roboto'],
+      // sans: ['Roboto'],
     },
   },
 
