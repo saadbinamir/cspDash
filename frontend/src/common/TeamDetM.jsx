@@ -96,77 +96,77 @@ export default function TeamDetM() {
       {/* <Sidebar /> */}
       <Toast err={err} errState={errState} />
       {/* <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10  my-10"> */}
-      <div
+      {/* <div
         className="flex flex-col rounded-2xl shadow w-full"
         style={{ backgroundColor: "#2f2f2f" }}
         // style={{ backgroundColor: "#111111" }}
+      > */}
+      <div
+        className="rounded-2xl shadow gap-x-10 px-5 py-5 gap-y-5"
+        style={{ backgroundColor: "#111111" }}
       >
         <div
-          className="flex flex-col rounded-2xl shadow gap-x-10 px-10 py-5 gap-y-5"
-          style={{ backgroundColor: "#111111" }}
+          className="flex md:flex-row flex-col md:items-center items-start gap-y-2 justify-between "
+          // style={{ backgroundColor: "#111111" }}
         >
-          <div
-            className="flex flex-row items-center   justify-between "
-            // style={{ backgroundColor: "#111111" }}
-          >
-            <div className="flex flex-row gap-x-5 items-baseline">
-              <h5 className="text-2xl font-medium" style={{ color: "#c39601" }}>
-                {/* Hoor ka Event */}
-                {teamDet.team_name}
-              </h5>
-              <p
-                className="font-light text-sm flex items-center "
-                style={{ color: "#FAFAFA" }}
-              >
-                {teamDet.team_unique_id}
-                <span
-                  className=" text-base font-light ml-2 cursor-pointer"
-                  onClick={() => {
-                    navigator.clipboard.writeText(teamDet.team_unique_id);
-                    setErr("coppied to clipboard");
+          <div className="flex flex-row gap-x-5 items-baseline">
+            <h5 className="text-2xl font-medium" style={{ color: "#c39601" }}>
+              {/* Hoor ka Event */}
+              {teamDet.team_name}
+            </h5>
+            <p
+              className="font-light text-sm flex items-center "
+              style={{ color: "#FAFAFA" }}
+            >
+              {teamDet.team_unique_id}
+              <span
+                className=" text-base font-light ml-2 cursor-pointer"
+                onClick={() => {
+                  navigator.clipboard.writeText(teamDet.team_unique_id);
+                  setErr("coppied to clipboard");
+                  setErrState(false);
+                  setTimeout(() => {
+                    setErr("");
                     setErrState(false);
-                    setTimeout(() => {
-                      setErr("");
-                      setErrState(false);
-                    }, 3000);
-                  }}
-                >
-                  <Copy />
-                </span>
-              </p>
-            </div>
-            <div className="flex flex-row space-x-5">
-              <div>
-                <input
-                  type="password"
-                  // name="new-pass"
-                  // id="new-pass"
-                  className="sm:text-sm rounded-lg   p-2 "
-                  style={{ backgroundColor: "#2f2f2f", color: "#F6F6F6" }}
-                  placeholder="Enter Password to leave"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <button
-                className=" py-1 px-4 rounded-2xl text-red-700"
-                style={{
-                  transition: "border-bottom 1ms",
-                }}
-                onClick={() => RemoveMember()}
-                onMouseEnter={(e) => {
-                  e.target.style.borderBottom = "1px solid #C39601";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.borderBottom = "none";
+                  }, 3000);
                 }}
               >
-                Leave team
-              </button>
+                <Copy />
+              </span>
+            </p>
+          </div>
+          <div className="flex flex-row space-x-5">
+            <div>
+              <input
+                type="password"
+                // name="new-pass"
+                // id="new-pass"
+                className="sm:text-sm rounded-lg   p-2 "
+                style={{ backgroundColor: "#2f2f2f", color: "#F6F6F6" }}
+                placeholder="Enter Password to leave"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
+            <button
+              className=" py-1 px-4 rounded-2xl text-red-700"
+              style={{
+                transition: "border-bottom 1ms",
+              }}
+              onClick={() => RemoveMember()}
+              onMouseEnter={(e) => {
+                e.target.style.borderBottom = "1px solid #C39601";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.borderBottom = "none";
+              }}
+            >
+              Leave team
+            </button>
           </div>
         </div>
       </div>
+      {/* </div> */}
     </>
   );
 }

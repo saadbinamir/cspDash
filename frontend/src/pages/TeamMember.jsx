@@ -218,10 +218,10 @@ export default function TeamMember() {
     <>
       <Sidebar />
       <Toast err={err} errState={errState} />
-      <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10  my-10 mt-10">
+      <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10  mt-10">
         <TeamDetM />
-        <div className=" flex flex-row gap-x-10  justify-center items-start">
-          <div className="flex flex-col w-8/12 gap-y-5">
+        <div className=" flex md:flex-row flex-col-reverse gap-x-10  justify-center items-start gap-y-10  ">
+          <div className="flex flex-col md:w-8/12 gap-y-5 mx-auto w-11/12">
             <div
               className="cursor-pointer"
               onClick={() => setshowTodays(!showTodays)}
@@ -930,7 +930,7 @@ export default function TeamMember() {
               </>
             )}
           </div>
-          <div className="flex flex-col w-4/12 sticky top-10 gap-y-5">
+          <div className="flex flex-col md:w-4/12 sticky top-10 gap-y-5 mx-auto w-11/12">
             <div
               className=" space-y-2 rounded-2xl  px-5 py-4"
               style={{ backgroundColor: "#2F2F2F" }}
@@ -945,15 +945,6 @@ export default function TeamMember() {
                 className="  rounded-lg overflow-y-auto "
                 style={{ backgroundColor: "#111111" }}
               >
-                {/* {announcements.map((announce) => (
-                  <p
-                    key={announce.id}
-                    className="text-sm text-white w-full px-3 py-1 rounded-lg flex items-center justify-between "
-                    style={{ borderBottom: "0.5px solid #C39601" }}
-                  >
-                    {announce.message}
-                  </p>
-                ))} */}
                 {announcements
                   .slice()
                   .reverse()

@@ -42,6 +42,7 @@ Route::post('updateTeamAnnouncements', [teamController::class, 'updateTeamAnnoun
 Route::post('createAnnouncement', [teamController::class, 'createAnnouncement']);
 Route::post('getAnnouncementsInTeam', [teamController::class, 'getAnnouncementsInTeam']);
 Route::post('deleteAnnouncement', [teamController::class, 'deleteAnnouncement']);
+Route::post('getAllUserTeams', [teamController::class, 'getAllUserTeams']);
 
 
 

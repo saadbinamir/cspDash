@@ -4,11 +4,13 @@ import Lottie from "lottie-react";
 import help from "../assets/help.json";
 import axios from "axios";
 import Toast from "../common/Toast";
+import { useAuth } from "../utils/Auth";
 
 // import NavBar from "../common/NavBar";
 // import Footer from "../common/Footer";
 
 export default function CreateAcc() {
+  const auth = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");

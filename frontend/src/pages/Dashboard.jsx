@@ -51,8 +51,40 @@ export default function Dashboard() {
       .then((response) => {
         if (response.data.status === 200) {
           setTeams(response.data.teams);
-          console.log(response.data.teams);
+          // console.log(response.data.teams);
           // console.log(teams);
+        } else {
+          setErr(response.data.message);
+          setErrState(true);
+          setTimeout(() => {
+            setErr("");
+            setErrState(false);
+          }, 3000);
+        }
+      });
+  }
+  function getTeams() {
+    axios
+      .post(`http://${auth.ip}:8000/api/getAllUserTeams`, {
+        user_email: auth.user.email,
+      })
+      .then((response) => {
+        if (response.data.status === 200) {
+          setTeams(response.data.teams);
+
+          const myTeams = [];
+          const notMyTeams = [];
+
+          response.data.teams.forEach((team) => {
+            if (team.organizer_email === auth.user.email) {
+              myTeams.push(team);
+            } else {
+              notMyTeams.push(team);
+            }
+          });
+
+          setMyTeams(myTeams);
+          setTeams(notMyTeams);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -65,16 +97,17 @@ export default function Dashboard() {
   }
   useEffect(() => {
     document.body.style.backgroundColor = "#1e1e1e";
-    getUserTeams();
-    getMyTeams();
+    getTeams();
+    // getUserTeams();
+    // getMyTeams();
   }, []);
 
   return (
     <div>
       <Sidebar />
-      <div className="container mx-auto max-w-screen-xl flex flex-row gap-x-10  justify-center items-start my-10">
+      <div className="container mx-auto max-w-screen-xl flex flex-col md:flex-row gap-x-10  justify-center items-start my-10">
         <Toast err={err} errState={errState} />
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col md:w-full mx-auto w-11/12">
           <div>
             <h1
               className="text-lg md:text-xl mt-3"
@@ -94,7 +127,7 @@ export default function Dashboard() {
                     <Link
                       key={team.team_unique_id}
                       to={`/teams/${team.team_unique_id}`}
-                      className="flex flex-row gap-x-10  w-full pb-2"
+                      className="flex flex-row gap-x-10  w-full pb-2 items-center"
                       style={{ borderBottom: "0.5px solid grey" }}
                     >
                       <div
@@ -125,13 +158,19 @@ export default function Dashboard() {
                           <span className=" text-base font-light mr-8">
                             Owner:
                           </span>
-                          {team.organizer_email}
+                          {team.organizer_name}
                         </p>
                         <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
                           <span className=" text-base font-light mr-2">
                             Members:
                           </span>
                           &nbsp;{team.number_of_members - 1}
+                        </p>
+                        <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
+                          <span className=" text-base font-light mr-7">
+                            Events:
+                          </span>
+                          &nbsp;{team.number_of_events}
                         </p>
                       </div>
                     </Link>
@@ -166,7 +205,7 @@ export default function Dashboard() {
                     <Link
                       key={team.team_unique_id}
                       to={`/teams/${team.team_unique_id}/admin`}
-                      className="flex flex-row gap-x-10  w-full pb-2"
+                      className="flex flex-row gap-x-10  w-full pb-2  items-center"
                       style={{ borderBottom: "0.5px solid grey" }}
                     >
                       <div
@@ -197,13 +236,19 @@ export default function Dashboard() {
                           <span className=" text-base font-light mr-8">
                             Owner:
                           </span>
-                          {team.organizer_email}
+                          {team.organizer_name}
                         </p>
                         <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
                           <span className=" text-base font-light mr-2">
                             Members:
                           </span>
                           &nbsp;{team.number_of_members - 1}
+                        </p>
+                        <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
+                          <span className=" text-base font-light mr-7">
+                            Events:
+                          </span>
+                          &nbsp;{team.number_of_events}
                         </p>
                       </div>
                     </Link>

@@ -110,7 +110,7 @@ export default function JoinCreateTeam({ getMyTeams, getUserTeams }) {
   return (
     <>
       <Toast err={err} errState={errState} />
-      <div className="flex flex-col gap-5 md:w-4/12 mt-10 sticky top-40 ">
+      <div className="flex flex-col gap-y-5 md:w-4/12 mt-10 sticky top-40 mx-auto w-11/12">
         <div
           className=" space-y-4 rounded-2xl p-5 "
           style={{ backgroundColor: "#2F2F2F" }}
