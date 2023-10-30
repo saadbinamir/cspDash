@@ -122,7 +122,15 @@ class teamController extends Controller
         $email = $request->input('email');
         $unique_id = $request->input('unique_id');
 
-        $user = User::where('email', $email)->first();
+        // $user = User::where('email', $email)->first();
+
+        if (strpos($email, '@') === false) {
+            // Assume the entered input is a username, so search for a user based on this pattern
+            $user = User::where('email', 'LIKE', $email . '@%')->first();
+        } else {
+            $user = User::where('email', $email)->first();
+        }
+
         $team = Team::where('unique_id', $unique_id)->first();
         if (!$user) {
             return response()->json([

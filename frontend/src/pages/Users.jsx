@@ -53,8 +53,6 @@ export default function Users() {
       }, 3000);
     } else {
       axios
-        // .post("http://localhost:8000/api/addUserToTeam", {
-        // .post("http://192.168.18.36:8000/api/addUserToTeam", {
         .post(`http://${auth.ip}:8000/api/addUserToTeam`, {
           email: addUserEmail,
           unique_id: teamId,

@@ -109,6 +109,23 @@ class userController extends Controller
         $email = $request->input('email');
         $pass = $request->input('password');
 
+
+        if (strpos($email, '@') === false) {
+            // If the "@" symbol is not present, assume the entered input is a username
+            $user = User::where('email', 'LIKE', $email . '@%')->first();
+            if ($user) {
+                $email = $user->email;
+            } else {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Invalid credentials',
+                ]);
+            }
+        } else {
+            $email = $email;
+        }
+
+
         if (Auth::attempt(['email' => $email, 'password' => $pass])) {
 
             $user = Auth::user();

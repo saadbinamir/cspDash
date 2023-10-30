@@ -45,13 +45,10 @@ export default function ContactUs() {
   return (
     <>
       {/* <NavBar /> */}
-      <section
-        className="text-gray-600 body-font relative"
-        style={{ backgroundColor: "#f6f6f6" }}
-      >
+      <section className="text-gray-600 body-font relative">
         <div className="container max-w-screen-xl px-5 py-16 mx-auto flex sm:flex-nowrap flex-wrap">
           <div
-            className="lg:w-2/3 md:w-1/2  rounded-3xl overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative"
+            className="lg:w-2/3 md:w-1/2  rounded-2xl overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative"
             style={{ backgroundColor: "#2F2F2F" }}
           >
             <iframe
@@ -95,10 +92,10 @@ export default function ContactUs() {
           </div>
 
           <div
-            className="w-full rounded-3xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0"
+            className="w-full rounded-2xl shadow md:mt-0 sm:max-w-md "
             style={{ backgroundColor: "#2F2F2F" }}
           >
-            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <div className=" space-y-4 md:space-y-6 p-5">
               <h1
                 className="text-xl leading-tight tracking-tight md:text-2xl"
                 style={{ color: "#C39601" }}
