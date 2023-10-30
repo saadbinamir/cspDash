@@ -1,9 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import emailjs from "@emailjs/browser";
 // import NavBar from "../common/NavBar";
 // import Footer from "../common/Footer";
 
 export default function ContactUs() {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_xrb4dfl",
+        "template_63thot9",
+        form.current,
+        "wP7G7RotSIre32n7L"
+      )
+      .then(
+        (result) => {
+          console.log(result.text);
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
+  };
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -30,17 +52,24 @@ export default function ContactUs() {
     } else if (name != "" && email != "" && message != "") {
       setErr("Sent");
       setErrState(false);
+
+      emailjs
+        .sendForm(
+          "service_xrb4dfl",
+          "template_63thot9",
+          form.current,
+          "wP7G7RotSIre32n7L"
+        )
+        .then(
+          (result) => {
+            console.log(result.text);
+          },
+          (error) => {
+            console.log(error.text);
+          }
+        );
     }
   };
-
-  // React.useEffect(() => {
-  //     document.documentElement.style.overflow = 'hidden';
-  //     document.body.style.overflow = 'hidden';
-  //     return () => {
-  //         document.documentElement.style.overflow = 'auto';
-  //         document.body.style.overflow = 'auto';
-  //     };
-  // }, []);
 
   return (
     <>
@@ -102,7 +131,11 @@ export default function ContactUs() {
               >
                 Feedback
               </h1>
-              <form className="space-y-4 md:space-y-3" onSubmit={handleSubmit}>
+              <form
+                ref={form}
+                className="space-y-4 md:space-y-3"
+                onSubmit={handleSubmit}
+              >
                 <div>
                   <label
                     htmlFor="name"
@@ -113,7 +146,7 @@ export default function ContactUs() {
                   </label>
                   <input
                     type="name"
-                    name="name"
+                    name="user_name"
                     id="name"
                     className="sm:text-sm rounded-lg  block w-full p-2.5 "
                     style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
@@ -133,7 +166,7 @@ export default function ContactUs() {
                   </label>
                   <input
                     type="email"
-                    name="email"
+                    name="user_email"
                     id="email"
                     className="sm:text-sm rounded-lg  block w-full p-2.5 "
                     style={{ backgroundColor: "#111111", color: "#F6F6F6" }}

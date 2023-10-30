@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Sidebar from "../common/Sidebar";
 import { useAuth } from "../utils/Auth";
@@ -7,10 +7,13 @@ import JoinCreateTeam from "./JoinCreateTeam";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import TeamDetA from "../common/TeamDetA";
+import emailjs from "@emailjs/browser";
 
 export default function Users() {
   const { teamId } = useParams();
   const auth = useAuth();
+  const form = useRef();
+
   const [addUserEmail, setaddUserEmail] = useState([]);
   const [members, setmembers] = useState([]);
   const [err, setErr] = useState("");
@@ -65,6 +68,23 @@ export default function Users() {
             getTeamMembers();
 
             setKey(key + 1);
+            form.current.user_name.value = response.data.name;
+            form.current.user_email.value = response.data.user_email;
+            emailjs
+              .sendForm(
+                "service_xrb4dfl",
+                "template_rbw1zyf",
+                form.current,
+                "wP7G7RotSIre32n7L"
+              )
+              .then(
+                (result) => {
+                  console.log(result.text);
+                },
+                (error) => {
+                  console.log(error.text);
+                }
+              );
           } else {
             setErr(response.data.message);
             setErrState(true);
@@ -132,7 +152,7 @@ export default function Users() {
                   Name
                 </th>
                 <th scope="col" className="px-2 py-3">
-                  Email
+                  Username / Enrollemtn
                 </th>
                 <th scope="col" className="px-2 py-3">
                   Phone
@@ -159,7 +179,9 @@ export default function Users() {
                   <td className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {member.team_member_name}
                   </td>
-                  <td className="px-2 py-4">{member.team_member_email}</td>
+                  <td className="px-2 py-4">
+                    {member.team_member_email.split("@")[0]}
+                  </td>
                   <td className="px-2 py-4">{member.team_member_phone}</td>
                   <td className="px-2 py-4">{member.team_member_address}</td>
                   {/* <td className="px-2 py-4">{member.team_member_role}</td> */}
@@ -186,8 +208,14 @@ export default function Users() {
             >
               Add a member to the team
             </h1>
-            <form className="space-y-4 md:space-y-2" onSubmit={AddMember}>
+            <form
+              ref={form}
+              className="space-y-4 md:space-y-2"
+              onSubmit={AddMember}
+            >
               <div>
+                <input type="hidden" name="user_name" value={addUserEmail} />
+                <input type="hidden" name="team_name" value={teamId} />
                 <label
                   htmlFor="teamID"
                   className="block mb-2 text-sm font-medium mt-2"
@@ -197,7 +225,7 @@ export default function Users() {
                 </label>
                 <input
                   type="text"
-                  name="teamID"
+                  name="user_email"
                   id="teamID"
                   className="sm:text-sm rounded-2xl w-full px-4 py-2"
                   style={{ backgroundColor: "#111111", color: "#F6F6F6" }}

@@ -172,7 +172,7 @@ class teamController extends Controller
                 'status' => 201,
                 'message' => 'User added to the team.',
                 'user_email' => $user->email,
-                'user_teams' => $teams
+                'name' => $user->name
             ], 201);
         }
 
