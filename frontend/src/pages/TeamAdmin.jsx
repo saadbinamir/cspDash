@@ -11,6 +11,7 @@ import Location from "../assets/Location";
 import Email from "../assets/Email";
 import Hours from "../assets/Hours";
 import TeamDetA from "../common/TeamDetA";
+import { CSVLink } from "react-csv";
 
 export default function TeamAdmin() {
   const { teamId } = useParams();
@@ -45,6 +46,13 @@ export default function TeamAdmin() {
 
   const [announcements, setannouncements] = useState([]);
   const [mess, setmess] = useState();
+
+  const headers = [
+    { label: "Name", key: "name" },
+    { label: "Email/Enroll", key: "email" },
+    { label: "Phone", key: "phone" },
+    { label: "Attendance", key: "attendance" },
+  ];
 
   function toggleTable(eventTitle) {
     setShowTable((prevShowTable) =>
@@ -1231,72 +1239,85 @@ export default function TeamAdmin() {
                                 </thead>
                                 <tbody>
                                   {participnts.map((participnt, index) => (
-                                    <tr
-                                      key={participnt.id}
-                                      className={`border-b dark:border-gray-700 `}
-                                      style={{ backgroundColor: "#2f2f2f" }}
-                                    >
-                                      <td className="px-2 py-2">{index + 1}</td>
-                                      <td className="px-2 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {participnt.name}
-                                      </td>
-                                      <td className="px-2 py-2">
-                                        {participnt.email}
-                                      </td>
-                                      <td className="px-2 py-2">
-                                        {participnt.phone}
-                                      </td>
+                                    <>
+                                      <tr
+                                        key={participnt.id}
+                                        className={`border-b dark:border-gray-700 `}
+                                        style={{ backgroundColor: "#2f2f2f" }}
+                                      >
+                                        <td className="px-2 py-2">
+                                          {index + 1}
+                                        </td>
+                                        <td className="px-2 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                          {participnt.name}
+                                        </td>
+                                        <td className="px-2 py-2">
+                                          {participnt.email}
+                                        </td>
+                                        <td className="px-2 py-2">
+                                          {participnt.phone}
+                                        </td>
 
-                                      <td className="px-2 py-2">
-                                        <button
-                                          onClick={() =>
-                                            removeEventParticipant(
-                                              participnt.email,
-                                              event.title
-                                            )
-                                          }
-                                          className={
-                                            new Date(event.date).setHours(
-                                              0,
-                                              0,
-                                              0,
-                                              0
-                                            ) < new Date().setHours(0, 0, 0, 0)
-                                              ? absentStudents.includes(
-                                                  participnt.email
-                                                )
-                                                ? "text-red-700 hover:underline"
-                                                : "text-green-700 hover:underline"
-                                              : "text-red-700 hover:underline"
-                                          }
-                                          disabled={
-                                            new Date(event.date).setHours(
-                                              0,
-                                              0,
-                                              0,
-                                              0
-                                            ) < new Date().setHours(0, 0, 0, 0)
-                                          }
-                                        >
-                                          {new Date(event.date).setHours(
-                                            0,
-                                            0,
-                                            0,
-                                            0
-                                          ) < new Date().setHours(0, 0, 0, 0)
-                                            ? absentStudents.includes(
+                                        <td className="px-2 py-2">
+                                          <button
+                                            className={
+                                              absentStudents.includes(
                                                 participnt.email
                                               )
+                                                ? "text-red-700 hover:underline"
+                                                : "text-green-700 hover:underline"
+                                            }
+                                            disabled
+                                          >
+                                            {absentStudents.includes(
+                                              participnt.email
+                                            )
                                               ? "Absent"
-                                              : "Present"
-                                            : "Remove"}
-                                        </button>
-                                      </td>
-                                    </tr>
+                                              : "Present"}
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    </>
                                   ))}
                                 </tbody>
                               </table>
                             </div>
+                            <CSVLink
+                              // data={participnts}
+                              data={participnts.map((participnt) => ({
+                                name: participnt.name,
+                                email: participnt.email,
+                                phone: participnt.phone,
+                                attendance: absentStudents.includes(
+                                  participnt.email
+                                )
+                                  ? "Absent"
+                                  : "Present",
+                              }))}
+                              headers={headers}
+                              filename={`${event.title} | ${event.date}.csv`}
+                            >
+                              <button
+                                type="submit"
+                                className="py-1 px-4 rounded-2xl mt-5 float-right"
+                                style={{
+                                  color: "#C39601",
+                                  transition: "1ms",
+                                  border: "1px solid #C39601",
+                                }}
+                                // onClick={() => toggleTable(event.title)}
+                                onMouseEnter={(e) => {
+                                  e.target.style.backgroundColor = "#C39601";
+                                  e.target.style.color = "#111111";
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.target.style.backgroundColor = "initial";
+                                  e.target.style.color = "#C39601";
+                                }}
+                              >
+                                Export
+                              </button>
+                            </CSVLink>
                           </>
                         )}
                       </div>
