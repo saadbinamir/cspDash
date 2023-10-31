@@ -24,7 +24,6 @@ export default function Profile() {
   const [progress, setProgress] = useState(0);
 
   const handleUpdate = (e) => {
-    setProgress(50);
     e.preventDefault();
     // console.log(auth.user);
     console.log("Name:", name);
@@ -59,9 +58,8 @@ export default function Profile() {
         setErrState(false);
       }, 3000);
     } else {
+      setProgress(50);
       axios
-        // .post("http://localhost:8000/api/updateProfile", {
-        // .post("http://192.168.18.36:8000/api/updateProfile", {
         .post(`http://${auth.ip}:8000/api/updateProfile`, {
           name: name,
           email: email,
@@ -75,11 +73,16 @@ export default function Profile() {
             setErrState(false);
             auth.user = response.data.user;
             auth.user.password = password;
+
+            setName(response.data.user.name);
+            setPhone(response.data.user.phone);
+            setAddress(response.data.user.address);
             setTimeout(() => {
               setErr("");
               setErrState(false);
             }, 3000);
             setProgress(100);
+            console.log(response.data.user);
           } else {
             setErr(response.data.message);
             setErrState(true);
