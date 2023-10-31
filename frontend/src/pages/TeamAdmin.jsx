@@ -12,6 +12,7 @@ import Email from "../assets/Email";
 import Hours from "../assets/Hours";
 import TeamDetA from "../common/TeamDetA";
 import { CSVLink } from "react-csv";
+import LoadingBar from "react-top-loading-bar";
 
 export default function TeamAdmin() {
   const { teamId } = useParams();
@@ -53,6 +54,7 @@ export default function TeamAdmin() {
     { label: "Phone", key: "phone" },
     { label: "Attendance", key: "attendance" },
   ];
+  const [progress, setProgress] = useState(0);
 
   function toggleTable(eventTitle) {
     setShowTable((prevShowTable) =>
@@ -71,6 +73,7 @@ export default function TeamAdmin() {
   const [errState, setErrState] = useState();
 
   const createEvent = (e) => {
+    setProgress(50);
     e.preventDefault();
     if (!EventTitle) {
       setErr("Enter Event Title");
@@ -159,6 +162,7 @@ export default function TeamAdmin() {
 
             setKey(key + 1);
             setisEdit(false);
+            setProgress(100);
           } else {
             setErr(response.data.message);
             setErrState(true);
@@ -166,11 +170,13 @@ export default function TeamAdmin() {
               setErr("");
               setErrState(false);
             }, 3000);
+            setProgress(100);
           }
         });
     }
   };
   function saveAttendance(eventTitle) {
+    setProgress(50);
     console.log("sending Absent Students:", absentStudents);
     axios
       .post(`http://${auth.ip}:8000/api/markAttendance`, {
@@ -186,6 +192,7 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -193,10 +200,12 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
   function getEvents() {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/getEventsInTeam`, {
         team_unique_id: teamId,
@@ -229,6 +238,7 @@ export default function TeamAdmin() {
           setTodaysEvents(todayEvents);
           setUpcomingEvents(upcomingEvents);
           setPastEvents(pastEvents);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -236,10 +246,12 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
   function getAnnouncementsInTeam() {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/getAnnouncementsInTeam`, {
         team_unique_id: teamId,
@@ -248,6 +260,7 @@ export default function TeamAdmin() {
         if (response.data.status === 200) {
           setannouncements(response.data.announcements);
           setmess("");
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -255,10 +268,12 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
   function createAnnouncement(mess) {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/createAnnouncement`, {
         team_unique_id: teamId,
@@ -268,6 +283,7 @@ export default function TeamAdmin() {
         if (response.data.status === 200) {
           // setannouncements(response.data.announcements);
           getAnnouncementsInTeam();
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -275,10 +291,12 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
   function deleteannouncement(messid) {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/deleteAnnouncement`, {
         team_unique_id: teamId,
@@ -288,6 +306,7 @@ export default function TeamAdmin() {
         if (response.data.status === 200) {
           // setannouncements(response.data.announcements);
           getAnnouncementsInTeam();
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -295,11 +314,13 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
 
   function getEventParticipants(event_title) {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/getEventParticipants`, {
         team_unique_id: teamId,
@@ -317,8 +338,7 @@ export default function TeamAdmin() {
 
           // Now, absentStudents contains the emails of absent students
           setAbsentStudents(absent);
-
-          console.log("prev Absent Students:", absentStudents);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -326,11 +346,13 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
 
   function removeEventParticipant(email, event_title) {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/removeEventParticipant`, {
         unique_id: teamId,
@@ -344,6 +366,7 @@ export default function TeamAdmin() {
           getEventParticipants(event_title);
           // setParticipnts(response.data.participants);
           // console.log(response.data.participants);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -351,11 +374,13 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
 
   function deleteEvent(eventTitle) {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/deleteEvent`, {
         event_title: eventTitle,
@@ -372,6 +397,7 @@ export default function TeamAdmin() {
           setEvents(response.data.events);
           getEvents();
           setKey(key + 1);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -379,6 +405,7 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
@@ -390,6 +417,11 @@ export default function TeamAdmin() {
   }, []);
   return (
     <>
+      <LoadingBar
+        color="#C39601"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Sidebar />
       <Toast err={err} errState={errState} />
       <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10 py-10">
@@ -1287,7 +1319,7 @@ export default function TeamAdmin() {
                               data={participnts.map((participnt) => ({
                                 name: participnt.name,
                                 email: participnt.email,
-                                phone: participnt.phone,
+                                phone: `'${participnt.phone}`,
                                 attendance: absentStudents.includes(
                                   participnt.email
                                 )
@@ -1296,6 +1328,9 @@ export default function TeamAdmin() {
                               }))}
                               headers={headers}
                               filename={`${event.title} | ${event.date}.csv`}
+                              config={{
+                                bom: true,
+                              }}
                             >
                               <button
                                 type="submit"

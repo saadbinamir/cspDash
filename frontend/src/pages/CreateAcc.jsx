@@ -5,7 +5,7 @@ import help from "../assets/help.json";
 import axios from "axios";
 import Toast from "../common/Toast";
 import { useAuth } from "../utils/Auth";
-
+import LoadingBar from "react-top-loading-bar";
 // import NavBar from "../common/NavBar";
 // import Footer from "../common/Footer";
 
@@ -19,10 +19,10 @@ export default function CreateAcc() {
 
   const [err, setErr] = useState("");
   const [errState, setErrState] = useState();
-
+  const [progress, setProgress] = useState(0);
   const handleCreateAcc = (e) => {
     e.preventDefault();
-
+    setProgress(50);
     console.log("Name:", name);
     console.log("Email:", email);
     console.log("Phone:", phone);
@@ -30,6 +30,7 @@ export default function CreateAcc() {
     console.log("CPassword:", Cpassword);
 
     if (name == "") {
+      setProgress(100);
       setErr("Enter a valid Name");
       setErrState(true);
       setTimeout(() => {
@@ -37,6 +38,7 @@ export default function CreateAcc() {
         setErrState(false);
       }, 3000);
     } else if (email === "") {
+      setProgress(100);
       setErr("Enter a valid Email");
       setErrState(true);
       setTimeout(() => {
@@ -44,6 +46,7 @@ export default function CreateAcc() {
         setErrState(false);
       }, 3000);
     } else if (phone === "") {
+      setProgress(100);
       setErr("Enter a valid Phone #");
       setErrState(true);
       setTimeout(() => {
@@ -51,6 +54,7 @@ export default function CreateAcc() {
         setErrState(false);
       }, 3000);
     } else if (password == "") {
+      setProgress(100);
       setErr("Enter a valid Password");
       setErrState(true);
       setTimeout(() => {
@@ -58,6 +62,7 @@ export default function CreateAcc() {
         setErrState(false);
       }, 3000);
     } else if (Cpassword != password) {
+      setProgress(100);
       setErr("Passwords do not match");
       setErrState(false);
       setTimeout(() => {
@@ -96,6 +101,7 @@ export default function CreateAcc() {
               setErrState(false);
             }, 3000);
           }
+          setProgress(100);
         });
     }
   };
@@ -103,6 +109,11 @@ export default function CreateAcc() {
   return (
     <>
       {/* <NavBar /> */}
+      <LoadingBar
+        color="#C39601"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Toast err={err} errState={errState} />
       <div className="md:flex  md:max-w-screen-xl mx-auto">
         <div className="md:w-1/2">

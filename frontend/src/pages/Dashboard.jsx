@@ -5,6 +5,7 @@ import { useAuth } from "../utils/Auth";
 import Toast from "../common/Toast";
 import JoinCreateTeam from "./JoinCreateTeam";
 import { Link } from "react-router-dom";
+import LoadingBar from "react-top-loading-bar";
 
 export default function Dashboard() {
   const auth = useAuth();
@@ -17,53 +18,57 @@ export default function Dashboard() {
 
   const [err, setErr] = useState("");
   const [errState, setErrState] = useState();
+  const [progress, setProgress] = useState(0);
 
-  function getMyTeams() {
-    axios
-      // .post("http://localhost:8000/api/getMyTeams", {
-      // .post("http://192.168.18.36:8000/api/getMyTeams", {
-      .post(`http://${auth.ip}:8000/api/getMyTeams`, {
-        user_email: auth.user.email,
-      })
-      .then((response) => {
-        if (response.data.status === 200) {
-          setMyTeams(response.data.teams);
-          // console.log(response.data.teams);
-          // console.log(teams
-        } else {
-          setErr(response.data.message);
-          setErrState(true);
-          setTimeout(() => {
-            setErr("");
-            setErrState(false);
-          }, 3000);
-        }
-      });
-  }
+  // function getMyTeams() {
+  //   axios
+  //     // .post("http://localhost:8000/api/getMyTeams", {
+  //     // .post("http://192.168.18.36:8000/api/getMyTeams", {
+  //     .post(`http://${auth.ip}:8000/api/getMyTeams`, {
+  //       user_email: auth.user.email,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         setMyTeams(response.data.teams);
+  //         // console.log(response.data.teams);
+  //         // console.log(teams
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //       }
+  //     });
+  // }
 
-  function getUserTeams() {
-    axios
-      // .post("http://localhost:8000/api/getUserTeams", {
-      // .post("http://192.168.18.36:8000/api/getUserTeams", {
-      .post(`http://${auth.ip}:8000/api/getUserTeams`, {
-        user_email: auth.user.email,
-      })
-      .then((response) => {
-        if (response.data.status === 200) {
-          setTeams(response.data.teams);
-          // console.log(response.data.teams);
-          // console.log(teams);
-        } else {
-          setErr(response.data.message);
-          setErrState(true);
-          setTimeout(() => {
-            setErr("");
-            setErrState(false);
-          }, 3000);
-        }
-      });
-  }
-  function getTeams() {
+  // function getUserTeams() {
+  //   axios
+  //     // .post("http://localhost:8000/api/getUserTeams", {
+  //     // .post("http://192.168.18.36:8000/api/getUserTeams", {
+  //     .post(`http://${auth.ip}:8000/api/getUserTeams`, {
+  //       user_email: auth.user.email,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         setTeams(response.data.teams);
+  //         // console.log(response.data.teams);
+  //         // console.log(teams);
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //       }
+  //     });
+  // }
+
+  const getTeams = () => {
+    setProgress(50);
+
     axios
       .post(`http://${auth.ip}:8000/api/getAllUserTeams`, {
         user_email: auth.user.email,
@@ -93,17 +98,22 @@ export default function Dashboard() {
             setErrState(false);
           }, 3000);
         }
+
+        setProgress(100);
       });
-  }
+  };
+
   useEffect(() => {
-    document.body.style.backgroundColor = "#1e1e1e";
     getTeams();
-    // getUserTeams();
-    // getMyTeams();
   }, []);
 
   return (
-    <div>
+    <>
+      <LoadingBar
+        color="#C39601"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Sidebar />
       <Toast err={err} errState={errState} />
       <div className="container mx-auto max-w-screen-xl flex flex-col md:flex-row gap-x-10  justify-center items-start my-10">
@@ -263,8 +273,8 @@ export default function Dashboard() {
           </div>
         </div>
         {/* <JoinCreateTeam /> */}
-        <JoinCreateTeam getMyTeams={getMyTeams} getUserTeams={getUserTeams} />
+        <JoinCreateTeam getTeams={getTeams} />
       </div>
-    </div>
+    </>
   );
 }

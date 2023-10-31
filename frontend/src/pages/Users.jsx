@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import TeamDetA from "../common/TeamDetA";
 import emailjs from "@emailjs/browser";
+import LoadingBar from "react-top-loading-bar";
 
 export default function Users() {
   const { teamId } = useParams();
@@ -19,13 +20,12 @@ export default function Users() {
   const [err, setErr] = useState("");
   const [errState, setErrState] = useState();
 
-  const [progress, setProgress] = useState();
   const [key, setKey] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   function getTeamMembers() {
+    setProgress(50);
     axios
-      // .post("http://localhost:8000/api/getTeamMembers", {
-      // .post("http://192.168.18.36:8000/api/getTeamMembers", {
       .post(`http://${auth.ip}:8000/api/getTeamMembers`, {
         unique_id: teamId,
       })
@@ -33,6 +33,7 @@ export default function Users() {
         if (response.data.status === 200) {
           setmembers(response.data.members);
           console.log(response.data.members);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -46,6 +47,7 @@ export default function Users() {
 
   const AddMember = (e) => {
     e.preventDefault();
+    setProgress(50);
     if (!addUserEmail) {
       setErr("Enter a user email");
       setErrState(true);
@@ -85,6 +87,7 @@ export default function Users() {
                   console.log(error.text);
                 }
               );
+            setProgress(100);
           } else {
             setErr(response.data.message);
             setErrState(true);
@@ -92,20 +95,20 @@ export default function Users() {
               setErr("");
               setErrState(false);
             }, 3000);
+            setProgress(100);
           }
         });
     }
   };
 
   function RemoveMember(userEmail) {
+    setProgress(50);
     const requestData = {
       email: userEmail,
       unique_id: teamId,
     };
 
     axios
-      // .delete("http://localhost:8000/api/removeUserFromTeam", {
-      // .delete("http://192.168.18.36:8000/api/removeUserFromTeam", {
       .delete(`http://${auth.ip}:8000/api/removeUserFromTeam`, {
         data: requestData,
       })
@@ -117,6 +120,7 @@ export default function Users() {
           getTeamMembers();
 
           setKey(key + 1);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -124,6 +128,7 @@ export default function Users() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
@@ -133,6 +138,11 @@ export default function Users() {
   }, []);
   return (
     <>
+      <LoadingBar
+        color="#C39601"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Sidebar />
       <Toast err={err} errState={errState} />
       <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10  py-10">

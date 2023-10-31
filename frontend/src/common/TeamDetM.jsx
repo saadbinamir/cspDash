@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Copy from "../assets/copy";
 import TeamAdmin from "../pages/TeamAdmin";
-import Users from "../pages/Users";
+import LoadingBar from "react-top-loading-bar";
 
 export default function TeamDetM() {
   const { teamId } = useParams();
@@ -18,9 +18,10 @@ export default function TeamDetM() {
   const [err, setErr] = useState();
   const [errState, setErrState] = useState();
   const [password, setPassword] = useState("");
-  const [announcements, setAnnouncements] = useState("");
+  const [progress, setProgress] = useState(0);
 
   function RemoveMember() {
+    setProgress(50);
     const requestData = {
       email: auth.user.email,
       unique_id: teamId,
@@ -43,8 +44,6 @@ export default function TeamDetM() {
       }, 3000);
     } else {
       axios
-        // .delete("http://localhost:8000/api/removeUserFromTeam", {
-        // .delete("http://192.168.18.36:8000/api/removeUserFromTeam", {
         .delete(`http://${auth.ip}:8000/api/removeUserFromTeam`, {
           data: requestData,
         })
@@ -55,6 +54,7 @@ export default function TeamDetM() {
             setErrState(false);
             navigate("/dash");
             //   getTeamMembers();
+            setProgress(100);
           } else {
             setErr(response.data.message);
             setErrState(true);
@@ -62,14 +62,14 @@ export default function TeamDetM() {
               setErr("");
               setErrState(false);
             }, 3000);
+            setProgress(100);
           }
         });
     }
   }
   function getTeamDetails() {
+    setProgress(50);
     axios
-      // .post("http://localhost:8000/api/getTeamDetails", {
-      // .post("http://192.168.18.36:8000/api/getTeamDetails", {
       .post(`http://${auth.ip}:8000/api/getTeamDetails`, {
         team_unique_id: teamId,
       })
@@ -77,7 +77,7 @@ export default function TeamDetM() {
         if (response.data.status === 200) {
           setteamDet(response.data.team_details);
           console.log(response.data.team_details);
-          setAnnouncements(response.data.team_details.announcements);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -85,6 +85,7 @@ export default function TeamDetM() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
@@ -93,22 +94,18 @@ export default function TeamDetM() {
   }, []);
   return (
     <>
-      {/* <Sidebar /> */}
+      <LoadingBar
+        color="#C39601"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Toast err={err} errState={errState} />
-      {/* <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10  my-10"> */}
-      {/* <div
-        className="flex flex-col rounded-2xl shadow w-full"
-        style={{ backgroundColor: "#2f2f2f" }}
-        // style={{ backgroundColor: "#111111" }}
-      > */}
+
       <div
         className="rounded-2xl shadow gap-x-10 px-5 py-5 gap-y-5"
         style={{ backgroundColor: "#111111" }}
       >
-        <div
-          className="flex md:flex-row flex-col md:items-center items-start gap-y-2 justify-between "
-          // style={{ backgroundColor: "#111111" }}
-        >
+        <div className="flex md:flex-row flex-col md:items-center items-start gap-y-2 justify-between ">
           <div className="flex flex-row gap-x-5 items-baseline">
             <h5 className="text-2xl font-medium" style={{ color: "#c39601" }}>
               {/* Hoor ka Event */}
@@ -139,8 +136,6 @@ export default function TeamDetM() {
             <div>
               <input
                 type="password"
-                // name="new-pass"
-                // id="new-pass"
                 className="sm:text-sm rounded-lg   p-2 "
                 style={{ backgroundColor: "#2f2f2f", color: "#F6F6F6" }}
                 placeholder="Enter Password to leave"
@@ -166,7 +161,6 @@ export default function TeamDetM() {
           </div>
         </div>
       </div>
-      {/* </div> */}
     </>
   );
 }

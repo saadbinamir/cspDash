@@ -1,14 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Lottie from "lottie-react";
 import help from "../assets/help.json";
 // import NavBar from "../common/NavBar";
 // import Footer from "../common/Footer";
 export default function Home() {
-  useEffect(() => {
-    document.body.style.backgroundColor = "#1e1e1e";
-  }, []);
-
   return (
     <>
       {/* <NavBar /> */}

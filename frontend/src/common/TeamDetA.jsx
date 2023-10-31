@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import Copy from "../assets/copy";
 import TeamAdmin from "../pages/TeamAdmin";
 import Users from "../pages/Users";
+import LoadingBar from "react-top-loading-bar";
 
 export default function TeamDetA() {
   const { teamId } = useParams();
@@ -19,46 +20,48 @@ export default function TeamDetA() {
   const [errState, setErrState] = useState();
   const [password, setPassword] = useState("");
   const [announcements, setAnnouncements] = useState("");
+  const [progress, setProgress] = useState(0);
 
-  function updateAnnouncements() {
-    if (!announcements) {
-      setErr("Announcements can not be empty");
-      setErrState(true);
+  // function updateAnnouncements() {
+  //   if (!announcements) {
+  //     setErr("Announcements can not be empty");
+  //     setErrState(true);
 
-      setTimeout(() => {
-        setErr("");
-        setErrState(false);
-      }, 3000);
-    } else {
-      axios
-        // .post("http://localhost:8000/api/updateTeamAnnouncements", {
-        // .post("http://192.168.18.36:8000/api/updateTeamAnnouncements", {
-        .post(`http://${auth.ip}:8000/api/updateTeamAnnouncements`, {
-          team_unique_id: teamId,
-          announcements: announcements,
-        })
-        .then((response) => {
-          if (response.data.status === 200) {
-            setAnnouncements(response.data.announcements);
-            setErr(response.data.message);
-            setErrState(false);
-            setTimeout(() => {
-              setErr("");
-              setErrState(false);
-            }, 3000);
-            // getTeamDetails();
-          } else {
-            setErr(response.data.message);
-            setErrState(true);
-            setTimeout(() => {
-              setErr("");
-              setErrState(false);
-            }, 3000);
-          }
-        });
-    }
-  }
+  //     setTimeout(() => {
+  //       setErr("");
+  //       setErrState(false);
+  //     }, 3000);
+  //   } else {
+  //     axios
+  //       // .post("http://localhost:8000/api/updateTeamAnnouncements", {
+  //       // .post("http://192.168.18.36:8000/api/updateTeamAnnouncements", {
+  //       .post(`http://${auth.ip}:8000/api/updateTeamAnnouncements`, {
+  //         team_unique_id: teamId,
+  //         announcements: announcements,
+  //       })
+  //       .then((response) => {
+  //         if (response.data.status === 200) {
+  //           setAnnouncements(response.data.announcements);
+  //           setErr(response.data.message);
+  //           setErrState(false);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //           // getTeamDetails();
+  //         } else {
+  //           setErr(response.data.message);
+  //           setErrState(true);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //         }
+  //       });
+  //   }
+  // }
   function deleteTeam() {
+    setProgress(50);
     if (!password) {
       setErr("Enter your password to delete team");
       setErrState(true);
@@ -77,8 +80,6 @@ export default function TeamDetA() {
       }, 3000);
     } else {
       axios
-        // .post("http://localhost:8000/api/deleteTeam", {
-        // .post("http://192.168.18.36:8000/api/deleteTeam", {
         .post(`http://${auth.ip}:8000/api/deleteTeam`, {
           unique_id: teamId,
           organizerEmail: auth.user.email,
@@ -92,6 +93,7 @@ export default function TeamDetA() {
               setErrState(false);
             }, 3000);
             navigate("/dash");
+            setProgress(100);
           } else {
             setErr(response.data.message);
             setErrState(true);
@@ -99,14 +101,14 @@ export default function TeamDetA() {
               setErr("");
               setErrState(false);
             }, 3000);
+            setProgress(100);
           }
         });
     }
   }
   function getTeamDetails() {
+    setProgress(50);
     axios
-      // .post("http://localhost:8000/api/getTeamDetails", {
-      // .post("http://192.168.18.36:8000/api/getTeamDetails", {
       .post(`http://${auth.ip}:8000/api/getTeamDetails`, {
         team_unique_id: teamId,
       })
@@ -115,6 +117,7 @@ export default function TeamDetA() {
           setteamDet(response.data.team_details);
           console.log(response.data.team_details);
           setAnnouncements(response.data.team_details.announcements);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -122,6 +125,7 @@ export default function TeamDetA() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
@@ -130,6 +134,11 @@ export default function TeamDetA() {
   }, []);
   return (
     <>
+      <LoadingBar
+        color="#C39601"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       {/* <Sidebar /> */}
       <Toast err={err} errState={errState} />
       {/* <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10  my-10"> */}
@@ -138,18 +147,18 @@ export default function TeamDetA() {
         style={{ backgroundColor: "#2f2f2f" }}
       >
         <div
-        className="rounded-2xl shadow gap-x-10 px-5 py-5 gap-y-5"
-        style={{ backgroundColor: "#111111" }}
-      >
-        <div
-          className="flex md:flex-row flex-col md:items-center items-start gap-y-2 justify-between "
-          // style={{ backgroundColor: "#111111" }}
+          className="rounded-2xl shadow gap-x-10 px-5 py-5 gap-y-5"
+          style={{ backgroundColor: "#111111" }}
         >
-          <div className="flex flex-row gap-x-5 items-baseline">
-            <h5 className="text-2xl font-medium" style={{ color: "#c39601" }}>
-              {/* Hoor ka Event */}
-              {teamDet.team_name}
-            </h5>
+          <div
+            className="flex md:flex-row flex-col md:items-center items-start gap-y-2 justify-between "
+            // style={{ backgroundColor: "#111111" }}
+          >
+            <div className="flex flex-row gap-x-5 items-baseline">
+              <h5 className="text-2xl font-medium" style={{ color: "#c39601" }}>
+                {/* Hoor ka Event */}
+                {teamDet.team_name}
+              </h5>
               <p
                 className="font-light text-sm flex items-center "
                 style={{ color: "#FAFAFA" }}

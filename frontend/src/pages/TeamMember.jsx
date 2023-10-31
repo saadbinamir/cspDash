@@ -11,6 +11,7 @@ import Location from "../assets/Location";
 import Email from "../assets/Email";
 import Hours from "../assets/Hours";
 import TeamDetM from "../common/TeamDetM";
+import LoadingBar from "react-top-loading-bar";
 
 export default function TeamMember() {
   const { teamId } = useParams();
@@ -33,6 +34,7 @@ export default function TeamMember() {
   const [showpast, setshowpast] = useState(false);
 
   const [announcements, setannouncements] = useState([]);
+  const [progress, setProgress] = useState(0);
 
   function toggleTable(eventTitle) {
     setShowTable((prevShowTable) =>
@@ -48,6 +50,7 @@ export default function TeamMember() {
   }
 
   function getEventParticipants(event_title) {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/getEventParticipants`, {
         team_unique_id: teamId,
@@ -63,8 +66,7 @@ export default function TeamMember() {
             .map((participant) => participant.email);
 
           setAbsentStudents(absent);
-
-          // console.log("prev Absent Students:", absentStudents);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -72,11 +74,13 @@ export default function TeamMember() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
 
   function saveAttendance(eventTitle) {
+    setProgress(50);
     console.log("sending Absent Students:", absentStudents);
     axios
       .post(`http://${auth.ip}:8000/api/markAttendance`, {
@@ -92,6 +96,7 @@ export default function TeamMember() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -99,11 +104,13 @@ export default function TeamMember() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
 
   function addEventParticipant(event_title) {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/addEventParticipant`, {
         unique_id: teamId,
@@ -115,6 +122,7 @@ export default function TeamMember() {
           setErr(response.data.message);
           setErrState(false);
           getEvents();
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -122,10 +130,12 @@ export default function TeamMember() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
   function removeEventParticipant(email, event_title) {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/removeEventParticipant`, {
         unique_id: teamId,
@@ -137,6 +147,7 @@ export default function TeamMember() {
           setErr(response.data.message);
           setErrState(false);
           getEvents();
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -144,10 +155,12 @@ export default function TeamMember() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
   function getEvents() {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/getEventsWithStatus`, {
         team_unique_id: teamId,
@@ -155,9 +168,6 @@ export default function TeamMember() {
       })
       .then((response) => {
         if (response.data.status === 200) {
-          // setEvents(response.data.events);
-          // console.log(response.data.events);
-
           const todayEvents = [];
           const upcomingEvents = [];
           const pastEvents = [];
@@ -181,6 +191,7 @@ export default function TeamMember() {
           setTodaysEvents(todayEvents);
           setUpcomingEvents(upcomingEvents);
           setPastEvents(pastEvents);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -188,10 +199,12 @@ export default function TeamMember() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
   function getAnnouncementsInTeam() {
+    setProgress(50);
     axios
       .post(`http://${auth.ip}:8000/api/getAnnouncementsInTeam`, {
         team_unique_id: teamId,
@@ -199,6 +212,7 @@ export default function TeamMember() {
       .then((response) => {
         if (response.data.status === 200) {
           setannouncements(response.data.announcements);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -206,6 +220,7 @@ export default function TeamMember() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
@@ -216,6 +231,11 @@ export default function TeamMember() {
   }, []);
   return (
     <>
+      <LoadingBar
+        color="#C39601"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Sidebar />
       <Toast err={err} errState={errState} />
       <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10 py-10">

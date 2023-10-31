@@ -4,6 +4,7 @@ import { useAuth } from "../utils/Auth";
 import axios from "axios";
 import Toast from "../common/Toast";
 import { Link } from "react-router-dom";
+import LoadingBar from "react-top-loading-bar";
 
 export default function Profile() {
   const auth = useAuth();
@@ -20,8 +21,10 @@ export default function Profile() {
   const [errState, setErrState] = useState("");
   const [events, setEvents] = useState([]);
   const [creditHRS, setcreditHRS] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   const handleUpdate = (e) => {
+    setProgress(50);
     e.preventDefault();
     // console.log(auth.user);
     console.log("Name:", name);
@@ -76,6 +79,7 @@ export default function Profile() {
               setErr("");
               setErrState(false);
             }, 3000);
+            setProgress(100);
           } else {
             setErr(response.data.message);
             setErrState(true);
@@ -83,35 +87,34 @@ export default function Profile() {
               setErr("");
               setErrState(false);
             }, 3000);
+            setProgress(100);
           }
         });
     }
   };
 
   function getEvents() {
+    setProgress(50);
     axios
-      // .post("http://localhost:8000/api/getEventsForUser", {
-      // .post("http://192.168.18.36:8000/api/getEventsForUser", {
       .post(`http://${auth.ip}:8000/api/getEventsForUser`, {
         user_email: auth.user.email,
       })
       .then((response) => {
         if (response.data.status === 200) {
           const events = response.data.events;
-          // Filter events where attendance_status is true
           const attendedEvents = events.filter(
             (event) => event.attendance_status === true
           );
 
-          // Calculate the sum of credit hours for attended events
           const sumOfCreditHours = attendedEvents.reduce(
             (sum, event) => sum + parseFloat(event.event_credit_hours),
             0
           );
           setcreditHRS(sumOfCreditHours);
           setEvents(events);
-          console.log(events);
-          console.log(creditHRS);
+          // console.log(events);
+          // console.log(creditHRS);
+          setProgress(100);
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -119,17 +122,22 @@ export default function Profile() {
             setErr("");
             setErrState(false);
           }, 3000);
+          setProgress(100);
         }
       });
   }
 
   useEffect(() => {
-    // document.body.style.backgroundColor = "#1e1e1e";
     getEvents();
   }, []);
 
   return (
     <div>
+      <LoadingBar
+        color="#C39601"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Sidebar />
       <Toast err={err} errState={errState} />
 

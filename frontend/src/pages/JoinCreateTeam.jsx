@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { useAuth } from "../utils/Auth";
 import axios from "axios";
 import Toast from "../common/Toast";
-// import { getMyTeams, getUserTeams } from "./Dashboard";
 
-export default function JoinCreateTeam({ getMyTeams, getUserTeams }) {
+export default function JoinCreateTeam({ getTeams }) {
   const auth = useAuth();
 
   const [teamName, setteamName] = useState("");
@@ -52,7 +51,7 @@ export default function JoinCreateTeam({ getMyTeams, getUserTeams }) {
               setErr("");
               setErrState(false);
             }, 3000);
-            getMyTeams();
+            getTeams();
           } else {
             setErr(response.data.message);
             setErrState(true);

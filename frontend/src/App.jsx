@@ -1,5 +1,5 @@
-import { React } from "react";
-import { Routes, Route } from "react-router-dom";
+import { React, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./utils/Auth";
 import PrivateRoute from "./utils/PrivateRoute";
 
@@ -24,6 +24,9 @@ import MyEvents from "./pages/MyEvents";
 import CoordinatorEvents from "./pages/CoordinatorEvents";
 
 export default function App() {
+  useEffect(() => {
+    document.body.style.backgroundColor = "#1e1e1e";
+  }, []);
   return (
     <AuthProvider>
       <Routes>
@@ -83,7 +86,7 @@ export default function App() {
           path="/dash"
           element={
             <>
-              <PrivateRoute>
+              <PrivateRoute location={useLocation()}>
                 <Dashboard />
               </PrivateRoute>
             </>

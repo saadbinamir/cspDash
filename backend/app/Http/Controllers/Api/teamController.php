@@ -236,82 +236,82 @@ class teamController extends Controller
 
 
 
-    public function getUserTeams(Request $request)
-    {
-        $userEmail = $request->input('user_email');
+    // public function getUserTeams(Request $request)
+    // {
+    //     $userEmail = $request->input('user_email');
 
-        // Retrieve the user
-        $user = User::where('email', $userEmail)->first();
+    //     // Retrieve the user
+    //     $user = User::where('email', $userEmail)->first();
 
-        if (!$user) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'User not found'
-            ]);
-        }
+    //     if (!$user) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'User not found'
+    //         ]);
+    //     }
 
-        $teams = Team::select(
-            'teams.team_name',
-            'teams.unique_id as team_unique_id',
-            'users.name as organizer_name',
-            'users.email as organizer_email'
-        )
-            ->join('user_roles', function ($join) {
-                $join->on('teams.id', '=', 'user_roles.team_id')
-                    ->where('user_roles.role_id', '=', 3);
-            })
-            ->join('users', 'teams.organizer_id', '=', 'users.id')
-            ->leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
-            ->where('user_roles.user_id', $user->id)
-            ->groupBy('teams.team_name', 'teams.unique_id', 'users.name', 'users.email')
-            ->addSelect(DB::raw('COUNT(team_members.id) as number_of_members'))
-            ->get();
+    //     $teams = Team::select(
+    //         'teams.team_name',
+    //         'teams.unique_id as team_unique_id',
+    //         'users.name as organizer_name',
+    //         'users.email as organizer_email'
+    //     )
+    //         ->join('user_roles', function ($join) {
+    //             $join->on('teams.id', '=', 'user_roles.team_id')
+    //                 ->where('user_roles.role_id', '=', 3);
+    //         })
+    //         ->join('users', 'teams.organizer_id', '=', 'users.id')
+    //         ->leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
+    //         ->where('user_roles.user_id', $user->id)
+    //         ->groupBy('teams.team_name', 'teams.unique_id', 'users.name', 'users.email')
+    //         ->addSelect(DB::raw('COUNT(team_members.id) as number_of_members'))
+    //         ->get();
 
-        return response()->json([
-            'status' => 200,
-            'teams' => $teams
-        ]);
-    }
-
-
+    //     return response()->json([
+    //         'status' => 200,
+    //         'teams' => $teams
+    //     ]);
+    // }
 
 
-    public function getMyTeams(Request $request)
-    {
-        $userEmail = $request->input('user_email');
 
-        // Retrieve the user
-        $user = User::where('email', $userEmail)->first();
 
-        if (!$user) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'User not found'
-            ]);
-        }
+    // public function getMyTeams(Request $request)
+    // {
+    //     $userEmail = $request->input('user_email');
 
-        $teams = Team::select(
-            'teams.team_name',
-            'teams.unique_id as team_unique_id',
-            'users.name as organizer_name',
-            'users.email as organizer_email'
-        )
-            ->join('user_roles', function ($join) {
-                $join->on('teams.id', '=', 'user_roles.team_id')
-                    ->where('user_roles.role_id', '=', 1);
-            })
-            ->join('users', 'teams.organizer_id', '=', 'users.id')
-            ->leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
-            ->where('user_roles.user_id', $user->id)
-            ->groupBy('teams.team_name', 'teams.unique_id', 'users.name', 'users.email')
-            ->addSelect(DB::raw('COUNT(team_members.id) as number_of_members'))
-            ->get();
+    //     // Retrieve the user
+    //     $user = User::where('email', $userEmail)->first();
 
-        return response()->json([
-            'status' => 200,
-            'teams' => $teams
-        ]);
-    }
+    //     if (!$user) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'User not found'
+    //         ]);
+    //     }
+
+    //     $teams = Team::select(
+    //         'teams.team_name',
+    //         'teams.unique_id as team_unique_id',
+    //         'users.name as organizer_name',
+    //         'users.email as organizer_email'
+    //     )
+    //         ->join('user_roles', function ($join) {
+    //             $join->on('teams.id', '=', 'user_roles.team_id')
+    //                 ->where('user_roles.role_id', '=', 1);
+    //         })
+    //         ->join('users', 'teams.organizer_id', '=', 'users.id')
+    //         ->leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
+    //         ->where('user_roles.user_id', $user->id)
+    //         ->groupBy('teams.team_name', 'teams.unique_id', 'users.name', 'users.email')
+    //         ->addSelect(DB::raw('COUNT(team_members.id) as number_of_members'))
+    //         ->get();
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         'teams' => $teams
+    //     ]);
+    // }
 
 
     public function getAllUserTeams(Request $request)

@@ -1,31 +1,13 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import emailjs from "@emailjs/browser";
+import Toast from "../common/Toast";
 // import NavBar from "../common/NavBar";
 // import Footer from "../common/Footer";
 
 export default function ContactUs() {
   const form = useRef();
 
-  const sendEmail = (e) => {
-    e.preventDefault();
-
-    emailjs
-      .sendForm(
-        "service_xrb4dfl",
-        "template_63thot9",
-        form.current,
-        "wP7G7RotSIre32n7L"
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
-  };
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -42,38 +24,57 @@ export default function ContactUs() {
     if (name === "") {
       setErr("Enter a valid Name");
       setErrState(true);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
     } else if (email === "") {
       setErr("Enter a valid Email");
       setErrState(true);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
     } else if (message == "") {
       setErr("Enter a message");
-      message;
       setErrState(true);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
     } else if (name != "" && email != "" && message != "") {
       setErr("Sent");
       setErrState(false);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
+      setName("");
+      setEmail("");
+      setMessage("");
 
-      emailjs
-        .sendForm(
-          "service_xrb4dfl",
-          "template_63thot9",
-          form.current,
-          "wP7G7RotSIre32n7L"
-        )
-        .then(
-          (result) => {
-            console.log(result.text);
-          },
-          (error) => {
-            console.log(error.text);
-          }
-        );
+      // emailjs
+      //   .sendForm(
+      //     "service_xrb4dfl",
+      //     "template_63thot9",
+      //     form.current,
+      //     "wP7G7RotSIre32n7L"
+      //   )
+      //   .then(
+      //     (result) => {
+      //       console.log(result.text);
+      //     },
+      //     (error) => {
+      //       console.log(error.text);
+      //     }
+      //   );
     }
   };
 
   return (
     <>
       {/* <NavBar /> */}
+      <Toast err={err} errState={errState} />
       <section className="text-gray-600 body-font relative">
         <div className="container max-w-screen-xl px-5 py-16 mx-auto flex sm:flex-nowrap flex-wrap">
           <div
@@ -194,7 +195,7 @@ export default function ContactUs() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                   ></textarea>
-                  <p
+                  {/* <p
                     id="error"
                     // style={errState ? { color: '#F6F6F6' } : { color: '#cc0000' }}
                     // className='text-sm font-light text-red-700 pt-2'>
@@ -204,7 +205,7 @@ export default function ContactUs() {
                     }`}
                   >
                     {err}
-                  </p>
+                  </p> */}
                 </div>
 
                 <button

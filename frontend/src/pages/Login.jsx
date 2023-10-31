@@ -5,6 +5,7 @@ import Lottie from "lottie-react";
 import help from "../assets/help.json";
 import { useAuth } from "../utils/Auth";
 import Toast from "../common/Toast";
+import LoadingBar from "react-top-loading-bar";
 
 export default function Login() {
   const auth = useAuth();
@@ -17,10 +18,11 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [errState, setErrState] = useState();
+  const [progress, setProgress] = useState(0);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-
+    setProgress(50);
     console.log("Email:", email);
     console.log("Password:", password);
 
@@ -46,6 +48,7 @@ export default function Login() {
               setErr("");
               setErrState(false);
             }, 3000);
+            setProgress(100);
             response.data.user.password = password;
             auth.login(response.data.user);
             navigate(redirectPath, { replace: true });
@@ -64,6 +67,11 @@ export default function Login() {
   return (
     <>
       {/* <NavBar /> */}
+      <LoadingBar
+        color="#C39601"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Toast err={err} errState={errState} />
       <div className="md:flex  md:max-w-screen-xl mx-auto">
         <div className="md:w-1/2">
