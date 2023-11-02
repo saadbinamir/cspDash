@@ -94,7 +94,7 @@ export default function JoinCreateTeam({ getTeams }) {
               setErr("");
               setErrState(false);
             }, 3000);
-            getUserTeams();
+            getTeams();
           } else {
             setErr(response.data.message);
             setErrState(true);

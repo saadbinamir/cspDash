@@ -165,7 +165,7 @@ export default function Dashboard() {
                         </h5>
 
                         <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
-                          <span className=" text-base font-light mr-8">
+                          <span className=" text-base font-light mr-7">
                             Owner:
                           </span>
                           {team.organizer_name}
@@ -243,7 +243,7 @@ export default function Dashboard() {
                         </h5>
 
                         <p className="font-normal text-gray-700 dark:text-gray-400 flex items-center">
-                          <span className=" text-base font-light mr-8">
+                          <span className=" text-base font-light mr-7">
                             Owner:
                           </span>
                           {team.organizer_name}

@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\team_members;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+
 
 class teamMembersControllers extends Controller
 {
@@ -25,6 +27,7 @@ class teamMembersControllers extends Controller
             ], 404);
         }
     }
+
 
 
 

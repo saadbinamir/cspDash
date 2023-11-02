@@ -676,7 +676,7 @@ export default function TeamAdmin() {
                                         {participant.name}
                                       </td>
                                       <td className="px-2 py-2">
-                                        {participant.email}
+                                        {participant.email.split("@")[0]}
                                       </td>
                                       <td className="px-2 py-2">
                                         {participant.phone}
@@ -725,7 +725,7 @@ export default function TeamAdmin() {
                             </div>
                           </>
                         )}
-                        {showTable === event.title && (
+                        {/* {showTable === event.title && (
                           <>
                             <hr className="mt-5 opacity-50" />
                             <div>
@@ -765,7 +765,7 @@ export default function TeamAdmin() {
                                         {participnt.name}
                                       </td>
                                       <td className="px-2 py-2">
-                                        {participnt.email}
+                                        {participnt.email.split("@")[0]}
                                       </td>
                                       <td className="px-2 py-2">
                                         {participnt.phone}
@@ -780,40 +780,26 @@ export default function TeamAdmin() {
                                             )
                                           }
                                           className={
-                                            new Date(event.date).setHours(
-                                              0,
-                                              0,
-                                              0,
-                                              0
-                                            ) < new Date().setHours(0, 0, 0, 0)
-                                              ? absentStudents.includes(
-                                                  participnt.email
-                                                )
-                                                ? "text-red-700 hover:underline"
-                                                : "text-green-700 hover:underline"
-                                              : "text-red-700 hover:underline"
+                                            absentStudents.includes(
+                                              participnt.email
+                                            )
+                                              ? "text-red-700 hover:underline"
+                                              : "text-green-700 hover:underline"
                                           }
-                                          disabled={
-                                            new Date(event.date).setHours(
-                                              0,
-                                              0,
-                                              0,
-                                              0
-                                            ) < new Date().setHours(0, 0, 0, 0)
-                                          }
+                                          // disabled={
+                                          //   new Date(event.date).setHours(
+                                          //     0,
+                                          //     0,
+                                          //     0,
+                                          //     0
+                                          //   ) < new Date().setHours(0, 0, 0, 0)
+                                          // }
                                         >
-                                          {new Date(event.date).setHours(
-                                            0,
-                                            0,
-                                            0,
-                                            0
-                                          ) < new Date().setHours(0, 0, 0, 0)
-                                            ? absentStudents.includes(
-                                                participnt.email
-                                              )
-                                              ? "Absent"
-                                              : "Present"
-                                            : "Remove"}
+                                          {absentStudents.includes(
+                                            participnt.email
+                                          )
+                                            ? "Absent"
+                                            : "Present"}
                                         </button>
                                       </td>
                                     </tr>
@@ -822,7 +808,7 @@ export default function TeamAdmin() {
                               </table>
                             </div>
                           </>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   ))
@@ -1035,7 +1021,7 @@ export default function TeamAdmin() {
                                         {participnt.name}
                                       </td>
                                       <td className="px-2 py-2">
-                                        {participnt.email}
+                                        {participnt.email.split("@")[0]}
                                       </td>
                                       <td className="px-2 py-2">
                                         {participnt.phone}
@@ -1258,7 +1244,7 @@ export default function TeamAdmin() {
                                       Name
                                     </th>
                                     <th scope="col" className="px-2 py-3">
-                                      Email
+                                      Email/Enroll
                                     </th>
                                     <th scope="col" className="px-2 py-3">
                                       Phone
@@ -1284,7 +1270,7 @@ export default function TeamAdmin() {
                                           {participnt.name}
                                         </td>
                                         <td className="px-2 py-2">
-                                          {participnt.email}
+                                          {participnt.email.split("@")[0]}
                                         </td>
                                         <td className="px-2 py-2">
                                           {participnt.phone}
@@ -1314,7 +1300,7 @@ export default function TeamAdmin() {
                                 </tbody>
                               </table>
                             </div>
-                            <CSVLink
+                            {/* <CSVLink
                               // data={participnts}
                               data={participnts.map((participnt) => ({
                                 name: participnt.name,
@@ -1331,6 +1317,37 @@ export default function TeamAdmin() {
                               config={{
                                 bom: true,
                               }}
+                            > */}
+                            <CSVLink
+                              data={[
+                                [
+                                  "Event Title",
+                                  "Event Date",
+                                  "Organization and Location",
+                                  "Coordinator Email",
+                                  "Credit Hours",
+                                ],
+                                [
+                                  event.title,
+                                  new Date(event.date).toLocaleDateString(),
+                                  event.organization_name +
+                                    " | " +
+                                    event.location,
+                                  event.coordinator_email,
+                                  event.credit_hours,
+                                ],
+                                [],
+                                ["Name", "Email", "Phone", "Attendance"],
+                                ...participnts.map((participnt) => [
+                                  participnt.name,
+                                  participnt.email,
+                                  `'${participnt.phone}`,
+                                  absentStudents.includes(participnt.email)
+                                    ? "Absent"
+                                    : "Present",
+                                ]),
+                              ]}
+                              filename={`${event.title} | ${event.date}.csv`}
                             >
                               <button
                                 type="submit"
