@@ -725,7 +725,7 @@ export default function TeamAdmin() {
                             </div>
                           </>
                         )}
-                        {/* {showTable === event.title && (
+                        {showTable === event.title && (
                           <>
                             <hr className="mt-5 opacity-50" />
                             <div>
@@ -808,7 +808,7 @@ export default function TeamAdmin() {
                               </table>
                             </div>
                           </>
-                        )} */}
+                        )}
                       </div>
                     </div>
                   ))
@@ -845,8 +845,8 @@ export default function TeamAdmin() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
                     fill="white"
                   />
@@ -1418,9 +1418,6 @@ export default function TeamAdmin() {
               </div>
               <div className="flex flex-row ">
                 <input
-                  type="email"
-                  name="CoordinatorEmail"
-                  id="CoordinatorEmail"
                   className="sm:text-sm rounded-lg w-full px-3 "
                   style={{ backgroundColor: "#111111", color: "#F6F6F6" }}
                   placeholder="Message"

@@ -59,6 +59,7 @@ export default function Login() {
               setErr("");
               setErrState(false);
             }, 3000);
+            setProgress(100);
           }
         });
     }
