@@ -76,7 +76,7 @@ export default function Login() {
       <Toast err={err} errState={errState} />
       <div className="md:flex  md:max-w-screen-xl mx-auto">
         <div className="md:w-1/2">
-          <div className="flex flex-col items-center justify-center px-6  mx-auto my-32">
+          <div className="flex flex-col items-center justify-center px-5  mx-auto my-32">
             <div
               className="w-full rounded-2xl shadow md:mt-0 "
               style={{ backgroundColor: "#2F2F2F" }}

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('unique_id', 50)->unique();
             $table->unsignedBigInteger('organizer_id');
+            $table->string('team_name', 50);
+            $table->unsignedBigInteger('organizer_id');
 
             $table->foreign('organizer_id')->references('id')->on('users');
             $table->timestamps();

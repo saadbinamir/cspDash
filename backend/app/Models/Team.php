@@ -13,7 +13,6 @@ class Team extends Model
     protected $fillable  = [
         'unique_id',
         'organizer_id',
-        'team_name',
-        'announcements'
+        'team_name'
     ];
 }

@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('message', 500);
             $table->unsignedBigInteger('team_id');
+
+
+            $table->foreign('team_id')->references('id')->on('teams');
             $table->timestamps();
         });
     }

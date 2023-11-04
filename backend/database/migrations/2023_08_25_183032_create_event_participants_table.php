@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->boolean('attendance_status');
 
+
+            $table->foreign('team_id')->references('id')->on('teams');
             $table->foreign('event_id')->references('id')->on('events');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
