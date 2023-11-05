@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Api\teamController;
 use App\Http\Controllers\Api\eventController;
 use App\Http\Controllers\Api\eventParticipantsController;
-
+use App\Models\admin;
 
 class userController extends Controller
 {
@@ -104,36 +104,65 @@ class userController extends Controller
     // }
 
 
+    // public function login(Request $request)
+    // {
+    //     $email = $request->input('email');
+    //     $pass = $request->input('password');
+
+
+    //     if (strpos($email, '@') === false) {
+    //         // If the "@" symbol is not present, assume the entered input is a username
+    //         $user = User::where('email', 'LIKE', $email . '@%')->first();
+    //         if ($user) {
+    //             $email = $user->email;
+    //         } else {
+    //             return response()->json([
+    //                 'status' => 401,
+    //                 'message' => 'Invalid credentials',
+    //             ]);
+    //         }
+    //     } else {
+    //         $email = $email;
+    //     }
+
+
+    //     if (Auth::attempt(['email' => $email, 'password' => $pass])) {
+
+    //         $user = Auth::user();
+
+    //         return response()->json([
+    //             'status' => 200,
+    //             'message' => 'Login successful',
+    //             'user' => $user,
+    //         ]);
+    //     } else {
+    //         return response()->json([
+    //             'status' => 401,
+    //             'message' => 'Invalid credentials',
+    //         ]);
+    //     }
+    // }
+
+
+
     public function login(Request $request)
     {
         $email = $request->input('email');
         $pass = $request->input('password');
 
-
-        if (strpos($email, '@') === false) {
-            // If the "@" symbol is not present, assume the entered input is a username
-            $user = User::where('email', 'LIKE', $email . '@%')->first();
-            if ($user) {
-                $email = $user->email;
-            } else {
-                return response()->json([
-                    'status' => 401,
-                    'message' => 'Invalid credentials',
-                ]);
-            }
-        } else {
-            $email = $email;
-        }
-
+        // Your existing code for handling email or username login
 
         if (Auth::attempt(['email' => $email, 'password' => $pass])) {
-
             $user = Auth::user();
+
+            // Check if the user is an admin
+            $isAdmin = admin::where('user_id', $user->id)->exists();
 
             return response()->json([
                 'status' => 200,
                 'message' => 'Login successful',
                 'user' => $user,
+                'isAdmin' => $isAdmin, // Sending a flag to identify if the user is an admin
             ]);
         } else {
             return response()->json([

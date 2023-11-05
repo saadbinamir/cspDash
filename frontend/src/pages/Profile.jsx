@@ -71,8 +71,9 @@ export default function Profile() {
           if (response.data.status === 200) {
             setErr(response.data.message);
             setErrState(false);
-            auth.user = response.data.user;
-            auth.user.password = password;
+
+            response.data.user.password = newPass ? newPass : password;
+            auth.login(response.data.user);
 
             setName(response.data.user.name);
             setPhone(response.data.user.phone);

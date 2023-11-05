@@ -747,7 +747,6 @@ export default function TeamAdmin() {
                                     <th scope="col" className="px-2 py-3">
                                       Phone
                                     </th>
-
                                     <th scope="col" className="px-2 py-3 ">
                                       Attendance
                                     </th>
@@ -772,35 +771,22 @@ export default function TeamAdmin() {
                                       </td>
 
                                       <td className="px-2 py-2">
-                                        <button
-                                          onClick={() =>
-                                            removeEventParticipant(
-                                              participnt.email,
-                                              event.title
-                                            )
-                                          }
+                                        <p
                                           className={
                                             absentStudents.includes(
                                               participnt.email
                                             )
-                                              ? "text-red-700 hover:underline"
-                                              : "text-green-700 hover:underline"
+                                              ? "text-red-700"
+                                              : "text-green-700"
                                           }
-                                          // disabled={
-                                          //   new Date(event.date).setHours(
-                                          //     0,
-                                          //     0,
-                                          //     0,
-                                          //     0
-                                          //   ) < new Date().setHours(0, 0, 0, 0)
-                                          // }
+                                          disabled
                                         >
                                           {absentStudents.includes(
                                             participnt.email
                                           )
                                             ? "Absent"
                                             : "Present"}
-                                        </button>
+                                        </p>
                                       </td>
                                     </tr>
                                   ))}

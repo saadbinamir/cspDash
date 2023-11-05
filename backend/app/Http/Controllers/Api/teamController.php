@@ -361,7 +361,6 @@ class teamController extends Controller
             ->select(
                 'teams.team_name as team_name',
                 'teams.unique_id as team_unique_id',
-                'teams.announcements as announcements',
                 'users.name as organizer_name',
                 'users.email as organizer_email',
                 DB::raw('COUNT(DISTINCT events.id) as number_of_events'),
