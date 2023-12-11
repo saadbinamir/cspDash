@@ -51,7 +51,8 @@ export default function JoinCreateTeam({ getTeams }) {
               setErr("");
               setErrState(false);
             }, 3000);
-            getTeams();
+            // getTeams();
+            getTeams(true);
           } else {
             setErr(response.data.message);
             setErrState(true);
@@ -94,7 +95,8 @@ export default function JoinCreateTeam({ getTeams }) {
               setErr("");
               setErrState(false);
             }, 3000);
-            getTeams();
+            // getTeams();
+            getTeams(true);
           } else {
             setErr(response.data.message);
             setErrState(true);

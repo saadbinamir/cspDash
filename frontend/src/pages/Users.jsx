@@ -23,8 +23,22 @@ export default function Users() {
   const [key, setKey] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  function getTeamMembers() {
+  function getTeamMembers(forceFetch = false) {
     setProgress(50);
+
+    // Check if the data is cached in localStorage
+    const cacheKey = `cachedTeamMembers_${teamId}`;
+    const cachedTeamMembers = localStorage.getItem(cacheKey);
+
+    if (!forceFetch && cachedTeamMembers) {
+      const parsedTeamMembers = JSON.parse(cachedTeamMembers);
+      setmembers(parsedTeamMembers.members);
+      console.log("Data loaded from cache");
+      setProgress(100);
+      return; // Exit early to avoid API call
+    }
+
+    // Fetch team members from the API if not found in the cache or forceFetch is true
     axios
       .post(`http://${auth.ip}:8000/api/getTeamMembers`, {
         unique_id: teamId,
@@ -32,8 +46,12 @@ export default function Users() {
       .then((response) => {
         if (response.data.status === 200) {
           setmembers(response.data.members);
-          console.log(response.data.members);
-          setProgress(100);
+
+          // Cache the data in localStorage with team-specific key
+          const dataToCache = { members: response.data.members };
+          localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+          console.log("API called, data cached");
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -42,8 +60,76 @@ export default function Users() {
             setErrState(false);
           }, 3000);
         }
+
+        setProgress(100);
       });
   }
+
+  // function getTeamMembers() {
+  //   setProgress(50);
+
+  //   // Check if the data is cached in localStorage
+  //   const cacheKey = `cachedTeamMembers_${teamId}`;
+  //   const cachedTeamMembers = localStorage.getItem(cacheKey);
+
+  //   if (cachedTeamMembers) {
+  //     const parsedTeamMembers = JSON.parse(cachedTeamMembers);
+  //     setmembers(parsedTeamMembers.members);
+  //     console.log("Data loaded from cache");
+  //     setProgress(100);
+  //     return; // Exit early to avoid API call
+  //   }
+
+  //   // Fetch team members from the API if not found in the cache
+  //   axios
+  //     .post(`http://${auth.ip}:8000/api/getTeamMembers`, {
+  //       unique_id: teamId,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         setmembers(response.data.members);
+
+  //         // Cache the data in localStorage with team-specific key
+  //         const dataToCache = { members: response.data.members };
+  //         localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+  //         console.log("API called, data cached");
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //       }
+
+  //       setProgress(100);
+  //     });
+  // }
+
+  //before caching
+
+  // function getTeamMembers() {
+  //   setProgress(50);
+  //   axios
+  //     .post(`http://${auth.ip}:8000/api/getTeamMembers`, {
+  //       unique_id: teamId,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         setmembers(response.data.members);
+  //         console.log(response.data.members);
+  //         setProgress(100);
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //       }
+  //     });
+  // }
 
   const AddMember = (e) => {
     e.preventDefault();
@@ -67,7 +153,26 @@ export default function Users() {
             console.log(response.data.message);
             setErr(response.data.message);
             setErrState(false);
-            getTeamMembers();
+            // getTeamMembers();
+
+            // Update the number_of_members in the cached team data
+            const cacheKeyDetails = `cachedTeamDetails_${teamId}`;
+            const cachedTeamDetails = localStorage.getItem(cacheKeyDetails);
+
+            if (cachedTeamDetails) {
+              const parsedTeamDetails = JSON.parse(cachedTeamDetails);
+              parsedTeamDetails.team_details.number_of_members += 1;
+
+              // Update the cache with the modified data
+              localStorage.setItem(
+                cacheKeyDetails,
+                JSON.stringify(parsedTeamDetails)
+              );
+
+              console.log("Number of members updated in cache");
+            }
+
+            getTeamMembers(true);
 
             setKey(key + 1);
             form.current.user_name.value = response.data.name;
@@ -117,7 +222,44 @@ export default function Users() {
           console.log(response.data.message);
           setErr(response.data.message);
           setErrState(false);
-          getTeamMembers();
+
+          // Update the number_of_members in the cached team data
+          const cacheKeyDetails = `cachedTeamDetails_${teamId}`;
+          const cachedTeamDetails = localStorage.getItem(cacheKeyDetails);
+
+          if (cachedTeamDetails) {
+            const parsedTeamDetails = JSON.parse(cachedTeamDetails);
+            parsedTeamDetails.team_details.number_of_members -= 1;
+
+            // Update the cache with the modified data
+            localStorage.setItem(
+              cacheKeyDetails,
+              JSON.stringify(parsedTeamDetails)
+            );
+
+            console.log("Number of members updated in cache");
+          }
+
+          // Remove the user from the cached team members data
+          const cacheKeyMembers = `cachedTeamMembers_${teamId}`;
+          const cachedTeamMembers = localStorage.getItem(cacheKeyMembers);
+
+          if (cachedTeamMembers) {
+            const parsedTeamMembers = JSON.parse(cachedTeamMembers);
+
+            // Ensure userEmail is a string for comparison
+            const userEmailString = userEmail.toString();
+
+            const updatedMembers = parsedTeamMembers.members.filter(
+              (member) => member.team_member_email !== userEmailString
+            );
+
+            // Update the cache with the modified data
+            const dataToCache = { members: updatedMembers };
+            localStorage.setItem(cacheKeyMembers, JSON.stringify(dataToCache));
+          }
+
+          getTeamMembers(); // Refresh the team members without API call
 
           setKey(key + 1);
           setProgress(100);
@@ -132,6 +274,58 @@ export default function Users() {
         }
       });
   }
+
+  // function RemoveMember(userEmail) {
+  //   setProgress(50);
+  //   const requestData = {
+  //     email: userEmail,
+  //     unique_id: teamId,
+  //   };
+
+  //   axios
+  //     .delete(`http://${auth.ip}:8000/api/removeUserFromTeam`, {
+  //       data: requestData,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         console.log(response.data.message);
+  //         setErr(response.data.message);
+  //         setErrState(false);
+
+  //         // Remove the user from the cached data
+  //         const cacheKey = `cachedTeamMembers_${teamId}`;
+  //         const cachedTeamMembers = localStorage.getItem(cacheKey);
+
+  //         if (cachedTeamMembers) {
+  //           const parsedTeamMembers = JSON.parse(cachedTeamMembers);
+
+  //           // Ensure userEmail is a string for comparison
+  //           const userEmailString = userEmail.toString();
+
+  //           const updatedMembers = parsedTeamMembers.members.filter(
+  //             (member) => member.team_member_email !== userEmailString
+  //           );
+
+  //           // Update the cache with the modified data
+  //           const dataToCache = { members: updatedMembers };
+  //           localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+  //         }
+
+  //         getTeamMembers();
+
+  //         setKey(key + 1);
+  //         setProgress(100);
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //         setProgress(100);
+  //       }
+  //     });
+  // }
 
   useEffect(() => {
     getTeamMembers();
@@ -148,6 +342,7 @@ export default function Users() {
       <div className="container mx-auto max-w-screen-xl flex flex-col gap-y-10  py-10">
         {/* <TeamDetA /> */}
         <TeamDetA key={key} />
+
         <div className=" flex flex-row gap-x-10  justify-center items-start">
           <table className="w-full text-sm text-left  dark:text-gray-400 rounded-2xl overflow-hidden">
             <thead

@@ -26,8 +26,9 @@ export default function TeamDetM() {
       email: auth.user.email,
       unique_id: teamId,
     };
+
     if (!password) {
-      setErr("Enter your password to leave team");
+      setErr("Enter your password to leave the team");
       setErrState(true);
 
       setTimeout(() => {
@@ -52,8 +53,27 @@ export default function TeamDetM() {
             console.log(response.data.message);
             setErr(response.data.message);
             setErrState(false);
+
+            const cacheKey = `cachedTeams_${auth.user.email}`;
+            const cachedTeams = localStorage.getItem(cacheKey);
+
+            if (cachedTeams) {
+              const parsedTeams = JSON.parse(cachedTeams);
+
+              const teamIdString = teamId.toString();
+
+              const updatedTeams = parsedTeams.teams.filter(
+                (team) => team.team_unique_id !== teamIdString
+              );
+
+              const dataToCache = {
+                teams: updatedTeams,
+                myTeams: parsedTeams.myTeams,
+              };
+              localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+            }
+
             navigate("/dash");
-            //   getTeamMembers();
             setProgress(100);
           } else {
             setErr(response.data.message);
@@ -67,6 +87,54 @@ export default function TeamDetM() {
         });
     }
   }
+
+  // function RemoveMember() {
+  //   setProgress(50);
+  //   const requestData = {
+  //     email: auth.user.email,
+  //     unique_id: teamId,
+  //   };
+  //   if (!password) {
+  //     setErr("Enter your password to leave team");
+  //     setErrState(true);
+
+  //     setTimeout(() => {
+  //       setErr("");
+  //       setErrState(false);
+  //     }, 3000);
+  //   } else if (password !== auth.user.password) {
+  //     setErr("Wrong password");
+  //     setErrState(true);
+
+  //     setTimeout(() => {
+  //       setErr("");
+  //       setErrState(false);
+  //     }, 3000);
+  //   } else {
+  //     axios
+  //       .delete(`http://${auth.ip}:8000/api/removeUserFromTeam`, {
+  //         data: requestData,
+  //       })
+  //       .then((response) => {
+  //         if (response.data.status === 200) {
+  //           console.log(response.data.message);
+  //           setErr(response.data.message);
+  //           setErrState(false);
+  //           navigate("/dash");
+  //           //   getTeamMembers();
+  //           setProgress(100);
+  //         } else {
+  //           setErr(response.data.message);
+  //           setErrState(true);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //           setProgress(100);
+  //         }
+  //       });
+  //   }
+  // }
   function getTeamDetails() {
     setProgress(50);
     axios

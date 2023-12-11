@@ -22,48 +22,11 @@ export default function TeamDetA() {
   const [announcements, setAnnouncements] = useState("");
   const [progress, setProgress] = useState(0);
 
-  // function updateAnnouncements() {
-  //   if (!announcements) {
-  //     setErr("Announcements can not be empty");
-  //     setErrState(true);
-
-  //     setTimeout(() => {
-  //       setErr("");
-  //       setErrState(false);
-  //     }, 3000);
-  //   } else {
-  //     axios
-  //       // .post("http://localhost:8000/api/updateTeamAnnouncements", {
-  //       // .post("http://192.168.18.36:8000/api/updateTeamAnnouncements", {
-  //       .post(`http://${auth.ip}:8000/api/updateTeamAnnouncements`, {
-  //         team_unique_id: teamId,
-  //         announcements: announcements,
-  //       })
-  //       .then((response) => {
-  //         if (response.data.status === 200) {
-  //           setAnnouncements(response.data.announcements);
-  //           setErr(response.data.message);
-  //           setErrState(false);
-  //           setTimeout(() => {
-  //             setErr("");
-  //             setErrState(false);
-  //           }, 3000);
-  //           // getTeamDetails();
-  //         } else {
-  //           setErr(response.data.message);
-  //           setErrState(true);
-  //           setTimeout(() => {
-  //             setErr("");
-  //             setErrState(false);
-  //           }, 3000);
-  //         }
-  //       });
-  //   }
-  // }
   function deleteTeam() {
     setProgress(50);
+
     if (!password) {
-      setErr("Enter your password to delete team");
+      setErr("Enter your password to delete the team");
       setErrState(true);
 
       setTimeout(() => {
@@ -88,10 +51,31 @@ export default function TeamDetA() {
           if (response.data.status === 200) {
             setErr(response.data.message);
             setErrState(true);
+
+            const cacheKey = `cachedTeams_${auth.user.email}`;
+            const cachedTeams = localStorage.getItem(cacheKey);
+
+            if (cachedTeams) {
+              const parsedTeams = JSON.parse(cachedTeams);
+
+              const teamIdString = teamId.toString();
+
+              const updatedMyTeams = parsedTeams.myTeams.filter(
+                (team) => team.team_unique_id !== teamIdString
+              );
+
+              const dataToCache = {
+                teams: parsedTeams.teams,
+                myTeams: updatedMyTeams,
+              };
+              localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+            }
+
             setTimeout(() => {
               setErr("");
               setErrState(false);
             }, 3000);
+
             navigate("/dash");
             setProgress(100);
           } else {
@@ -106,8 +90,71 @@ export default function TeamDetA() {
         });
     }
   }
+
+  //before caching
+
+  // function deleteTeam() {
+  //   setProgress(50);
+  //   if (!password) {
+  //     setErr("Enter your password to delete team");
+  //     setErrState(true);
+
+  //     setTimeout(() => {
+  //       setErr("");
+  //       setErrState(false);
+  //     }, 3000);
+  //   } else if (password !== auth.user.password) {
+  //     setErr("Wrong password");
+  //     setErrState(true);
+
+  //     setTimeout(() => {
+  //       setErr("");
+  //       setErrState(false);
+  //     }, 3000);
+  //   } else {
+  //     axios
+  //       .post(`http://${auth.ip}:8000/api/deleteTeam`, {
+  //         unique_id: teamId,
+  //         organizerEmail: auth.user.email,
+  //       })
+  //       .then((response) => {
+  //         if (response.data.status === 200) {
+  //           setErr(response.data.message);
+  //           setErrState(true);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //           navigate("/dash");
+  //           setProgress(100);
+  //         } else {
+  //           setErr(response.data.message);
+  //           setErrState(true);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //           setProgress(100);
+  //         }
+  //       });
+  //   }
+  // }
   function getTeamDetails() {
     setProgress(50);
+
+    // Check if the data is cached in localStorage
+    const cacheKey = `cachedTeamDetails_${teamId}`;
+    const cachedTeamDetails = localStorage.getItem(cacheKey);
+
+    if (cachedTeamDetails) {
+      const parsedTeamDetails = JSON.parse(cachedTeamDetails);
+      setteamDet(parsedTeamDetails.team_details);
+      setAnnouncements(parsedTeamDetails.team_details.announcements);
+      console.log("Data loaded from cache");
+      setProgress(100);
+      return;
+    }
+
     axios
       .post(`http://${auth.ip}:8000/api/getTeamDetails`, {
         team_unique_id: teamId,
@@ -115,9 +162,13 @@ export default function TeamDetA() {
       .then((response) => {
         if (response.data.status === 200) {
           setteamDet(response.data.team_details);
-          console.log(response.data.team_details);
           setAnnouncements(response.data.team_details.announcements);
-          setProgress(100);
+
+          // Cache the data in localStorage with team-specific key
+          const dataToCache = { team_details: response.data.team_details };
+          localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+          console.log("API called, data cached");
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -125,13 +176,42 @@ export default function TeamDetA() {
             setErr("");
             setErrState(false);
           }, 3000);
-          setProgress(100);
         }
+
+        setProgress(100);
       });
   }
+
   useEffect(() => {
     getTeamDetails();
   }, []);
+
+  // function getTeamDetails() {
+  //   setProgress(50);
+  //   axios
+  //     .post(`http://${auth.ip}:8000/api/getTeamDetails`, {
+  //       team_unique_id: teamId,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         setteamDet(response.data.team_details);
+  //         console.log(response.data.team_details);
+  //         setAnnouncements(response.data.team_details.announcements);
+  //         setProgress(100);
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //         setProgress(100);
+  //       }
+  //     });
+  // }
+  // useEffect(() => {
+  //   getTeamDetails();
+  // }, []);
   return (
     <>
       <LoadingBar

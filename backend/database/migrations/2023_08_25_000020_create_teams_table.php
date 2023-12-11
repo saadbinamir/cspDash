@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('organizer_id');
             $table->string('team_name', 50);
             $table->unsignedBigInteger('organizer_id');
-
+    
             $table->foreign('organizer_id')->references('id')->on('users');
             $table->timestamps();
         });
