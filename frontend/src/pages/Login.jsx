@@ -48,6 +48,9 @@ export default function Login() {
             }, 3000);
             setProgress(100);
 
+            response.data.user.password = password;
+            auth.login(response.data.user);
+
             // Fetch user teams and other relevant data after successful login
             axios
               .post(`http://${auth.ip}:8000/api/getAllUserTeams`, {
@@ -72,12 +75,11 @@ export default function Login() {
                   localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
 
                   console.log("User teams cached after login");
+
+                  // Now, navigate to the dashboard after caching
+                  navigate(redirectPath, { replace: true });
                 }
               });
-
-            response.data.user.password = password;
-            auth.login(response.data.user);
-            navigate(redirectPath, { replace: true });
           } else {
             setErr(response.data.message);
             setErrState(true);
@@ -90,6 +92,77 @@ export default function Login() {
         });
     }
   };
+
+  // const handleSignIn = async (e) => {
+  //   e.preventDefault();
+  //   setProgress(50);
+  //   console.log("Email:", email);
+  //   console.log("Password:", password);
+
+  //   if (email === "") {
+  //     setErr("Enter a valid Email");
+  //     setErrState(true);
+  //   } else if (password === "") {
+  //     setErr("Enter a valid Password");
+  //     setErrState(true);
+  //   } else {
+  //     axios
+  //       .post(`http://${auth.ip}:8000/api/login`, {
+  //         email: email,
+  //         password: password,
+  //       })
+  //       .then((response) => {
+  //         if (response.data.status === 200) {
+  //           setErr(response.data.message);
+  //           setErrState(false);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //           setProgress(100);
+
+  //           // Fetch user teams and other relevant data after successful login
+  //           axios
+  //             .post(`http://${auth.ip}:8000/api/getAllUserTeams`, {
+  //               user_email: email,
+  //             })
+  //             .then((teamResponse) => {
+  //               if (teamResponse.data.status === 200) {
+  //                 const myTeams = [];
+  //                 const notMyTeams = [];
+
+  //                 teamResponse.data.teams.forEach((team) => {
+  //                   if (team.organizer_email === email) {
+  //                     myTeams.push(team);
+  //                   } else {
+  //                     notMyTeams.push(team);
+  //                   }
+  //                 });
+
+  //                 // Cache the data in localStorage with user-specific key
+  //                 const cacheKey = `cachedTeams_${email}`;
+  //                 const dataToCache = { teams: notMyTeams, myTeams };
+  //                 localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+  //                 console.log("User teams cached after login");
+  //               }
+  //             });
+
+  //           response.data.user.password = password;
+  //           auth.login(response.data.user);
+  //           navigate(redirectPath, { replace: true });
+  //         } else {
+  //           setErr(response.data.message);
+  //           setErrState(true);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //           setProgress(100);
+  //         }
+  //       });
+  //   }
+  // };
 
   // const handleSignIn = async (e) => {
   //   e.preventDefault();

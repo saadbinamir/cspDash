@@ -150,7 +150,6 @@ export default function TeamAdmin() {
             console.log(response.data.message);
             setErr(response.data.message);
             setErrState(false);
-            getEvents();
 
             setEventTitle("");
             setEventDate("");
@@ -159,8 +158,25 @@ export default function TeamAdmin() {
             setCredithours("");
             setCoordinatorEmail("");
             setcomments("");
+            // Update the number_of_members in the cached team data
+            const cacheKeyDetails = `cachedTeamDetails_${teamId}`;
+            const cachedTeamDetails = localStorage.getItem(cacheKeyDetails);
+
+            if (cachedTeamDetails) {
+              const parsedTeamDetails = JSON.parse(cachedTeamDetails);
+              parsedTeamDetails.team_details.number_of_events += 1;
+
+              // Update the cache with the modified data
+              localStorage.setItem(
+                cacheKeyDetails,
+                JSON.stringify(parsedTeamDetails)
+              );
+
+              console.log("Number of members updated in cache");
+            }
 
             setKey(key + 1);
+            getEvents(true);
             setisEdit(false);
             setProgress(100);
           } else {
@@ -204,17 +220,68 @@ export default function TeamAdmin() {
         }
       });
   }
-  function getEvents() {
+  function getEvents(forceFetch = false) {
     setProgress(50);
+
+    // Check if the data is cached in localStorage
+    const cacheKey = `cachedEvents_${teamId}`;
+    const cachedEvents = localStorage.getItem(cacheKey);
+
+    if (!forceFetch && cachedEvents) {
+      const parsedEvents = JSON.parse(cachedEvents);
+      setEvents(parsedEvents.events);
+      console.log("Data loaded from cache");
+
+      // Update the number_of_events dynamically
+      const numberOfEvents = parsedEvents.numberOfEvents;
+      const cacheKeyDetails = `cachedTeamDetails_${teamId}`;
+      const cachedTeamDetails = localStorage.getItem(cacheKeyDetails);
+      const parsedTeamDetails = JSON.parse(cachedTeamDetails);
+      parsedTeamDetails.team_details.number_of_events = numberOfEvents;
+
+      // Update the cached data with the modified number_of_events
+      const dataToCache = {
+        events: parsedEvents.events,
+        numberOfEvents,
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+      // Render events based on the cached data
+      const todayEvents = [];
+      const upcomingEvents = [];
+      const pastEvents = [];
+
+      parsedEvents.events.forEach((event) => {
+        if (
+          new Date(event.date).setHours(0, 0, 0, 0) <
+          new Date().setHours(0, 0, 0, 0)
+        ) {
+          pastEvents.push(event);
+        } else if (
+          new Date(event.date).setHours(0, 0, 0, 0) >
+          new Date().setHours(0, 0, 0, 0)
+        ) {
+          upcomingEvents.push(event);
+        } else {
+          todayEvents.push(event);
+        }
+      });
+
+      setTodaysEvents(todayEvents);
+      setUpcomingEvents(upcomingEvents);
+      setPastEvents(pastEvents);
+
+      return; // Exit early to avoid rendering from API call response
+    }
+
+    // Fetch events from the API if not found in the cache or forceFetch is true
     axios
       .post(`http://${auth.ip}:8000/api/getEventsInTeam`, {
         team_unique_id: teamId,
       })
       .then((response) => {
         if (response.data.status === 200) {
-          setEvents(response.data.events);
-          console.log(response.data.events);
-
+          // Your logic to update events based on the API response
           const todayEvents = [];
           const upcomingEvents = [];
           const pastEvents = [];
@@ -238,7 +305,22 @@ export default function TeamAdmin() {
           setTodaysEvents(todayEvents);
           setUpcomingEvents(upcomingEvents);
           setPastEvents(pastEvents);
-          setProgress(100);
+
+          // Update the number_of_events dynamically
+          const numberOfEvents = response.data.events.length;
+          const cacheKeyDetails = `cachedTeamDetails_${teamId}`;
+          const cachedTeamDetails = localStorage.getItem(cacheKeyDetails);
+          const parsedTeamDetails = JSON.parse(cachedTeamDetails);
+          parsedTeamDetails.team_details.number_of_events = numberOfEvents;
+
+          // Cache the data in localStorage with team-specific key
+          const dataToCache = {
+            events: response.data.events,
+            numberOfEvents,
+          };
+          localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+          console.log("API called, data cached");
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -246,10 +328,189 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
-          setProgress(100);
         }
+      })
+      .finally(() => {
+        setProgress(100);
       });
   }
+
+  // function getEvents(forceFetch = false) {
+  //   setProgress(50);
+
+  //   // Check if the data is cached in localStorage
+  //   const cacheKey = `cachedEvents_${teamId}`;
+  //   const cachedEvents = localStorage.getItem(cacheKey);
+
+  //   if (!forceFetch && cachedEvents) {
+  //     const parsedEvents = JSON.parse(cachedEvents);
+  //     setEvents(parsedEvents.events);
+  //     const todayEvents = [];
+  //     const upcomingEvents = [];
+  //     const pastEvents = [];
+
+  //     parsedEvents.events.forEach((event) => {
+  //       if (
+  //         new Date(event.date).setHours(0, 0, 0, 0) <
+  //         new Date().setHours(0, 0, 0, 0)
+  //       ) {
+  //         pastEvents.push(event);
+  //       } else if (
+  //         new Date(event.date).setHours(0, 0, 0, 0) >
+  //         new Date().setHours(0, 0, 0, 0)
+  //       ) {
+  //         upcomingEvents.push(event);
+  //       } else {
+  //         todayEvents.push(event);
+  //       }
+  //     });
+
+  //     setTodaysEvents(todayEvents);
+  //     setUpcomingEvents(upcomingEvents);
+  //     setPastEvents(pastEvents);
+  //     console.log("Data loaded from cache");
+
+  //     // Now, initiate a background API call to fetch the latest data
+  //     axios
+  //       .post(`http://${auth.ip}:8000/api/getEventsInTeam`, {
+  //         team_unique_id: teamId,
+  //       })
+  //       .then((response) => {
+  //         if (response.data.status === 200) {
+  //           // Compare the data from the API with the cached data
+  //           if (
+  //             JSON.stringify(response.data.events) !==
+  //             JSON.stringify(parsedEvents.events)
+  //           ) {
+  //             console.log("Updating data from API response");
+
+  //             // Your logic to update events based on the API response
+
+  //             // Update the cached data with the modified events
+  //             const dataToCache = {
+  //               events: response.data.events,
+  //               // Add any other data you want to cache
+  //             };
+  //             localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+  //             setEvents(response.data.events);
+  //             const todayEvents = [];
+  //             const upcomingEvents = [];
+  //             const pastEvents = [];
+
+  //             response.data.events.forEach((event) => {
+  //               if (
+  //                 new Date(event.date).setHours(0, 0, 0, 0) <
+  //                 new Date().setHours(0, 0, 0, 0)
+  //               ) {
+  //                 pastEvents.push(event);
+  //               } else if (
+  //                 new Date(event.date).setHours(0, 0, 0, 0) >
+  //                 new Date().setHours(0, 0, 0, 0)
+  //               ) {
+  //                 upcomingEvents.push(event);
+  //               } else {
+  //                 todayEvents.push(event);
+  //               }
+  //             });
+
+  //             setTodaysEvents(todayEvents);
+  //             setUpcomingEvents(upcomingEvents);
+  //             setPastEvents(pastEvents);
+  //           }
+  //         } else {
+  //           setErr(response.data.message);
+  //           setErrState(true);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //         }
+  //       })
+  //       .finally(() => {
+  //         setProgress(100);
+  //       });
+
+  //     return; // Exit early to avoid rendering from API call response
+  //   }
+
+  //   // Fetch events from the API if not found in the cache or forceFetch is true
+  //   axios
+  //     .post(`http://${auth.ip}:8000/api/getEventsInTeam`, {
+  //       team_unique_id: teamId,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         // Your logic to update events based on the API response
+
+  //         // Cache the data in localStorage with team-specific key
+  //         const dataToCache = {
+  //           events: response.data.events,
+  //           // Add any other data you want to cache
+  //         };
+  //         localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+  //         console.log("API called, data cached");
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //       }
+  //     })
+  //     .finally(() => {
+  //       setProgress(100);
+  //     });
+  // }
+
+  // function getEvents() {
+  //   setProgress(50);
+  //   axios
+  //     .post(`http://${auth.ip}:8000/api/getEventsInTeam`, {
+  //       team_unique_id: teamId,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         setEvents(response.data.events);
+  //         console.log(response.data.events);
+
+  // const todayEvents = [];
+  // const upcomingEvents = [];
+  // const pastEvents = [];
+
+  // response.data.events.forEach((event) => {
+  //   if (
+  //     new Date(event.date).setHours(0, 0, 0, 0) <
+  //     new Date().setHours(0, 0, 0, 0)
+  //   ) {
+  //     pastEvents.push(event);
+  //   } else if (
+  //     new Date(event.date).setHours(0, 0, 0, 0) >
+  //     new Date().setHours(0, 0, 0, 0)
+  //   ) {
+  //     upcomingEvents.push(event);
+  //   } else {
+  //     todayEvents.push(event);
+  //   }
+  // });
+
+  // setTodaysEvents(todayEvents);
+  // setUpcomingEvents(upcomingEvents);
+  // setPastEvents(pastEvents);
+  //         setProgress(100);
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //         setProgress(100);
+  //       }
+  //     });
+  // }
   function getAnnouncementsInTeam() {
     setProgress(50);
     axios
@@ -395,7 +656,23 @@ export default function TeamAdmin() {
             setErrState(false);
           }, 3000);
           setEvents(response.data.events);
-          getEvents();
+          // Update the number_of_members in the cached team data
+          const cacheKeyDetails = `cachedTeamDetails_${teamId}`;
+          const cachedTeamDetails = localStorage.getItem(cacheKeyDetails);
+
+          if (cachedTeamDetails) {
+            const parsedTeamDetails = JSON.parse(cachedTeamDetails);
+            parsedTeamDetails.team_details.number_of_events -= 1;
+
+            // Update the cache with the modified data
+            localStorage.setItem(
+              cacheKeyDetails,
+              JSON.stringify(parsedTeamDetails)
+            );
+
+            console.log("Number of members updated in cache");
+          }
+          getEvents(true);
           setKey(key + 1);
           setProgress(100);
         } else {
