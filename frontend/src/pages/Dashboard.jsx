@@ -26,79 +26,20 @@ export default function Dashboard() {
   const [errState, setErrState] = useState();
   const [progress, setProgress] = useState(0);
 
-  const getTeams = useCallback(
-    (forceFetch = false) => {
-      console.log("Memoized function recreated");
-
-      const cacheKey = `cachedTeams_${auth.user.email}`;
-      const cachedTeams = localStorage.getItem(cacheKey);
-
-      if (!forceFetch && cachedTeams) {
-        const parsedTeams = JSON.parse(cachedTeams);
-        setTeams(parsedTeams.teams);
-        setMyTeams(parsedTeams.myTeams);
-        console.log("Data loaded from cache");
-        console.log(parsedTeams);
-        return; // Exit early to avoid API call
-      }
-
-      setProgress(50);
-
-      axios
-        .post(`http://${auth.ip}:8000/api/getAllUserTeams`, {
-          user_email: auth.user.email,
-        })
-        .then((response) => {
-          if (response.data.status === 200) {
-            const myTeams = [];
-            const notMyTeams = [];
-
-            response.data.teams.forEach((team) => {
-              if (team.organizer_email === auth.user.email) {
-                myTeams.push(team);
-              } else {
-                notMyTeams.push(team);
-              }
-            });
-
-            setMyTeams(myTeams);
-            setTeams(notMyTeams);
-
-            // Cache the data in localStorage with user-specific key
-            const dataToCache = { teams: notMyTeams, myTeams };
-            localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
-
-            console.log("API called, data cached");
-          } else {
-            setErr(response.data.message);
-            setErrState(true);
-            setTimeout(() => {
-              setErr("");
-              setErrState(false);
-            }, 3000);
-          }
-
-          setProgress(100);
-        });
-    },
-    [auth.user.email]
-  );
-
   // const getTeams = useCallback(
   //   (forceFetch = false) => {
   //     console.log("Memoized function recreated");
 
   //     const cacheKey = `cachedTeams_${auth.user.email}`;
-  //     if (!forceFetch) {
-  //       const cachedTeams = localStorage.getItem(cacheKey);
-  //       if (cachedTeams) {
-  //         const parsedTeams = JSON.parse(cachedTeams);
-  //         setTeams(parsedTeams.teams);
-  //         setMyTeams(parsedTeams.myTeams);
-  //         console.log("Data loaded from cache");
-  //         console.log(parsedTeams);
-  //         return; // Exit early to avoid API call
-  //       }
+  //     const cachedTeams = localStorage.getItem(cacheKey);
+
+  //     if (!forceFetch && cachedTeams) {
+  //       const parsedTeams = JSON.parse(cachedTeams);
+  //       setTeams(parsedTeams.teams);
+  //       setMyTeams(parsedTeams.myTeams);
+  //       console.log("Data loaded from cache");
+  //       console.log(parsedTeams);
+  //       return; // Exit early to avoid API call
   //     }
 
   //     setProgress(50);
@@ -109,8 +50,6 @@ export default function Dashboard() {
   //       })
   //       .then((response) => {
   //         if (response.data.status === 200) {
-  //           setTeams(response.data.teams);
-
   //           const myTeams = [];
   //           const notMyTeams = [];
 
@@ -144,6 +83,67 @@ export default function Dashboard() {
   //   },
   //   [auth.user.email]
   // );
+
+  const getTeams = useCallback(
+    (forceFetch = false) => {
+      console.log("Memoized function recreated");
+
+      const cacheKey = `cachedTeams_${auth.user.email}`;
+      if (!forceFetch) {
+        const cachedTeams = localStorage.getItem(cacheKey);
+        if (cachedTeams) {
+          const parsedTeams = JSON.parse(cachedTeams);
+          setTeams(parsedTeams.teams);
+          setMyTeams(parsedTeams.myTeams);
+          console.log("Data loaded from cache");
+          console.log(parsedTeams);
+          // return; // Exit early to avoid API call
+        }
+      }
+
+      setProgress(50);
+
+      axios
+        .post(`http://${auth.ip}:8000/api/getAllUserTeams`, {
+          user_email: auth.user.email,
+        })
+        .then((response) => {
+          if (response.data.status === 200) {
+            setTeams(response.data.teams);
+
+            const myTeams = [];
+            const notMyTeams = [];
+
+            response.data.teams.forEach((team) => {
+              if (team.organizer_email === auth.user.email) {
+                myTeams.push(team);
+              } else {
+                notMyTeams.push(team);
+              }
+            });
+
+            setMyTeams(myTeams);
+            setTeams(notMyTeams);
+
+            // Cache the data in localStorage with user-specific key
+            const dataToCache = { teams: notMyTeams, myTeams };
+            localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+            console.log("API called, data cached");
+          } else {
+            setErr(response.data.message);
+            setErrState(true);
+            setTimeout(() => {
+              setErr("");
+              setErrState(false);
+            }, 3000);
+          }
+
+          setProgress(100);
+        });
+    },
+    [auth.user.email]
+  );
 
   // before caching
   // const getTeams = () => {

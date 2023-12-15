@@ -13,6 +13,8 @@ export default function JoinCreateTeam({ getTeams }) {
   const [errState, setErrState] = useState();
 
   const handleCreateTeam = (e) => {
+    setteamName("");
+    setteamID("");
     e.preventDefault();
     // console.log(auth.user);
     console.log("teamName:", teamName);
@@ -67,6 +69,8 @@ export default function JoinCreateTeam({ getTeams }) {
 
   const handeJoin = (e) => {
     e.preventDefault();
+    setjoinTeamID("");
+
     // console.log(auth.user);
     console.log("teamID:", teamID);
 

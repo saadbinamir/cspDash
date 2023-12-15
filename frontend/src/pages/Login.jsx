@@ -20,78 +20,78 @@ export default function Login() {
   const [errState, setErrState] = useState();
   const [progress, setProgress] = useState(0);
 
-  const handleSignIn = async (e) => {
-    e.preventDefault();
-    setProgress(50);
-    console.log("Email:", email);
-    console.log("Password:", password);
+  // const handleSignIn = async (e) => {
+  //   e.preventDefault();
+  //   setProgress(50);
+  //   console.log("Email:", email);
+  //   console.log("Password:", password);
 
-    if (email === "") {
-      setErr("Enter a valid Email");
-      setErrState(true);
-    } else if (password === "") {
-      setErr("Enter a valid Password");
-      setErrState(true);
-    } else {
-      axios
-        .post(`http://${auth.ip}:8000/api/login`, {
-          email: email,
-          password: password,
-        })
-        .then((response) => {
-          if (response.data.status === 200) {
-            setErr(response.data.message);
-            setErrState(false);
-            setTimeout(() => {
-              setErr("");
-              setErrState(false);
-            }, 3000);
-            setProgress(100);
+  //   if (email === "") {
+  //     setErr("Enter a valid Email");
+  //     setErrState(true);
+  //   } else if (password === "") {
+  //     setErr("Enter a valid Password");
+  //     setErrState(true);
+  //   } else {
+  //     axios
+  //       .post(`http://${auth.ip}:8000/api/login`, {
+  //         email: email,
+  //         password: password,
+  //       })
+  //       .then((response) => {
+  //         if (response.data.status === 200) {
+  //           setErr(response.data.message);
+  //           setErrState(false);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //           setProgress(100);
 
-            response.data.user.password = password;
-            auth.login(response.data.user);
+  //           response.data.user.password = password;
+  //           auth.login(response.data.user);
 
-            // Fetch user teams and other relevant data after successful login
-            axios
-              .post(`http://${auth.ip}:8000/api/getAllUserTeams`, {
-                user_email: email,
-              })
-              .then((teamResponse) => {
-                if (teamResponse.data.status === 200) {
-                  const myTeams = [];
-                  const notMyTeams = [];
+  //           // Fetch user teams and other relevant data after successful login
+  //           axios
+  //             .post(`http://${auth.ip}:8000/api/getAllUserTeams`, {
+  //               user_email: email,
+  //             })
+  //             .then((teamResponse) => {
+  //               if (teamResponse.data.status === 200) {
+  //                 const myTeams = [];
+  //                 const notMyTeams = [];
 
-                  teamResponse.data.teams.forEach((team) => {
-                    if (team.organizer_email === email) {
-                      myTeams.push(team);
-                    } else {
-                      notMyTeams.push(team);
-                    }
-                  });
+  //                 teamResponse.data.teams.forEach((team) => {
+  //                   if (team.organizer_email === email) {
+  //                     myTeams.push(team);
+  //                   } else {
+  //                     notMyTeams.push(team);
+  //                   }
+  //                 });
 
-                  // Cache the data in localStorage with user-specific key
-                  const cacheKey = `cachedTeams_${email}`;
-                  const dataToCache = { teams: notMyTeams, myTeams };
-                  localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+  //                 // Cache the data in localStorage with user-specific key
+  //                 const cacheKey = `cachedTeams_${email}`;
+  //                 const dataToCache = { teams: notMyTeams, myTeams };
+  //                 localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
 
-                  console.log("User teams cached after login");
+  //                 console.log("User teams cached after login");
 
-                  // Now, navigate to the dashboard after caching
-                  navigate(redirectPath, { replace: true });
-                }
-              });
-          } else {
-            setErr(response.data.message);
-            setErrState(true);
-            setTimeout(() => {
-              setErr("");
-              setErrState(false);
-            }, 3000);
-            setProgress(100);
-          }
-        });
-    }
-  };
+  //                 // Now, navigate to the dashboard after caching
+  //                 navigate(redirectPath, { replace: true });
+  //               }
+  //             });
+  //         } else {
+  //           setErr(response.data.message);
+  //           setErrState(true);
+  //           setTimeout(() => {
+  //             setErr("");
+  //             setErrState(false);
+  //           }, 3000);
+  //           setProgress(100);
+  //         }
+  //       });
+  //   }
+  // };
 
   // const handleSignIn = async (e) => {
   //   e.preventDefault();
@@ -164,50 +164,50 @@ export default function Login() {
   //   }
   // };
 
-  // const handleSignIn = async (e) => {
-  //   e.preventDefault();
-  //   setProgress(50);
-  //   console.log("Email:", email);
-  //   console.log("Password:", password);
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    setProgress(50);
+    console.log("Email:", email);
+    console.log("Password:", password);
 
-  //   if (email === "") {
-  //     setErr("Enter a valid Email");
-  //     setErrState(true);
-  //   } else if (password == "") {
-  //     setErr("Enter a valid Password");
-  //     setErrState(true);
-  //   } else {
-  //     axios
-  //       // .post("http://localhost:8000/api/login", {
-  //       // .post("http://192.168.18.36:8000/api/login", {
-  //       .post(`http://${auth.ip}:8000/api/login`, {
-  //         email: email,
-  //         password: password,
-  //       })
-  //       .then((response) => {
-  //         if (response.data.status === 200) {
-  //           setErr(response.data.message);
-  //           setErrState(false);
-  //           setTimeout(() => {
-  //             setErr("");
-  //             setErrState(false);
-  //           }, 3000);
-  //           setProgress(100);
-  //           response.data.user.password = password;
-  //           auth.login(response.data.user);
-  //           navigate(redirectPath, { replace: true });
-  //         } else {
-  //           setErr(response.data.message);
-  //           setErrState(true);
-  //           setTimeout(() => {
-  //             setErr("");
-  //             setErrState(false);
-  //           }, 3000);
-  //           setProgress(100);
-  //         }
-  //       });
-  //   }
-  // };
+    if (email === "") {
+      setErr("Enter a valid Email");
+      setErrState(true);
+    } else if (password == "") {
+      setErr("Enter a valid Password");
+      setErrState(true);
+    } else {
+      axios
+        // .post("http://localhost:8000/api/login", {
+        // .post("http://192.168.18.36:8000/api/login", {
+        .post(`http://${auth.ip}:8000/api/login`, {
+          email: email,
+          password: password,
+        })
+        .then((response) => {
+          if (response.data.status === 200) {
+            setErr(response.data.message);
+            setErrState(false);
+            setTimeout(() => {
+              setErr("");
+              setErrState(false);
+            }, 3000);
+            setProgress(100);
+            response.data.user.password = password;
+            auth.login(response.data.user);
+            navigate(redirectPath, { replace: true });
+          } else {
+            setErr(response.data.message);
+            setErrState(true);
+            setTimeout(() => {
+              setErr("");
+              setErrState(false);
+            }, 3000);
+            setProgress(100);
+          }
+        });
+    }
+  };
 
   return (
     <>

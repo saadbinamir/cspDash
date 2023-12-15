@@ -9,7 +9,7 @@ import Copy from "../assets/copy";
 import TeamAdmin from "../pages/TeamAdmin";
 import LoadingBar from "react-top-loading-bar";
 
-export default function TeamDetM() {
+export default function TeamDetM({ refresh }) {
   const { teamId } = useParams();
   const auth = useAuth();
   const navigate = useNavigate();
@@ -135,8 +135,23 @@ export default function TeamDetM() {
   //       });
   //   }
   // }
+
   function getTeamDetails() {
     setProgress(50);
+
+    // Check if the data is cached in localStorage
+    const cacheKey = `cachedTeamDetails_${teamId}`;
+    const cachedTeamDetails = localStorage.getItem(cacheKey);
+
+    if (cachedTeamDetails) {
+      const parsedTeamDetails = JSON.parse(cachedTeamDetails);
+      setteamDet(parsedTeamDetails.team_details);
+      // setAnnouncements(parsedTeamDetails.team_details.announcements);
+      console.log("Data loaded from cache");
+      setProgress(100);
+      return;
+    }
+
     axios
       .post(`http://${auth.ip}:8000/api/getTeamDetails`, {
         team_unique_id: teamId,
@@ -144,8 +159,13 @@ export default function TeamDetM() {
       .then((response) => {
         if (response.data.status === 200) {
           setteamDet(response.data.team_details);
-          console.log(response.data.team_details);
-          setProgress(100);
+          // setAnnouncements(response.data.team_details.announcements);
+
+          // Cache the data in localStorage with team-specific key
+          const dataToCache = { team_details: response.data.team_details };
+          localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+          console.log("API called, data cached");
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -153,10 +173,34 @@ export default function TeamDetM() {
             setErr("");
             setErrState(false);
           }, 3000);
-          setProgress(100);
         }
+
+        setProgress(100);
       });
   }
+
+  // function getTeamDetails() {
+  //   setProgress(50);
+  //   axios
+  //     .post(`http://${auth.ip}:8000/api/getTeamDetails`, {
+  //       team_unique_id: teamId,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         setteamDet(response.data.team_details);
+  //         console.log(response.data.team_details);
+  //         setProgress(100);
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //         setProgress(100);
+  //       }
+  //     });
+  // }
   useEffect(() => {
     getTeamDetails();
   }, []);
@@ -175,7 +219,11 @@ export default function TeamDetM() {
       >
         <div className="flex md:flex-row flex-col md:items-center items-start gap-y-2 justify-between ">
           <div className="flex flex-row gap-x-5 items-baseline">
-            <h5 className="text-2xl font-medium" style={{ color: "#c39601" }}>
+            <h5
+              className="text-2xl font-medium cursor-pointer"
+              style={{ color: "#c39601" }}
+              onClick={refresh}
+            >
               {/* Hoor ka Event */}
               {teamDet.team_name}
             </h5>

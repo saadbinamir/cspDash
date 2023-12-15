@@ -162,17 +162,19 @@ export default function TeamAdmin() {
             const cacheKeyDetails = `cachedTeamDetails_${teamId}`;
             const cachedTeamDetails = localStorage.getItem(cacheKeyDetails);
 
-            if (cachedTeamDetails) {
-              const parsedTeamDetails = JSON.parse(cachedTeamDetails);
-              parsedTeamDetails.team_details.number_of_events += 1;
+            if (!isEdit) {
+              if (cachedTeamDetails) {
+                const parsedTeamDetails = JSON.parse(cachedTeamDetails);
+                parsedTeamDetails.team_details.number_of_events += 1;
 
-              // Update the cache with the modified data
-              localStorage.setItem(
-                cacheKeyDetails,
-                JSON.stringify(parsedTeamDetails)
-              );
+                // Update the cache with the modified data
+                localStorage.setItem(
+                  cacheKeyDetails,
+                  JSON.stringify(parsedTeamDetails)
+                );
 
-              console.log("Number of members updated in cache");
+                console.log("Number of members updated in cache");
+              }
             }
 
             setKey(key + 1);
@@ -511,17 +513,39 @@ export default function TeamAdmin() {
   //       }
   //     });
   // }
-  function getAnnouncementsInTeam() {
+
+  function getAnnouncementsInTeam(forceFetch = false) {
     setProgress(50);
+
+    // Check if the data is cached in localStorage
+    const cacheKey = `cachedAnnouncements_${teamId}`;
+    const cachedAnnouncements = localStorage.getItem(cacheKey);
+
+    if (!forceFetch && cachedAnnouncements) {
+      const parsedAnnouncements = JSON.parse(cachedAnnouncements);
+      setannouncements(parsedAnnouncements.announcements);
+      console.log("Data loaded from cache");
+      setProgress(100);
+      return; // Exit early to avoid rendering from API call response
+    }
+
+    // Fetch announcements from the API if not found in the cache or forceFetch is true
     axios
       .post(`http://${auth.ip}:8000/api/getAnnouncementsInTeam`, {
         team_unique_id: teamId,
       })
       .then((response) => {
         if (response.data.status === 200) {
+          // Your logic to update announcements based on the API response
           setannouncements(response.data.announcements);
-          setmess("");
-          setProgress(100);
+
+          // Cache the data in localStorage with team-specific key
+          const dataToCache = {
+            announcements: response.data.announcements,
+          };
+          localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+
+          console.log("API called, data cached");
         } else {
           setErr(response.data.message);
           setErrState(true);
@@ -529,10 +553,35 @@ export default function TeamAdmin() {
             setErr("");
             setErrState(false);
           }, 3000);
-          setProgress(100);
         }
+      })
+      .finally(() => {
+        setProgress(100);
       });
   }
+
+  // function getAnnouncementsInTeam() {
+  //   setProgress(50);
+  //   axios
+  //     .post(`http://${auth.ip}:8000/api/getAnnouncementsInTeam`, {
+  //       team_unique_id: teamId,
+  //     })
+  //     .then((response) => {
+  //       if (response.data.status === 200) {
+  //         setannouncements(response.data.announcements);
+  //         setmess("");
+  //         setProgress(100);
+  //       } else {
+  //         setErr(response.data.message);
+  //         setErrState(true);
+  //         setTimeout(() => {
+  //           setErr("");
+  //           setErrState(false);
+  //         }, 3000);
+  //         setProgress(100);
+  //       }
+  //     });
+  // }
   function createAnnouncement(mess) {
     setProgress(50);
     axios
@@ -543,7 +592,8 @@ export default function TeamAdmin() {
       .then((response) => {
         if (response.data.status === 200) {
           // setannouncements(response.data.announcements);
-          getAnnouncementsInTeam();
+          getAnnouncementsInTeam(true);
+          setmess("");
           setProgress(100);
         } else {
           setErr(response.data.message);
@@ -566,7 +616,7 @@ export default function TeamAdmin() {
       .then((response) => {
         if (response.data.status === 200) {
           // setannouncements(response.data.announcements);
-          getAnnouncementsInTeam();
+          getAnnouncementsInTeam(true);
           setProgress(100);
         } else {
           setErr(response.data.message);
@@ -712,31 +762,45 @@ export default function TeamAdmin() {
             >
               <div className="flex flex-row justify-between items-baseline">
                 <h1 className="text-lg text-white ">
-                  <span
-                    className="px-2 rounded-2xl mr-2 text-black"
-                    style={{
-                      backgroundColor: "#C39601",
-                    }}
-                  >
-                    {todaysEvents.length}
-                  </span>
                   Today's events
+                  {/* {todaysEvents.length > 0 && (
+                    <span
+                      className="px-2 rounded-2xl ml-2 text-black"
+                      style={{
+                        backgroundColor: "#C39601",
+                      }}
+                    >
+                      {todaysEvents.length}
+                    </span>
+                  )} */}
                 </h1>
-                <svg
-                  className={` ${showTodays ? "rotate-180" : ""}`}
-                  width="16"
-                  height="10"
-                  viewBox="0 0 16 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
-                    fill="white"
-                  />
-                </svg>
+                <div className="flex flex-row items-center">
+                  {todaysEvents.length > 0 && (
+                    <span
+                      className="px-2 rounded-full mr-2 text-black text-sm"
+                      style={{
+                        backgroundColor: "#C39601",
+                      }}
+                    >
+                      {todaysEvents.length}
+                    </span>
+                  )}
+                  <svg
+                    className={` ${showTodays ? "rotate-180" : ""}`}
+                    width="16"
+                    height="10"
+                    viewBox="0 0 16 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
+                      fill="white"
+                    />
+                  </svg>
+                </div>
               </div>
               <hr className="opacity-50" />
             </div>
@@ -1089,31 +1153,45 @@ export default function TeamAdmin() {
             >
               <div className="flex flex-row justify-between items-baseline">
                 <h1 className="text-lg  mt-3 text-white">
-                  <span
-                    className="px-2 rounded-2xl mr-2 text-black"
-                    style={{
-                      backgroundColor: "#C39601",
-                    }}
-                  >
-                    {upcomingEvents.length}
-                  </span>
+                  {/* {upcomingEvents.length > 0 && (
+                    <span
+                      className="px-2 rounded-2xl mr-2 text-black"
+                      style={{
+                        backgroundColor: "#C39601",
+                      }}
+                    >
+                      {upcomingEvents.length}
+                    </span>
+                  )} */}
                   Upcoming events
                 </h1>
-                <svg
-                  className={` ${showupcoming ? "rotate-180" : ""}`}
-                  width="16"
-                  height="10"
-                  viewBox="0 0 16 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
-                    fill="white"
-                  />
-                </svg>
+                <div className="flex flex-row items-center">
+                  {upcomingEvents.length > 0 && (
+                    <span
+                      className="px-2 rounded-full mr-2 text-black text-sm"
+                      style={{
+                        backgroundColor: "#C39601",
+                      }}
+                    >
+                      {upcomingEvents.length}
+                    </span>
+                  )}
+                  <svg
+                    className={` ${showTodays ? "rotate-180" : ""}`}
+                    width="16"
+                    height="10"
+                    viewBox="0 0 16 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
+                      fill="white"
+                    />
+                  </svg>
+                </div>
               </div>
               <hr className="opacity-50" />
             </div>
@@ -1358,31 +1436,45 @@ export default function TeamAdmin() {
             >
               <div className="flex flex-row justify-between items-baseline">
                 <h1 className="text-lg  mt-3 text-white">
-                  <span
-                    className="px-2 rounded-2xl mr-2 text-black"
-                    style={{
-                      backgroundColor: "#C39601",
-                    }}
-                  >
-                    {pastEvents.length}
-                  </span>
+                  {/* {pastEvents.length > 0 && (
+                    <span
+                      className="px-2 rounded-2xl mr-2 text-black"
+                      style={{
+                        backgroundColor: "#C39601",
+                      }}
+                    >
+                      {pastEvents.length}
+                    </span>
+                  )} */}
                   Past events
                 </h1>
-                <svg
-                  className={` ${showpast ? "rotate-180" : ""}`}
-                  width="16"
-                  height="10"
-                  viewBox="0 0 16 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
-                    fill="white"
-                  />
-                </svg>
+                <div className="flex flex-row items-center">
+                  {pastEvents.length > 0 && (
+                    <span
+                      className="px-2 rounded-full mr-2 text-black text-sm"
+                      style={{
+                        backgroundColor: "#C39601",
+                      }}
+                    >
+                      {pastEvents.length}
+                    </span>
+                  )}
+                  <svg
+                    className={` ${showTodays ? "rotate-180" : ""}`}
+                    width="16"
+                    height="10"
+                    viewBox="0 0 16 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M16 2L8 10L0 2L2 0L8 6L14 0L16 2Z"
+                      fill="white"
+                    />
+                  </svg>
+                </div>
               </div>
               <hr className="opacity-50" />
             </div>

@@ -149,10 +149,10 @@ export default function TeamDetA() {
     if (cachedTeamDetails) {
       const parsedTeamDetails = JSON.parse(cachedTeamDetails);
       setteamDet(parsedTeamDetails.team_details);
-      setAnnouncements(parsedTeamDetails.team_details.announcements);
+      // setAnnouncements(parsedTeamDetails.team_details.announcements);
       console.log("Data loaded from cache");
       setProgress(100);
-      return;
+      // return;
     }
 
     axios
@@ -162,7 +162,7 @@ export default function TeamDetA() {
       .then((response) => {
         if (response.data.status === 200) {
           setteamDet(response.data.team_details);
-          setAnnouncements(response.data.team_details.announcements);
+          // setAnnouncements(response.data.team_details.announcements);
 
           // Cache the data in localStorage with team-specific key
           const dataToCache = { team_details: response.data.team_details };
