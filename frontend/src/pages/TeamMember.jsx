@@ -689,7 +689,7 @@ export default function TeamMember() {
                     </span>
                   )}
                   <svg
-                    className={` ${showTodays ? "rotate-180" : ""}`}
+                    className={` ${showupcoming ? "rotate-180" : ""}`}
                     width="16"
                     height="10"
                     viewBox="0 0 16 10"
@@ -949,7 +949,7 @@ export default function TeamMember() {
                     </span>
                   )}
                   <svg
-                    className={` ${showTodays ? "rotate-180" : ""}`}
+                    className={` ${showpast ? "rotate-180" : ""}`}
                     width="16"
                     height="10"
                     viewBox="0 0 16 10"
