@@ -91,6 +91,14 @@ export default function CreateAcc() {
         setErr("");
         setErrState(false);
       }, 3000);
+    } else if (getPasswordStrength(password) == "Weak") {
+      setProgress(100);
+      setErr("Password too weak");
+      setErrState(true);
+      setTimeout(() => {
+        setErr("");
+        setErrState(false);
+      }, 3000);
     } else if (Cpassword != password) {
       setProgress(100);
       setErr("Passwords do not match");
