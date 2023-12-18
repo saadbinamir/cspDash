@@ -531,13 +531,21 @@ export default function Users() {
                   Name
                 </th>
                 <th scope="col" className="px-2 py-3">
-                  Username / Enrollemtn
+                  Enrollment
                 </th>
                 <th scope="col" className="px-2 py-3">
                   Phone
                 </th>
-                <th scope="col" className="px-2 py-3">
-                  Address
+                <th scope="col" className="px-2 py-3 flex flex-row">
+                  Credit hours
+                  <div
+                    className="text-black text-center rounded-full px-3 mx-3"
+                    style={{
+                      backgroundColor: "#C39601",
+                    }}
+                  >
+                    This team
+                  </div>
                 </th>
                 {/* <th scope="col" className="px-2 py-3">
                   Role
@@ -562,8 +570,39 @@ export default function Users() {
                     {member.team_member_email.split("@")[0]}
                   </td>
                   <td className="px-2 py-4">{member.team_member_phone}</td>
-                  <td className="px-2 py-4">{member.team_member_address}</td>
-                  {/* <td className="px-2 py-4">{member.team_member_role}</td> */}
+
+                  <td
+                    className="ml-2 my-4 bg-black flex flex-row items-center rounded-full overflow-clip"
+                    style={{ width: "300px", marginRight: "-50px" }}
+                  >
+                    <div
+                      className="text-black text-center"
+                      style={{
+                        width: `${(member.team_credit_hours / 40) * 300}px`,
+                        backgroundColor: "#C39601",
+                        borderRadius: "50px 0 0 50px",
+                      }}
+                    >
+                      {member.team_credit_hours > 0
+                        ? member.team_credit_hours - 0
+                        : ""}
+                    </div>
+                    <div
+                      className="text-white text-center"
+                      style={{
+                        width: `${
+                          ((member.total_credit_hours -
+                            member.team_credit_hours) /
+                            40) *
+                          300
+                        }px`,
+                        backgroundColor: "#2F2F2F",
+                        borderRadius: "0 50px 50px 0",
+                      }}
+                    >
+                      {member.total_credit_hours - member.team_credit_hours}
+                    </div>
+                  </td>
                   <td className="px-2 py-4">
                     <button
                       onClick={() => RemoveMember(member.team_member_email)}
