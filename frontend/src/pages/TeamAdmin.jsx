@@ -273,7 +273,7 @@ export default function TeamAdmin() {
       setUpcomingEvents(upcomingEvents);
       setPastEvents(pastEvents);
 
-      return; // Exit early to avoid rendering from API call response
+      // return; // Exit early to avoid rendering from API call response
     }
 
     // Fetch events from the API if not found in the cache or forceFetch is true

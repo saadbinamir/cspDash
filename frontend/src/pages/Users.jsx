@@ -583,9 +583,7 @@ export default function Users() {
                         borderRadius: "50px 0 0 50px",
                       }}
                     >
-                      {member.team_credit_hours > 0
-                        ? member.team_credit_hours - 0
-                        : ""}
+                      {member.team_credit_hours - 0}
                     </div>
                     <div
                       className="text-white text-center"
