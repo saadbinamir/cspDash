@@ -87,7 +87,7 @@ export default function AboutUS() {
                 >
                   Jawad Farooque
                 </h1>
-                <small style={{ color: "#F6F6F6" }}>Nikamma partner</small>
+                <small style={{ color: "#F6F6F6" }}>Project partner</small>
                 <p style={{ color: "#F6F6F6" }} className="text-center">
                   The best way to find yourself is to lose yourself in the
                   service of others.

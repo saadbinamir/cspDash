@@ -337,136 +337,6 @@ export default function TeamAdmin() {
       });
   }
 
-  // function getEvents(forceFetch = false) {
-  //   setProgress(50);
-
-  //   // Check if the data is cached in localStorage
-  //   const cacheKey = `cachedEvents_${teamId}`;
-  //   const cachedEvents = localStorage.getItem(cacheKey);
-
-  //   if (!forceFetch && cachedEvents) {
-  //     const parsedEvents = JSON.parse(cachedEvents);
-  //     setEvents(parsedEvents.events);
-  //     const todayEvents = [];
-  //     const upcomingEvents = [];
-  //     const pastEvents = [];
-
-  //     parsedEvents.events.forEach((event) => {
-  //       if (
-  //         new Date(event.date).setHours(0, 0, 0, 0) <
-  //         new Date().setHours(0, 0, 0, 0)
-  //       ) {
-  //         pastEvents.push(event);
-  //       } else if (
-  //         new Date(event.date).setHours(0, 0, 0, 0) >
-  //         new Date().setHours(0, 0, 0, 0)
-  //       ) {
-  //         upcomingEvents.push(event);
-  //       } else {
-  //         todayEvents.push(event);
-  //       }
-  //     });
-
-  //     setTodaysEvents(todayEvents);
-  //     setUpcomingEvents(upcomingEvents);
-  //     setPastEvents(pastEvents);
-  //     console.log("Data loaded from cache");
-
-  //     // Now, initiate a background API call to fetch the latest data
-  //     axios
-  //       .post(`http://${auth.ip}:8000/api/getEventsInTeam`, {
-  //         team_unique_id: teamId,
-  //       })
-  //       .then((response) => {
-  //         if (response.data.status === 200) {
-  //           // Compare the data from the API with the cached data
-  //           if (
-  //             JSON.stringify(response.data.events) !==
-  //             JSON.stringify(parsedEvents.events)
-  //           ) {
-  //             console.log("Updating data from API response");
-
-  //             // Your logic to update events based on the API response
-
-  //             // Update the cached data with the modified events
-  //             const dataToCache = {
-  //               events: response.data.events,
-  //               // Add any other data you want to cache
-  //             };
-  //             localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
-
-  //             setEvents(response.data.events);
-  //             const todayEvents = [];
-  //             const upcomingEvents = [];
-  //             const pastEvents = [];
-
-  //             response.data.events.forEach((event) => {
-  //               if (
-  //                 new Date(event.date).setHours(0, 0, 0, 0) <
-  //                 new Date().setHours(0, 0, 0, 0)
-  //               ) {
-  //                 pastEvents.push(event);
-  //               } else if (
-  //                 new Date(event.date).setHours(0, 0, 0, 0) >
-  //                 new Date().setHours(0, 0, 0, 0)
-  //               ) {
-  //                 upcomingEvents.push(event);
-  //               } else {
-  //                 todayEvents.push(event);
-  //               }
-  //             });
-
-  //             setTodaysEvents(todayEvents);
-  //             setUpcomingEvents(upcomingEvents);
-  //             setPastEvents(pastEvents);
-  //           }
-  //         } else {
-  //           setErr(response.data.message);
-  //           setErrState(true);
-  //           setTimeout(() => {
-  //             setErr("");
-  //             setErrState(false);
-  //           }, 3000);
-  //         }
-  //       })
-  //       .finally(() => {
-  //         setProgress(100);
-  //       });
-
-  //     return; // Exit early to avoid rendering from API call response
-  //   }
-
-  //   // Fetch events from the API if not found in the cache or forceFetch is true
-  //   axios
-  //     .post(`http://${auth.ip}:8000/api/getEventsInTeam`, {
-  //       team_unique_id: teamId,
-  //     })
-  //     .then((response) => {
-  //       if (response.data.status === 200) {
-  //         // Your logic to update events based on the API response
-
-  //         // Cache the data in localStorage with team-specific key
-  //         const dataToCache = {
-  //           events: response.data.events,
-  //           // Add any other data you want to cache
-  //         };
-  //         localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
-
-  //         console.log("API called, data cached");
-  //       } else {
-  //         setErr(response.data.message);
-  //         setErrState(true);
-  //         setTimeout(() => {
-  //           setErr("");
-  //           setErrState(false);
-  //         }, 3000);
-  //       }
-  //     })
-  //     .finally(() => {
-  //       setProgress(100);
-  //     });
-  // }
-
   // function getEvents() {
   //   setProgress(50);
   //   axios
@@ -515,7 +385,7 @@ export default function TeamAdmin() {
   // }
 
   function getAnnouncementsInTeam(forceFetch = false) {
-    setProgress(50);
+    // setProgress(50);
 
     // Check if the data is cached in localStorage
     const cacheKey = `cachedAnnouncements_${teamId}`;
@@ -526,10 +396,9 @@ export default function TeamAdmin() {
       setannouncements(parsedAnnouncements.announcements);
       console.log("Data loaded from cache");
       setProgress(100);
-      return; // Exit early to avoid rendering from API call response
+      // return;
     }
 
-    // Fetch announcements from the API if not found in the cache or forceFetch is true
     axios
       .post(`http://${auth.ip}:8000/api/getAnnouncementsInTeam`, {
         team_unique_id: teamId,
@@ -554,10 +423,10 @@ export default function TeamAdmin() {
             setErrState(false);
           }, 3000);
         }
-      })
-      .finally(() => {
-        setProgress(100);
       });
+    // .finally(() => {
+    //   setProgress(100);
+    // });
   }
 
   // function getAnnouncementsInTeam() {
@@ -1177,7 +1046,7 @@ export default function TeamAdmin() {
                     </span>
                   )}
                   <svg
-                    className={` ${showTodays ? "rotate-180" : ""}`}
+                    className={` ${showupcoming ? "rotate-180" : ""}`}
                     width="16"
                     height="10"
                     viewBox="0 0 16 10"
@@ -1460,7 +1329,7 @@ export default function TeamAdmin() {
                     </span>
                   )}
                   <svg
-                    className={` ${showTodays ? "rotate-180" : ""}`}
+                    className={` ${showpast ? "rotate-180" : ""}`}
                     width="16"
                     height="10"
                     viewBox="0 0 16 10"
